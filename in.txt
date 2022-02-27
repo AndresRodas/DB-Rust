@@ -1,0 +1,8 @@
+// declaration
+let mut var1 : i64 = 64;
+let var2 = "holis";
+
+fn main(){
+    println;
+    println;
+}
