@@ -3,13 +3,14 @@ package main
 import (
 	/* "OLC2/environment"
 	"OLC2/interfaces"*/
+
 	"OLC2/parser"
 	"fmt"
-
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 )
 
 func main() {
+
 	//reading file
 	is, _ := antlr.NewFileStream("in.txt")
 	//creating lexer
@@ -21,7 +22,6 @@ func main() {
 	tree := p.Start()
 
 	antlr.ParseTreeWalkerDefault.Walk(NewTreeShapeListener(), tree)
-	fmt.Println("end main")
 
 }
 
@@ -34,6 +34,9 @@ func NewTreeShapeListener() *TreeShapeListener {
 }
 
 func (this *TreeShapeListener) ExitStart(ctx *parser.StartContext) {
-	result := ctx.GetInst()
-	fmt.Println(result)
+	result := ctx.GetAst() //obtenemos AST generado en arbol
+
+	fmt.Println(result.Main.ToArray())
+	fmt.Println(result.Instructions.ToArray())
+
 }
