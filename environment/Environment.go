@@ -1,9 +1,11 @@
 package environment
 
 type Environment struct {
-	Lin           int
-	Col           int
-	Anterior      interface{}
-	Tabla         map[string]Symbol
-	Identificador string
+	Anterior interface{}
+	Tabla    map[string]Symbol
+	Id       string
+}
+
+func NewEnvironment(ant interface{}, id string) Environment {
+	return Environment{ant, make(map[string]Symbol), id}
 }

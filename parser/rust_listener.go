@@ -23,6 +23,9 @@ type RustListener interface {
 	// EnterInstruction is called when entering the instruction production.
 	EnterInstruction(c *InstructionContext)
 
+	// EnterImpression is called when entering the impression production.
+	EnterImpression(c *ImpressionContext)
+
 	// EnterDeclaration is called when entering the declaration production.
 	EnterDeclaration(c *DeclarationContext)
 
@@ -61,6 +64,9 @@ type RustListener interface {
 
 	// ExitInstruction is called when exiting the instruction production.
 	ExitInstruction(c *InstructionContext)
+
+	// ExitImpression is called when exiting the impression production.
+	ExitImpression(c *ImpressionContext)
 
 	// ExitDeclaration is called when exiting the declaration production.
 	ExitDeclaration(c *DeclarationContext)

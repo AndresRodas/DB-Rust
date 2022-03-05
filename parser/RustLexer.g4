@@ -15,7 +15,7 @@ STRUCT: 'struct';
 
 // reserved words
 POW: 'pow';
-PRINT: 'println';
+PRINT: 'println!';
 LET: 'let';
 MUT: 'mut';
 FUNC: 'fn';

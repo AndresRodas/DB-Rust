@@ -13,6 +13,7 @@ import (
 import arrayList "github.com/colegno/arraylist"
 import "OLC2/interfaces"
 import "OLC2/expressions"
+import "OLC2/instructions"
 import "OLC2/environment"
 import "strings"
 
@@ -22,87 +23,91 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 74, 180,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 74, 189,
 	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7,
 	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 4, 13,
-	9, 13, 4, 14, 9, 14, 3, 2, 7, 2, 30, 10, 2, 12, 2, 14, 2, 33, 11, 2, 3,
-	2, 3, 2, 7, 2, 37, 10, 2, 12, 2, 14, 2, 40, 11, 2, 3, 2, 3, 2, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 3, 53, 10, 3, 3, 4, 3,
-	4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 5, 6, 5, 65, 10, 5, 13,
-	5, 14, 5, 66, 3, 5, 3, 5, 3, 6, 3, 6, 3, 6, 3, 6, 3, 7, 3, 7, 3, 7, 3,
-	7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3,
-	7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3,
-	7, 3, 7, 3, 7, 5, 7, 105, 10, 7, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3,
-	8, 3, 8, 3, 8, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 10, 3, 10, 3, 11, 3, 11,
-	3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 7, 11, 132, 10, 11, 12,
-	11, 14, 11, 135, 11, 11, 3, 12, 3, 12, 3, 12, 3, 13, 3, 13, 3, 13, 3, 13,
-	3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 5, 13, 153,
-	10, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13,
-	3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 7, 13, 170, 10, 13, 12, 13, 14,
-	13, 173, 11, 13, 3, 14, 3, 14, 3, 14, 5, 14, 178, 10, 14, 3, 14, 2, 4,
-	20, 24, 15, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 2, 6, 4, 2,
-	3, 7, 10, 11, 3, 2, 61, 62, 3, 2, 63, 64, 3, 2, 57, 60, 2, 181, 2, 31,
-	3, 2, 2, 2, 4, 52, 3, 2, 2, 2, 6, 54, 3, 2, 2, 2, 8, 64, 3, 2, 2, 2, 10,
-	70, 3, 2, 2, 2, 12, 104, 3, 2, 2, 2, 14, 106, 3, 2, 2, 2, 16, 115, 3, 2,
-	2, 2, 18, 120, 3, 2, 2, 2, 20, 122, 3, 2, 2, 2, 22, 136, 3, 2, 2, 2, 24,
-	152, 3, 2, 2, 2, 26, 177, 3, 2, 2, 2, 28, 30, 5, 4, 3, 2, 29, 28, 3, 2,
-	2, 2, 30, 33, 3, 2, 2, 2, 31, 29, 3, 2, 2, 2, 31, 32, 3, 2, 2, 2, 32, 34,
-	3, 2, 2, 2, 33, 31, 3, 2, 2, 2, 34, 38, 5, 6, 4, 2, 35, 37, 5, 4, 3, 2,
-	36, 35, 3, 2, 2, 2, 37, 40, 3, 2, 2, 2, 38, 36, 3, 2, 2, 2, 38, 39, 3,
-	2, 2, 2, 39, 41, 3, 2, 2, 2, 40, 38, 3, 2, 2, 2, 41, 42, 8, 2, 1, 2, 42,
-	3, 3, 2, 2, 2, 43, 44, 5, 12, 7, 2, 44, 45, 8, 3, 1, 2, 45, 53, 3, 2, 2,
-	2, 46, 47, 5, 14, 8, 2, 47, 48, 8, 3, 1, 2, 48, 53, 3, 2, 2, 2, 49, 50,
-	5, 16, 9, 2, 50, 51, 8, 3, 1, 2, 51, 53, 3, 2, 2, 2, 52, 43, 3, 2, 2, 2,
-	52, 46, 3, 2, 2, 2, 52, 49, 3, 2, 2, 2, 53, 5, 3, 2, 2, 2, 54, 55, 7, 16,
-	2, 2, 55, 56, 7, 31, 2, 2, 56, 57, 7, 66, 2, 2, 57, 58, 7, 67, 2, 2, 58,
-	59, 7, 68, 2, 2, 59, 60, 5, 8, 5, 2, 60, 61, 7, 69, 2, 2, 61, 62, 8, 4,
-	1, 2, 62, 7, 3, 2, 2, 2, 63, 65, 5, 10, 6, 2, 64, 63, 3, 2, 2, 2, 65, 66,
-	3, 2, 2, 2, 66, 64, 3, 2, 2, 2, 66, 67, 3, 2, 2, 2, 67, 68, 3, 2, 2, 2,
-	68, 69, 8, 5, 1, 2, 69, 9, 3, 2, 2, 2, 70, 71, 7, 13, 2, 2, 71, 72, 7,
-	49, 2, 2, 72, 73, 8, 6, 1, 2, 73, 11, 3, 2, 2, 2, 74, 75, 7, 14, 2, 2,
-	75, 76, 7, 15, 2, 2, 76, 77, 7, 45, 2, 2, 77, 78, 7, 48, 2, 2, 78, 79,
-	5, 18, 10, 2, 79, 80, 7, 56, 2, 2, 80, 81, 5, 22, 12, 2, 81, 82, 7, 49,
-	2, 2, 82, 105, 3, 2, 2, 2, 83, 84, 7, 14, 2, 2, 84, 85, 7, 15, 2, 2, 85,
-	86, 7, 45, 2, 2, 86, 87, 7, 56, 2, 2, 87, 88, 5, 22, 12, 2, 88, 89, 7,
-	49, 2, 2, 89, 105, 3, 2, 2, 2, 90, 91, 7, 14, 2, 2, 91, 92, 7, 45, 2, 2,
-	92, 93, 7, 48, 2, 2, 93, 94, 5, 18, 10, 2, 94, 95, 7, 56, 2, 2, 95, 96,
-	5, 22, 12, 2, 96, 97, 7, 49, 2, 2, 97, 105, 3, 2, 2, 2, 98, 99, 7, 14,
-	2, 2, 99, 100, 7, 45, 2, 2, 100, 101, 7, 56, 2, 2, 101, 102, 5, 22, 12,
-	2, 102, 103, 7, 49, 2, 2, 103, 105, 3, 2, 2, 2, 104, 74, 3, 2, 2, 2, 104,
-	83, 3, 2, 2, 2, 104, 90, 3, 2, 2, 2, 104, 98, 3, 2, 2, 2, 105, 13, 3, 2,
-	2, 2, 106, 107, 7, 16, 2, 2, 107, 108, 7, 45, 2, 2, 108, 109, 7, 66, 2,
-	2, 109, 110, 5, 20, 11, 2, 110, 111, 7, 67, 2, 2, 111, 112, 7, 68, 2, 2,
-	112, 113, 5, 8, 5, 2, 113, 114, 7, 69, 2, 2, 114, 15, 3, 2, 2, 2, 115,
-	116, 7, 41, 2, 2, 116, 117, 7, 45, 2, 2, 117, 118, 7, 68, 2, 2, 118, 119,
-	7, 69, 2, 2, 119, 17, 3, 2, 2, 2, 120, 121, 9, 2, 2, 2, 121, 19, 3, 2,
-	2, 2, 122, 123, 8, 11, 1, 2, 123, 124, 5, 22, 12, 2, 124, 125, 8, 11, 1,
-	2, 125, 133, 3, 2, 2, 2, 126, 127, 12, 4, 2, 2, 127, 128, 7, 50, 2, 2,
-	128, 129, 5, 22, 12, 2, 129, 130, 8, 11, 1, 2, 130, 132, 3, 2, 2, 2, 131,
-	126, 3, 2, 2, 2, 132, 135, 3, 2, 2, 2, 133, 131, 3, 2, 2, 2, 133, 134,
-	3, 2, 2, 2, 134, 21, 3, 2, 2, 2, 135, 133, 3, 2, 2, 2, 136, 137, 5, 24,
-	13, 2, 137, 138, 8, 12, 1, 2, 138, 23, 3, 2, 2, 2, 139, 140, 8, 13, 1,
-	2, 140, 141, 7, 70, 2, 2, 141, 142, 5, 20, 11, 2, 142, 143, 7, 71, 2, 2,
-	143, 153, 3, 2, 2, 2, 144, 145, 7, 66, 2, 2, 145, 146, 5, 22, 12, 2, 146,
-	147, 7, 67, 2, 2, 147, 148, 8, 13, 1, 2, 148, 153, 3, 2, 2, 2, 149, 150,
-	5, 26, 14, 2, 150, 151, 8, 13, 1, 2, 151, 153, 3, 2, 2, 2, 152, 139, 3,
-	2, 2, 2, 152, 144, 3, 2, 2, 2, 152, 149, 3, 2, 2, 2, 153, 171, 3, 2, 2,
-	2, 154, 155, 12, 8, 2, 2, 155, 156, 9, 3, 2, 2, 156, 157, 5, 24, 13, 9,
-	157, 158, 8, 13, 1, 2, 158, 170, 3, 2, 2, 2, 159, 160, 12, 7, 2, 2, 160,
-	161, 9, 4, 2, 2, 161, 162, 5, 24, 13, 8, 162, 163, 8, 13, 1, 2, 163, 170,
-	3, 2, 2, 2, 164, 165, 12, 6, 2, 2, 165, 166, 9, 5, 2, 2, 166, 167, 5, 24,
-	13, 7, 167, 168, 8, 13, 1, 2, 168, 170, 3, 2, 2, 2, 169, 154, 3, 2, 2,
-	2, 169, 159, 3, 2, 2, 2, 169, 164, 3, 2, 2, 2, 170, 173, 3, 2, 2, 2, 171,
-	169, 3, 2, 2, 2, 171, 172, 3, 2, 2, 2, 172, 25, 3, 2, 2, 2, 173, 171, 3,
-	2, 2, 2, 174, 175, 7, 43, 2, 2, 175, 178, 8, 14, 1, 2, 176, 178, 7, 44,
-	2, 2, 177, 174, 3, 2, 2, 2, 177, 176, 3, 2, 2, 2, 178, 27, 3, 2, 2, 2,
-	12, 31, 38, 52, 66, 104, 133, 152, 169, 171, 177,
+	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 3, 2, 7, 2, 32, 10, 2, 12, 2, 14, 2,
+	35, 11, 2, 3, 2, 3, 2, 7, 2, 39, 10, 2, 12, 2, 14, 2, 42, 11, 2, 3, 2,
+	3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 3, 55, 10,
+	3, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 5, 6, 5, 67,
+	10, 5, 13, 5, 14, 5, 68, 3, 5, 3, 5, 3, 6, 3, 6, 3, 6, 3, 7, 3, 7, 3, 7,
+	3, 7, 3, 7, 3, 7, 3, 7, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8,
+	3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8,
+	3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 5, 8, 113,
+	10, 8, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 9, 3, 10, 3,
+	10, 3, 10, 3, 10, 3, 10, 3, 11, 3, 11, 3, 12, 3, 12, 3, 12, 3, 12, 3, 12,
+	3, 12, 3, 12, 3, 12, 3, 12, 7, 12, 140, 10, 12, 12, 12, 14, 12, 143, 11,
+	12, 3, 13, 3, 13, 3, 13, 3, 14, 3, 14, 3, 14, 3, 14, 3, 14, 3, 14, 3, 14,
+	3, 14, 3, 14, 3, 14, 3, 14, 3, 14, 3, 14, 5, 14, 161, 10, 14, 3, 14, 3,
+	14, 3, 14, 3, 14, 3, 14, 3, 14, 3, 14, 3, 14, 3, 14, 3, 14, 3, 14, 3, 14,
+	3, 14, 3, 14, 3, 14, 7, 14, 178, 10, 14, 12, 14, 14, 14, 181, 11, 14, 3,
+	15, 3, 15, 3, 15, 3, 15, 5, 15, 187, 10, 15, 3, 15, 2, 4, 22, 26, 16, 2,
+	4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 2, 6, 4, 2, 3, 7, 10,
+	11, 3, 2, 61, 62, 3, 2, 63, 64, 3, 2, 57, 60, 2, 189, 2, 33, 3, 2, 2, 2,
+	4, 54, 3, 2, 2, 2, 6, 56, 3, 2, 2, 2, 8, 66, 3, 2, 2, 2, 10, 72, 3, 2,
+	2, 2, 12, 75, 3, 2, 2, 2, 14, 112, 3, 2, 2, 2, 16, 114, 3, 2, 2, 2, 18,
+	123, 3, 2, 2, 2, 20, 128, 3, 2, 2, 2, 22, 130, 3, 2, 2, 2, 24, 144, 3,
+	2, 2, 2, 26, 160, 3, 2, 2, 2, 28, 186, 3, 2, 2, 2, 30, 32, 5, 4, 3, 2,
+	31, 30, 3, 2, 2, 2, 32, 35, 3, 2, 2, 2, 33, 31, 3, 2, 2, 2, 33, 34, 3,
+	2, 2, 2, 34, 36, 3, 2, 2, 2, 35, 33, 3, 2, 2, 2, 36, 40, 5, 6, 4, 2, 37,
+	39, 5, 4, 3, 2, 38, 37, 3, 2, 2, 2, 39, 42, 3, 2, 2, 2, 40, 38, 3, 2, 2,
+	2, 40, 41, 3, 2, 2, 2, 41, 43, 3, 2, 2, 2, 42, 40, 3, 2, 2, 2, 43, 44,
+	8, 2, 1, 2, 44, 3, 3, 2, 2, 2, 45, 46, 5, 14, 8, 2, 46, 47, 8, 3, 1, 2,
+	47, 55, 3, 2, 2, 2, 48, 49, 5, 16, 9, 2, 49, 50, 8, 3, 1, 2, 50, 55, 3,
+	2, 2, 2, 51, 52, 5, 18, 10, 2, 52, 53, 8, 3, 1, 2, 53, 55, 3, 2, 2, 2,
+	54, 45, 3, 2, 2, 2, 54, 48, 3, 2, 2, 2, 54, 51, 3, 2, 2, 2, 55, 5, 3, 2,
+	2, 2, 56, 57, 7, 16, 2, 2, 57, 58, 7, 31, 2, 2, 58, 59, 7, 66, 2, 2, 59,
+	60, 7, 67, 2, 2, 60, 61, 7, 68, 2, 2, 61, 62, 5, 8, 5, 2, 62, 63, 7, 69,
+	2, 2, 63, 64, 8, 4, 1, 2, 64, 7, 3, 2, 2, 2, 65, 67, 5, 10, 6, 2, 66, 65,
+	3, 2, 2, 2, 67, 68, 3, 2, 2, 2, 68, 66, 3, 2, 2, 2, 68, 69, 3, 2, 2, 2,
+	69, 70, 3, 2, 2, 2, 70, 71, 8, 5, 1, 2, 71, 9, 3, 2, 2, 2, 72, 73, 5, 12,
+	7, 2, 73, 74, 8, 6, 1, 2, 74, 11, 3, 2, 2, 2, 75, 76, 7, 13, 2, 2, 76,
+	77, 7, 66, 2, 2, 77, 78, 5, 22, 12, 2, 78, 79, 7, 67, 2, 2, 79, 80, 7,
+	49, 2, 2, 80, 81, 8, 7, 1, 2, 81, 13, 3, 2, 2, 2, 82, 83, 7, 14, 2, 2,
+	83, 84, 7, 15, 2, 2, 84, 85, 7, 45, 2, 2, 85, 86, 7, 48, 2, 2, 86, 87,
+	5, 20, 11, 2, 87, 88, 7, 56, 2, 2, 88, 89, 5, 24, 13, 2, 89, 90, 7, 49,
+	2, 2, 90, 113, 3, 2, 2, 2, 91, 92, 7, 14, 2, 2, 92, 93, 7, 15, 2, 2, 93,
+	94, 7, 45, 2, 2, 94, 95, 7, 56, 2, 2, 95, 96, 5, 24, 13, 2, 96, 97, 7,
+	49, 2, 2, 97, 113, 3, 2, 2, 2, 98, 99, 7, 14, 2, 2, 99, 100, 7, 45, 2,
+	2, 100, 101, 7, 48, 2, 2, 101, 102, 5, 20, 11, 2, 102, 103, 7, 56, 2, 2,
+	103, 104, 5, 24, 13, 2, 104, 105, 7, 49, 2, 2, 105, 113, 3, 2, 2, 2, 106,
+	107, 7, 14, 2, 2, 107, 108, 7, 45, 2, 2, 108, 109, 7, 56, 2, 2, 109, 110,
+	5, 24, 13, 2, 110, 111, 7, 49, 2, 2, 111, 113, 3, 2, 2, 2, 112, 82, 3,
+	2, 2, 2, 112, 91, 3, 2, 2, 2, 112, 98, 3, 2, 2, 2, 112, 106, 3, 2, 2, 2,
+	113, 15, 3, 2, 2, 2, 114, 115, 7, 16, 2, 2, 115, 116, 7, 45, 2, 2, 116,
+	117, 7, 66, 2, 2, 117, 118, 5, 22, 12, 2, 118, 119, 7, 67, 2, 2, 119, 120,
+	7, 68, 2, 2, 120, 121, 5, 8, 5, 2, 121, 122, 7, 69, 2, 2, 122, 17, 3, 2,
+	2, 2, 123, 124, 7, 41, 2, 2, 124, 125, 7, 45, 2, 2, 125, 126, 7, 68, 2,
+	2, 126, 127, 7, 69, 2, 2, 127, 19, 3, 2, 2, 2, 128, 129, 9, 2, 2, 2, 129,
+	21, 3, 2, 2, 2, 130, 131, 8, 12, 1, 2, 131, 132, 5, 24, 13, 2, 132, 133,
+	8, 12, 1, 2, 133, 141, 3, 2, 2, 2, 134, 135, 12, 4, 2, 2, 135, 136, 7,
+	50, 2, 2, 136, 137, 5, 24, 13, 2, 137, 138, 8, 12, 1, 2, 138, 140, 3, 2,
+	2, 2, 139, 134, 3, 2, 2, 2, 140, 143, 3, 2, 2, 2, 141, 139, 3, 2, 2, 2,
+	141, 142, 3, 2, 2, 2, 142, 23, 3, 2, 2, 2, 143, 141, 3, 2, 2, 2, 144, 145,
+	5, 26, 14, 2, 145, 146, 8, 13, 1, 2, 146, 25, 3, 2, 2, 2, 147, 148, 8,
+	14, 1, 2, 148, 149, 7, 70, 2, 2, 149, 150, 5, 22, 12, 2, 150, 151, 7, 71,
+	2, 2, 151, 161, 3, 2, 2, 2, 152, 153, 7, 66, 2, 2, 153, 154, 5, 24, 13,
+	2, 154, 155, 7, 67, 2, 2, 155, 156, 8, 14, 1, 2, 156, 161, 3, 2, 2, 2,
+	157, 158, 5, 28, 15, 2, 158, 159, 8, 14, 1, 2, 159, 161, 3, 2, 2, 2, 160,
+	147, 3, 2, 2, 2, 160, 152, 3, 2, 2, 2, 160, 157, 3, 2, 2, 2, 161, 179,
+	3, 2, 2, 2, 162, 163, 12, 8, 2, 2, 163, 164, 9, 3, 2, 2, 164, 165, 5, 26,
+	14, 9, 165, 166, 8, 14, 1, 2, 166, 178, 3, 2, 2, 2, 167, 168, 12, 7, 2,
+	2, 168, 169, 9, 4, 2, 2, 169, 170, 5, 26, 14, 8, 170, 171, 8, 14, 1, 2,
+	171, 178, 3, 2, 2, 2, 172, 173, 12, 6, 2, 2, 173, 174, 9, 5, 2, 2, 174,
+	175, 5, 26, 14, 7, 175, 176, 8, 14, 1, 2, 176, 178, 3, 2, 2, 2, 177, 162,
+	3, 2, 2, 2, 177, 167, 3, 2, 2, 2, 177, 172, 3, 2, 2, 2, 178, 181, 3, 2,
+	2, 2, 179, 177, 3, 2, 2, 2, 179, 180, 3, 2, 2, 2, 180, 27, 3, 2, 2, 2,
+	181, 179, 3, 2, 2, 2, 182, 183, 7, 43, 2, 2, 183, 187, 8, 15, 1, 2, 184,
+	185, 7, 44, 2, 2, 185, 187, 8, 15, 1, 2, 186, 182, 3, 2, 2, 2, 186, 184,
+	3, 2, 2, 2, 187, 29, 3, 2, 2, 2, 12, 33, 40, 54, 68, 112, 141, 160, 177,
+	179, 186,
 }
 var deserializer = antlr.NewATNDeserializer(nil)
 var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
 
 var literalNames = []string{
 	"", "'i64'", "'f64'", "'bool'", "'char'", "'String'", "'&str'", "'usize'",
-	"'vec'", "'struct'", "'pow'", "'println'", "'let'", "'mut'", "'fn'", "'->'",
+	"'vec'", "'struct'", "'pow'", "'println!'", "'let'", "'mut'", "'fn'", "'->'",
 	"'=>'", "'abs'", "'sqrt'", "'to_string'", "'clone'", "'new'", "'len'",
 	"'push'", "'remove'", "'contains'", "'insert'", "'capacity'", "'with_capacity'",
 	"'main'", "'if'", "'match'", "'loop'", "'while'", "'for'", "'in'", "'break'",
@@ -124,9 +129,9 @@ var symbolicNames = []string{
 }
 
 var ruleNames = []string{
-	"start", "global_env", "main", "instructions", "instruction", "declaration",
-	"function", "module", "types", "listParams", "expression", "expr_arit",
-	"primitive",
+	"start", "global_env", "main", "instructions", "instruction", "impression",
+	"declaration", "function", "module", "types", "listParams", "expression",
+	"expr_arit", "primitive",
 }
 var decisionToDFA = make([]*antlr.DFA, len(deserializedATN.DecisionToState))
 
@@ -238,14 +243,15 @@ const (
 	RustRULE_main         = 2
 	RustRULE_instructions = 3
 	RustRULE_instruction  = 4
-	RustRULE_declaration  = 5
-	RustRULE_function     = 6
-	RustRULE_module       = 7
-	RustRULE_types        = 8
-	RustRULE_listParams   = 9
-	RustRULE_expression   = 10
-	RustRULE_expr_arit    = 11
-	RustRULE_primitive    = 12
+	RustRULE_impression   = 5
+	RustRULE_declaration  = 6
+	RustRULE_function     = 7
+	RustRULE_module       = 8
+	RustRULE_types        = 9
+	RustRULE_listParams   = 10
+	RustRULE_expression   = 11
+	RustRULE_expr_arit    = 12
+	RustRULE_primitive    = 13
 )
 
 // IStartContext is an interface to support dynamic dispatch.
@@ -407,14 +413,14 @@ func (p *Rust) Start() (localctx IStartContext) {
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(29)
+	p.SetState(31)
 	p.GetErrorHandler().Sync(p)
 	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 0, p.GetParserRuleContext())
 
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
-				p.SetState(26)
+				p.SetState(28)
 
 				var _x = p.Global_env()
 
@@ -423,24 +429,24 @@ func (p *Rust) Start() (localctx IStartContext) {
 			localctx.(*StartContext).e = append(localctx.(*StartContext).e, localctx.(*StartContext)._global_env)
 
 		}
-		p.SetState(31)
+		p.SetState(33)
 		p.GetErrorHandler().Sync(p)
 		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 0, p.GetParserRuleContext())
 	}
 	{
-		p.SetState(32)
+		p.SetState(34)
 
 		var _x = p.Main()
 
 		localctx.(*StartContext)._main = _x
 	}
-	p.SetState(36)
+	p.SetState(38)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for ((_la-12)&-(0x1f+1)) == 0 && ((1<<uint((_la-12)))&((1<<(RustLET-12))|(1<<(RustFUNC-12))|(1<<(RustMODULE-12)))) != 0 {
 		{
-			p.SetState(33)
+			p.SetState(35)
 
 			var _x = p.Global_env()
 
@@ -448,7 +454,7 @@ func (p *Rust) Start() (localctx IStartContext) {
 		}
 		localctx.(*StartContext).e = append(localctx.(*StartContext).e, localctx.(*StartContext)._global_env)
 
-		p.SetState(38)
+		p.SetState(40)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
@@ -458,7 +464,7 @@ func (p *Rust) Start() (localctx IStartContext) {
 	for _, e := range listInt {
 		global.Add(e.GetHi())
 	}
-	localctx.(*StartContext).ast = environment.NewAST(localctx.(*StartContext).Get_main().GetMainInst(), global)
+	localctx.(*StartContext).ast = environment.NewAST(localctx.(*StartContext).Get_main().GetMainInst(), global, "")
 
 	return localctx
 }
@@ -582,14 +588,14 @@ func (p *Rust) Global_env() (localctx IGlobal_envContext) {
 		}
 	}()
 
-	p.SetState(50)
+	p.SetState(52)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case RustLET:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(41)
+			p.SetState(43)
 			p.Declaration()
 		}
 		localctx.(*Global_envContext).hi = "declaration"
@@ -597,7 +603,7 @@ func (p *Rust) Global_env() (localctx IGlobal_envContext) {
 	case RustFUNC:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(44)
+			p.SetState(46)
 			p.Function()
 		}
 		localctx.(*Global_envContext).hi = "function"
@@ -605,7 +611,7 @@ func (p *Rust) Global_env() (localctx IGlobal_envContext) {
 	case RustMODULE:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(47)
+			p.SetState(49)
 			p.Module()
 		}
 		localctx.(*Global_envContext).hi = "module"
@@ -753,34 +759,34 @@ func (p *Rust) Main() (localctx IMainContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(52)
+		p.SetState(54)
 		p.Match(RustFUNC)
 	}
 	{
-		p.SetState(53)
+		p.SetState(55)
 		p.Match(RustMAIN)
 	}
 	{
-		p.SetState(54)
+		p.SetState(56)
 		p.Match(RustPARIZQ)
 	}
 	{
-		p.SetState(55)
+		p.SetState(57)
 		p.Match(RustPARDER)
 	}
 	{
-		p.SetState(56)
+		p.SetState(58)
 		p.Match(RustLLAVEIZQ)
 	}
 	{
-		p.SetState(57)
+		p.SetState(59)
 
 		var _x = p.Instructions()
 
 		localctx.(*MainContext)._instructions = _x
 	}
 	{
-		p.SetState(58)
+		p.SetState(60)
 		p.Match(RustLLAVEDER)
 	}
 	localctx.(*MainContext).mainInst = localctx.(*MainContext).Get_instructions().GetInsts()
@@ -927,13 +933,13 @@ func (p *Rust) Instructions() (localctx IInstructionsContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(62)
+	p.SetState(64)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for ok := true; ok; ok = _la == RustPRINT {
 		{
-			p.SetState(61)
+			p.SetState(63)
 
 			var _x = p.Instruction()
 
@@ -941,7 +947,7 @@ func (p *Rust) Instructions() (localctx IInstructionsContext) {
 		}
 		localctx.(*InstructionsContext).e = append(localctx.(*InstructionsContext).e, localctx.(*InstructionsContext)._instruction)
 
-		p.SetState(64)
+		p.SetState(66)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
@@ -961,11 +967,17 @@ type IInstructionContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// Get_impression returns the _impression rule contexts.
+	Get_impression() IImpressionContext
+
+	// Set_impression sets the _impression rule contexts.
+	Set_impression(IImpressionContext)
+
 	// GetInst returns the inst attribute.
-	GetInst() string
+	GetInst() interfaces.Instruction
 
 	// SetInst sets the inst attribute.
-	SetInst(string)
+	SetInst(interfaces.Instruction)
 
 	// IsInstructionContext differentiates from other interfaces.
 	IsInstructionContext()
@@ -973,8 +985,9 @@ type IInstructionContext interface {
 
 type InstructionContext struct {
 	*antlr.BaseParserRuleContext
-	parser antlr.Parser
-	inst   string
+	parser      antlr.Parser
+	inst        interfaces.Instruction
+	_impression IImpressionContext
 }
 
 func NewEmptyInstructionContext() *InstructionContext {
@@ -999,16 +1012,22 @@ func NewInstructionContext(parser antlr.Parser, parent antlr.ParserRuleContext, 
 
 func (s *InstructionContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *InstructionContext) GetInst() string { return s.inst }
+func (s *InstructionContext) Get_impression() IImpressionContext { return s._impression }
 
-func (s *InstructionContext) SetInst(v string) { s.inst = v }
+func (s *InstructionContext) Set_impression(v IImpressionContext) { s._impression = v }
 
-func (s *InstructionContext) PRINT() antlr.TerminalNode {
-	return s.GetToken(RustPRINT, 0)
-}
+func (s *InstructionContext) GetInst() interfaces.Instruction { return s.inst }
 
-func (s *InstructionContext) PYC() antlr.TerminalNode {
-	return s.GetToken(RustPYC, 0)
+func (s *InstructionContext) SetInst(v interfaces.Instruction) { s.inst = v }
+
+func (s *InstructionContext) Impression() IImpressionContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IImpressionContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IImpressionContext)
 }
 
 func (s *InstructionContext) GetRuleContext() antlr.RuleContext {
@@ -1053,14 +1072,168 @@ func (p *Rust) Instruction() (localctx IInstructionContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(68)
+		p.SetState(70)
+
+		var _x = p.Impression()
+
+		localctx.(*InstructionContext)._impression = _x
+	}
+	localctx.(*InstructionContext).inst = localctx.(*InstructionContext).Get_impression().GetPr()
+
+	return localctx
+}
+
+// IImpressionContext is an interface to support dynamic dispatch.
+type IImpressionContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Get_listParams returns the _listParams rule contexts.
+	Get_listParams() IListParamsContext
+
+	// Set_listParams sets the _listParams rule contexts.
+	Set_listParams(IListParamsContext)
+
+	// GetPr returns the pr attribute.
+	GetPr() interfaces.Instruction
+
+	// SetPr sets the pr attribute.
+	SetPr(interfaces.Instruction)
+
+	// IsImpressionContext differentiates from other interfaces.
+	IsImpressionContext()
+}
+
+type ImpressionContext struct {
+	*antlr.BaseParserRuleContext
+	parser      antlr.Parser
+	pr          interfaces.Instruction
+	_listParams IListParamsContext
+}
+
+func NewEmptyImpressionContext() *ImpressionContext {
+	var p = new(ImpressionContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = RustRULE_impression
+	return p
+}
+
+func (*ImpressionContext) IsImpressionContext() {}
+
+func NewImpressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ImpressionContext {
+	var p = new(ImpressionContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = RustRULE_impression
+
+	return p
+}
+
+func (s *ImpressionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *ImpressionContext) Get_listParams() IListParamsContext { return s._listParams }
+
+func (s *ImpressionContext) Set_listParams(v IListParamsContext) { s._listParams = v }
+
+func (s *ImpressionContext) GetPr() interfaces.Instruction { return s.pr }
+
+func (s *ImpressionContext) SetPr(v interfaces.Instruction) { s.pr = v }
+
+func (s *ImpressionContext) PRINT() antlr.TerminalNode {
+	return s.GetToken(RustPRINT, 0)
+}
+
+func (s *ImpressionContext) PARIZQ() antlr.TerminalNode {
+	return s.GetToken(RustPARIZQ, 0)
+}
+
+func (s *ImpressionContext) ListParams() IListParamsContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IListParamsContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IListParamsContext)
+}
+
+func (s *ImpressionContext) PARDER() antlr.TerminalNode {
+	return s.GetToken(RustPARDER, 0)
+}
+
+func (s *ImpressionContext) PYC() antlr.TerminalNode {
+	return s.GetToken(RustPYC, 0)
+}
+
+func (s *ImpressionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *ImpressionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *ImpressionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(RustListener); ok {
+		listenerT.EnterImpression(s)
+	}
+}
+
+func (s *ImpressionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(RustListener); ok {
+		listenerT.ExitImpression(s)
+	}
+}
+
+func (p *Rust) Impression() (localctx IImpressionContext) {
+	localctx = NewImpressionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 10, RustRULE_impression)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(73)
 		p.Match(RustPRINT)
 	}
 	{
-		p.SetState(69)
+		p.SetState(74)
+		p.Match(RustPARIZQ)
+	}
+	{
+		p.SetState(75)
+
+		var _x = p.listParams(0)
+
+		localctx.(*ImpressionContext)._listParams = _x
+	}
+	{
+		p.SetState(76)
+		p.Match(RustPARDER)
+	}
+	{
+		p.SetState(77)
 		p.Match(RustPYC)
 	}
-	localctx.(*InstructionContext).inst = "Impresion!"
+	localctx.(*ImpressionContext).pr = instructions.NewPrint(0, 0, localctx.(*ImpressionContext).Get_listParams().GetL())
 
 	return localctx
 }
@@ -1169,7 +1342,7 @@ func (s *DeclarationContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *Rust) Declaration() (localctx IDeclarationContext) {
 	localctx = NewDeclarationContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 10, RustRULE_declaration)
+	p.EnterRule(localctx, 12, RustRULE_declaration)
 
 	defer func() {
 		p.ExitRule()
@@ -1187,88 +1360,57 @@ func (p *Rust) Declaration() (localctx IDeclarationContext) {
 		}
 	}()
 
-	p.SetState(102)
+	p.SetState(110)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 4, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(72)
+			p.SetState(80)
 			p.Match(RustLET)
 		}
 		{
-			p.SetState(73)
+			p.SetState(81)
 			p.Match(RustMUT)
 		}
 		{
-			p.SetState(74)
+			p.SetState(82)
 			p.Match(RustID)
 		}
 		{
-			p.SetState(75)
+			p.SetState(83)
 			p.Match(RustD_PTS)
 		}
 		{
-			p.SetState(76)
+			p.SetState(84)
 			p.Types()
 		}
 		{
-			p.SetState(77)
+			p.SetState(85)
 			p.Match(RustIGUAL)
 		}
 		{
-			p.SetState(78)
+			p.SetState(86)
 			p.Expression()
 		}
 		{
-			p.SetState(79)
+			p.SetState(87)
 			p.Match(RustPYC)
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(81)
-			p.Match(RustLET)
-		}
-		{
-			p.SetState(82)
-			p.Match(RustMUT)
-		}
-		{
-			p.SetState(83)
-			p.Match(RustID)
-		}
-		{
-			p.SetState(84)
-			p.Match(RustIGUAL)
-		}
-		{
-			p.SetState(85)
-			p.Expression()
-		}
-		{
-			p.SetState(86)
-			p.Match(RustPYC)
-		}
-
-	case 3:
-		p.EnterOuterAlt(localctx, 3)
-		{
-			p.SetState(88)
-			p.Match(RustLET)
-		}
-		{
 			p.SetState(89)
-			p.Match(RustID)
+			p.Match(RustLET)
 		}
 		{
 			p.SetState(90)
-			p.Match(RustD_PTS)
+			p.Match(RustMUT)
 		}
 		{
 			p.SetState(91)
-			p.Types()
+			p.Match(RustID)
 		}
 		{
 			p.SetState(92)
@@ -1283,8 +1425,8 @@ func (p *Rust) Declaration() (localctx IDeclarationContext) {
 			p.Match(RustPYC)
 		}
 
-	case 4:
-		p.EnterOuterAlt(localctx, 4)
+	case 3:
+		p.EnterOuterAlt(localctx, 3)
 		{
 			p.SetState(96)
 			p.Match(RustLET)
@@ -1295,14 +1437,45 @@ func (p *Rust) Declaration() (localctx IDeclarationContext) {
 		}
 		{
 			p.SetState(98)
-			p.Match(RustIGUAL)
+			p.Match(RustD_PTS)
 		}
 		{
 			p.SetState(99)
-			p.Expression()
+			p.Types()
 		}
 		{
 			p.SetState(100)
+			p.Match(RustIGUAL)
+		}
+		{
+			p.SetState(101)
+			p.Expression()
+		}
+		{
+			p.SetState(102)
+			p.Match(RustPYC)
+		}
+
+	case 4:
+		p.EnterOuterAlt(localctx, 4)
+		{
+			p.SetState(104)
+			p.Match(RustLET)
+		}
+		{
+			p.SetState(105)
+			p.Match(RustID)
+		}
+		{
+			p.SetState(106)
+			p.Match(RustIGUAL)
+		}
+		{
+			p.SetState(107)
+			p.Expression()
+		}
+		{
+			p.SetState(108)
 			p.Match(RustPYC)
 		}
 
@@ -1415,7 +1588,7 @@ func (s *FunctionContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *Rust) Function() (localctx IFunctionContext) {
 	localctx = NewFunctionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 12, RustRULE_function)
+	p.EnterRule(localctx, 14, RustRULE_function)
 
 	defer func() {
 		p.ExitRule()
@@ -1435,35 +1608,35 @@ func (p *Rust) Function() (localctx IFunctionContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(104)
+		p.SetState(112)
 		p.Match(RustFUNC)
 	}
 	{
-		p.SetState(105)
+		p.SetState(113)
 		p.Match(RustID)
 	}
 	{
-		p.SetState(106)
+		p.SetState(114)
 		p.Match(RustPARIZQ)
 	}
 	{
-		p.SetState(107)
+		p.SetState(115)
 		p.listParams(0)
 	}
 	{
-		p.SetState(108)
+		p.SetState(116)
 		p.Match(RustPARDER)
 	}
 	{
-		p.SetState(109)
+		p.SetState(117)
 		p.Match(RustLLAVEIZQ)
 	}
 	{
-		p.SetState(110)
+		p.SetState(118)
 		p.Instructions()
 	}
 	{
-		p.SetState(111)
+		p.SetState(119)
 		p.Match(RustLLAVEDER)
 	}
 
@@ -1546,7 +1719,7 @@ func (s *ModuleContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *Rust) Module() (localctx IModuleContext) {
 	localctx = NewModuleContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 14, RustRULE_module)
+	p.EnterRule(localctx, 16, RustRULE_module)
 
 	defer func() {
 		p.ExitRule()
@@ -1566,19 +1739,19 @@ func (p *Rust) Module() (localctx IModuleContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(113)
+		p.SetState(121)
 		p.Match(RustMODULE)
 	}
 	{
-		p.SetState(114)
+		p.SetState(122)
 		p.Match(RustID)
 	}
 	{
-		p.SetState(115)
+		p.SetState(123)
 		p.Match(RustLLAVEIZQ)
 	}
 	{
-		p.SetState(116)
+		p.SetState(124)
 		p.Match(RustLLAVEDER)
 	}
 
@@ -1673,7 +1846,7 @@ func (s *TypesContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *Rust) Types() (localctx ITypesContext) {
 	localctx = NewTypesContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 16, RustRULE_types)
+	p.EnterRule(localctx, 18, RustRULE_types)
 	var _la int
 
 	defer func() {
@@ -1694,7 +1867,7 @@ func (p *Rust) Types() (localctx ITypesContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(118)
+		p.SetState(126)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<RustINT)|(1<<RustFLOAT)|(1<<RustBOOL)|(1<<RustCHAR)|(1<<RustSTR1)|(1<<RustVECTOR)|(1<<RustSTRUCT))) != 0) {
@@ -1715,6 +1888,18 @@ type IListParamsContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// GetList returns the list rule contexts.
+	GetList() IListParamsContext
+
+	// Get_expression returns the _expression rule contexts.
+	Get_expression() IExpressionContext
+
+	// SetList sets the list rule contexts.
+	SetList(IListParamsContext)
+
+	// Set_expression sets the _expression rule contexts.
+	Set_expression(IExpressionContext)
+
 	// GetL returns the l attribute.
 	GetL() *arrayList.List
 
@@ -1727,8 +1912,10 @@ type IListParamsContext interface {
 
 type ListParamsContext struct {
 	*antlr.BaseParserRuleContext
-	parser antlr.Parser
-	l      *arrayList.List
+	parser      antlr.Parser
+	l           *arrayList.List
+	list        IListParamsContext
+	_expression IExpressionContext
 }
 
 func NewEmptyListParamsContext() *ListParamsContext {
@@ -1753,6 +1940,14 @@ func NewListParamsContext(parser antlr.Parser, parent antlr.ParserRuleContext, i
 
 func (s *ListParamsContext) GetParser() antlr.Parser { return s.parser }
 
+func (s *ListParamsContext) GetList() IListParamsContext { return s.list }
+
+func (s *ListParamsContext) Get_expression() IExpressionContext { return s._expression }
+
+func (s *ListParamsContext) SetList(v IListParamsContext) { s.list = v }
+
+func (s *ListParamsContext) Set_expression(v IExpressionContext) { s._expression = v }
+
 func (s *ListParamsContext) GetL() *arrayList.List { return s.l }
 
 func (s *ListParamsContext) SetL(v *arrayList.List) { s.l = v }
@@ -1767,6 +1962,10 @@ func (s *ListParamsContext) Expression() IExpressionContext {
 	return t.(IExpressionContext)
 }
 
+func (s *ListParamsContext) COMA() antlr.TerminalNode {
+	return s.GetToken(RustCOMA, 0)
+}
+
 func (s *ListParamsContext) ListParams() IListParamsContext {
 	var t = s.GetTypedRuleContext(reflect.TypeOf((*IListParamsContext)(nil)).Elem(), 0)
 
@@ -1775,10 +1974,6 @@ func (s *ListParamsContext) ListParams() IListParamsContext {
 	}
 
 	return t.(IListParamsContext)
-}
-
-func (s *ListParamsContext) COMA() antlr.TerminalNode {
-	return s.GetToken(RustCOMA, 0)
 }
 
 func (s *ListParamsContext) GetRuleContext() antlr.RuleContext {
@@ -1811,8 +2006,8 @@ func (p *Rust) listParams(_p int) (localctx IListParamsContext) {
 	localctx = NewListParamsContext(p, p.GetParserRuleContext(), _parentState)
 	var _prevctx IListParamsContext = localctx
 	var _ antlr.ParserRuleContext = _prevctx // TODO: To prevent unused variable warning.
-	_startState := 18
-	p.EnterRecursionRule(localctx, 18, RustRULE_listParams, _p)
+	_startState := 20
+	p.EnterRecursionRule(localctx, 20, RustRULE_listParams, _p)
 
 	defer func() {
 		p.UnrollRecursionContexts(_parentctx)
@@ -1834,12 +2029,18 @@ func (p *Rust) listParams(_p int) (localctx IListParamsContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(121)
-		p.Expression()
+		p.SetState(129)
+
+		var _x = p.Expression()
+
+		localctx.(*ListParamsContext)._expression = _x
 	}
 
+	localctx.(*ListParamsContext).l = arrayList.New()
+	localctx.(*ListParamsContext).l.Add(localctx.(*ListParamsContext).Get_expression().GetP())
+
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(131)
+	p.SetState(139)
 	p.GetErrorHandler().Sync(p)
 	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 5, p.GetParserRuleContext())
 
@@ -1850,23 +2051,30 @@ func (p *Rust) listParams(_p int) (localctx IListParamsContext) {
 			}
 			_prevctx = localctx
 			localctx = NewListParamsContext(p, _parentctx, _parentState)
+			localctx.(*ListParamsContext).list = _prevctx
 			p.PushNewRecursionContext(localctx, _startState, RustRULE_listParams)
-			p.SetState(124)
+			p.SetState(132)
 
 			if !(p.Precpred(p.GetParserRuleContext(), 2)) {
 				panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 2)", ""))
 			}
 			{
-				p.SetState(125)
+				p.SetState(133)
 				p.Match(RustCOMA)
 			}
 			{
-				p.SetState(126)
-				p.Expression()
+				p.SetState(134)
+
+				var _x = p.Expression()
+
+				localctx.(*ListParamsContext)._expression = _x
 			}
 
+			localctx.(*ListParamsContext).GetList().GetL().Add(localctx.(*ListParamsContext).Get_expression().GetP())
+			localctx.(*ListParamsContext).l = localctx.(*ListParamsContext).GetList().GetL()
+
 		}
-		p.SetState(133)
+		p.SetState(141)
 		p.GetErrorHandler().Sync(p)
 		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 5, p.GetParserRuleContext())
 	}
@@ -1966,7 +2174,7 @@ func (s *ExpressionContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *Rust) Expression() (localctx IExpressionContext) {
 	localctx = NewExpressionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 20, RustRULE_expression)
+	p.EnterRule(localctx, 22, RustRULE_expression)
 
 	defer func() {
 		p.ExitRule()
@@ -1986,7 +2194,7 @@ func (p *Rust) Expression() (localctx IExpressionContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(134)
+		p.SetState(142)
 
 		var _x = p.expr_arit(0)
 
@@ -2232,8 +2440,8 @@ func (p *Rust) expr_arit(_p int) (localctx IExpr_aritContext) {
 	localctx = NewExpr_aritContext(p, p.GetParserRuleContext(), _parentState)
 	var _prevctx IExpr_aritContext = localctx
 	var _ antlr.ParserRuleContext = _prevctx // TODO: To prevent unused variable warning.
-	_startState := 22
-	p.EnterRecursionRule(localctx, 22, RustRULE_expr_arit, _p)
+	_startState := 24
+	p.EnterRecursionRule(localctx, 24, RustRULE_expr_arit, _p)
 	var _la int
 
 	defer func() {
@@ -2255,45 +2463,45 @@ func (p *Rust) expr_arit(_p int) (localctx IExpr_aritContext) {
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(150)
+	p.SetState(158)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case RustCORIZQ:
 		{
-			p.SetState(138)
+			p.SetState(146)
 			p.Match(RustCORIZQ)
 		}
 		{
-			p.SetState(139)
+			p.SetState(147)
 			p.listParams(0)
 		}
 		{
-			p.SetState(140)
+			p.SetState(148)
 			p.Match(RustCORDER)
 		}
 
 	case RustPARIZQ:
 		{
-			p.SetState(142)
+			p.SetState(150)
 			p.Match(RustPARIZQ)
 		}
 		{
-			p.SetState(143)
+			p.SetState(151)
 
 			var _x = p.Expression()
 
 			localctx.(*Expr_aritContext)._expression = _x
 		}
 		{
-			p.SetState(144)
+			p.SetState(152)
 			p.Match(RustPARDER)
 		}
 		localctx.(*Expr_aritContext).p = localctx.(*Expr_aritContext).Get_expression().GetP()
 
 	case RustNUMBER, RustSTRING:
 		{
-			p.SetState(147)
+			p.SetState(155)
 
 			var _x = p.Primitive()
 
@@ -2305,7 +2513,7 @@ func (p *Rust) expr_arit(_p int) (localctx IExpr_aritContext) {
 		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(169)
+	p.SetState(177)
 	p.GetErrorHandler().Sync(p)
 	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 8, p.GetParserRuleContext())
 
@@ -2315,20 +2523,20 @@ func (p *Rust) expr_arit(_p int) (localctx IExpr_aritContext) {
 				p.TriggerExitRuleEvent()
 			}
 			_prevctx = localctx
-			p.SetState(167)
+			p.SetState(175)
 			p.GetErrorHandler().Sync(p)
 			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 7, p.GetParserRuleContext()) {
 			case 1:
 				localctx = NewExpr_aritContext(p, _parentctx, _parentState)
 				localctx.(*Expr_aritContext).opIz = _prevctx
 				p.PushNewRecursionContext(localctx, _startState, RustRULE_expr_arit)
-				p.SetState(152)
+				p.SetState(160)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 6)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 6)", ""))
 				}
 				{
-					p.SetState(153)
+					p.SetState(161)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -2346,7 +2554,7 @@ func (p *Rust) expr_arit(_p int) (localctx IExpr_aritContext) {
 					}
 				}
 				{
-					p.SetState(154)
+					p.SetState(162)
 
 					var _x = p.expr_arit(7)
 
@@ -2364,13 +2572,13 @@ func (p *Rust) expr_arit(_p int) (localctx IExpr_aritContext) {
 				localctx = NewExpr_aritContext(p, _parentctx, _parentState)
 				localctx.(*Expr_aritContext).opIz = _prevctx
 				p.PushNewRecursionContext(localctx, _startState, RustRULE_expr_arit)
-				p.SetState(157)
+				p.SetState(165)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 5)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 5)", ""))
 				}
 				{
-					p.SetState(158)
+					p.SetState(166)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -2388,7 +2596,7 @@ func (p *Rust) expr_arit(_p int) (localctx IExpr_aritContext) {
 					}
 				}
 				{
-					p.SetState(159)
+					p.SetState(167)
 
 					var _x = p.expr_arit(6)
 
@@ -2406,13 +2614,13 @@ func (p *Rust) expr_arit(_p int) (localctx IExpr_aritContext) {
 				localctx = NewExpr_aritContext(p, _parentctx, _parentState)
 				localctx.(*Expr_aritContext).opIz = _prevctx
 				p.PushNewRecursionContext(localctx, _startState, RustRULE_expr_arit)
-				p.SetState(162)
+				p.SetState(170)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 4)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 4)", ""))
 				}
 				{
-					p.SetState(163)
+					p.SetState(171)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -2430,7 +2638,7 @@ func (p *Rust) expr_arit(_p int) (localctx IExpr_aritContext) {
 					}
 				}
 				{
-					p.SetState(164)
+					p.SetState(172)
 
 					var _x = p.expr_arit(5)
 
@@ -2447,7 +2655,7 @@ func (p *Rust) expr_arit(_p int) (localctx IExpr_aritContext) {
 			}
 
 		}
-		p.SetState(171)
+		p.SetState(179)
 		p.GetErrorHandler().Sync(p)
 		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 8, p.GetParserRuleContext())
 	}
@@ -2465,8 +2673,14 @@ type IPrimitiveContext interface {
 	// Get_NUMBER returns the _NUMBER token.
 	Get_NUMBER() antlr.Token
 
+	// Get_STRING returns the _STRING token.
+	Get_STRING() antlr.Token
+
 	// Set_NUMBER sets the _NUMBER token.
 	Set_NUMBER(antlr.Token)
+
+	// Set_STRING sets the _STRING token.
+	Set_STRING(antlr.Token)
 
 	// GetP returns the p attribute.
 	GetP() interfaces.Expression
@@ -2483,6 +2697,7 @@ type PrimitiveContext struct {
 	parser  antlr.Parser
 	p       interfaces.Expression
 	_NUMBER antlr.Token
+	_STRING antlr.Token
 }
 
 func NewEmptyPrimitiveContext() *PrimitiveContext {
@@ -2509,7 +2724,11 @@ func (s *PrimitiveContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *PrimitiveContext) Get_NUMBER() antlr.Token { return s._NUMBER }
 
+func (s *PrimitiveContext) Get_STRING() antlr.Token { return s._STRING }
+
 func (s *PrimitiveContext) Set_NUMBER(v antlr.Token) { s._NUMBER = v }
+
+func (s *PrimitiveContext) Set_STRING(v antlr.Token) { s._STRING = v }
 
 func (s *PrimitiveContext) GetP() interfaces.Expression { return s.p }
 
@@ -2545,7 +2764,7 @@ func (s *PrimitiveContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *Rust) Primitive() (localctx IPrimitiveContext) {
 	localctx = NewPrimitiveContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 24, RustRULE_primitive)
+	p.EnterRule(localctx, 26, RustRULE_primitive)
 
 	defer func() {
 		p.ExitRule()
@@ -2563,14 +2782,14 @@ func (p *Rust) Primitive() (localctx IPrimitiveContext) {
 		}
 	}()
 
-	p.SetState(175)
+	p.SetState(184)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case RustNUMBER:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(172)
+			p.SetState(180)
 
 			var _m = p.Match(RustNUMBER)
 
@@ -2612,9 +2831,21 @@ func (p *Rust) Primitive() (localctx IPrimitiveContext) {
 	case RustSTRING:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(174)
-			p.Match(RustSTRING)
+			p.SetState(182)
+
+			var _m = p.Match(RustSTRING)
+
+			localctx.(*PrimitiveContext)._STRING = _m
 		}
+
+		str := (func() string {
+			if localctx.(*PrimitiveContext).Get_STRING() == nil {
+				return ""
+			} else {
+				return localctx.(*PrimitiveContext).Get_STRING().GetText()
+			}
+		}())
+		localctx.(*PrimitiveContext).p = expressions.NewPrimitive(0, 0, str[1:len(str)-1], environment.STRING)
 
 	default:
 		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
@@ -2625,14 +2856,14 @@ func (p *Rust) Primitive() (localctx IPrimitiveContext) {
 
 func (p *Rust) Sempred(localctx antlr.RuleContext, ruleIndex, predIndex int) bool {
 	switch ruleIndex {
-	case 9:
+	case 10:
 		var t *ListParamsContext = nil
 		if localctx != nil {
 			t = localctx.(*ListParamsContext)
 		}
 		return p.ListParams_Sempred(t, predIndex)
 
-	case 11:
+	case 12:
 		var t *Expr_aritContext = nil
 		if localctx != nil {
 			t = localctx.(*Expr_aritContext)

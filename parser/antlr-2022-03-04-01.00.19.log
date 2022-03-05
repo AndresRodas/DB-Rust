@@ -1,0 +1,442 @@
+2022-03-04 01:00:18:967 grammar LogManager.java:25 before: (PARSER_GRAMMAR Rust (OPTIONS (= tokenVocab RustLexer)) (@ header {
+    import arrayList "github.com/colegno/arraylist"
+    import "OLC2/interfaces"
+    import "OLC2/expressions"
+    import "OLC2/instructions"
+    import "OLC2/environment"
+    import "strings"
+}) (RULES (RULE start (returns environment.AST ast) (BLOCK (ALT (* (BLOCK (ALT (+= e global_env)))) main (* (BLOCK (ALT (+= e global_env)))) {
+        global := arrayList.New()
+        listInt := localctx.(*StartContext).GetE()
+        for _, e := range listInt {
+            global.Add(e.GetHi())
+        }
+        $ast = environment.NewAST($main.mainInst, global)
+    }))) (RULE global_env (returns string hi) (BLOCK (ALT declaration {$hi = "declaration"}) (ALT function {$hi = "function"}) (ALT module {$hi = "module"}))) (RULE main (returns *arrayList.List mainInst) (BLOCK (ALT FUNC MAIN PARIZQ PARDER LLAVEIZQ instructions LLAVEDER { $mainInst = $instructions.insts }))) (RULE instructions (returns *arrayList.List insts) (@ init {
+    $insts = arrayList.New()
+  }) (BLOCK (ALT (+ (BLOCK (ALT (+= e instruction)))) {
+        listInt := localctx.(*InstructionsContext).GetE()
+        for _, e := range listInt {
+            $insts.Add(e.GetInst())
+        }
+    }))) (RULE instruction (returns interfaces.Instruction inst) (BLOCK (ALT println PYC { $inst = $println.pr }))) (RULE println (returns interfaces.Instruction pr) (BLOCK (ALT PRINT PARIZQ listParams PARDER PYC { $pr = instructions.NewPrint(0,0,$listParams.l) }))) (RULE declaration (returns ) (BLOCK (ALT LET MUT ID D_PTS types IGUAL expression PYC) (ALT LET MUT ID IGUAL expression PYC) (ALT LET ID D_PTS types IGUAL expression PYC) (ALT LET ID IGUAL expression PYC))) (RULE function (returns ) (BLOCK (ALT FUNC ID PARIZQ listParams PARDER LLAVEIZQ instructions LLAVEDER))) (RULE module (returns ) (BLOCK (ALT MODULE ID LLAVEIZQ LLAVEDER))) (RULE types (returns ) (BLOCK (ALT INT) (ALT FLOAT) (ALT BOOL) (ALT CHAR) (ALT STR1) (ALT VECTOR) (ALT STRUCT))) (RULE listParams (returns *arrayList.List l) (BLOCK (ALT (= list listParams) COMA expression {
+                                        $list.l.Add($expression.p)
+                                        $l = $list.l
+                                     }) (ALT expression {
+                $l = arrayList.New()
+                $l.Add($expression.p)
+             }))) (RULE expression (returns interfaces.Expression p) (BLOCK (ALT expr_arit { $p = $expr_arit.p }))) (RULE expr_arit (returns interfaces.Expression p) (BLOCK (ALT (= opIz expr_arit) (= op (BLOCK (ALT MUL) (ALT DIV))) (= opDe expr_arit) {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}) (ALT (= opIz expr_arit) (= op (BLOCK (ALT ADD) (ALT SUB))) (= opDe expr_arit) {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}) (ALT (= opIz expr_arit) (= op (BLOCK (ALT MENOR) (ALT MENORIGUAL) (ALT MAYORIGUAL) (ALT MAYOR))) (= opDe expr_arit) {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}) (ALT CORIZQ listParams CORDER) (ALT PARIZQ expression PARDER { $p = $expression.p }) (ALT primitive { $p = $primitive.p }))) (RULE primitive (returns interfaces.Expression p) (BLOCK (ALT NUMBER {
+            if (strings.Contains($NUMBER.text,".")){
+            num,err := strconv.ParseFloat($NUMBER.text, 64);
+            if err!= nil{
+                fmt.Println(err)
+            }
+            $p = expressions.NewPrimitive(0,0,num,environment.FLOAT)
+            }else{
+            num,err := strconv.Atoi($NUMBER.text)
+            if err!= nil{
+                fmt.Println(err)
+            }
+            $p = expressions.NewPrimitive(0,0,num,environment.INTEGER)
+            }
+        }) (ALT STRING)))))
+2022-03-04 01:00:18:983 grammar LogManager.java:25 after: (PARSER_GRAMMAR Rust (OPTIONS (= tokenVocab RustLexer)) (@ header {
+    import arrayList "github.com/colegno/arraylist"
+    import "OLC2/interfaces"
+    import "OLC2/expressions"
+    import "OLC2/instructions"
+    import "OLC2/environment"
+    import "strings"
+}) (RULES (RULE start (returns environment.AST ast) (BLOCK (ALT (* (BLOCK (ALT (+= e global_env)))) main (* (BLOCK (ALT (+= e global_env)))) {
+        global := arrayList.New()
+        listInt := localctx.(*StartContext).GetE()
+        for _, e := range listInt {
+            global.Add(e.GetHi())
+        }
+        $ast = environment.NewAST($main.mainInst, global)
+    }))) (RULE global_env (returns string hi) (BLOCK (ALT declaration {$hi = "declaration"}) (ALT function {$hi = "function"}) (ALT module {$hi = "module"}))) (RULE main (returns *arrayList.List mainInst) (BLOCK (ALT FUNC MAIN PARIZQ PARDER LLAVEIZQ instructions LLAVEDER { $mainInst = $instructions.insts }))) (RULE instructions (returns *arrayList.List insts) (@ init {
+    $insts = arrayList.New()
+  }) (BLOCK (ALT (+ (BLOCK (ALT (+= e instruction)))) {
+        listInt := localctx.(*InstructionsContext).GetE()
+        for _, e := range listInt {
+            $insts.Add(e.GetInst())
+        }
+    }))) (RULE instruction (returns interfaces.Instruction inst) (BLOCK (ALT println PYC { $inst = $println.pr }))) (RULE println (returns interfaces.Instruction pr) (BLOCK (ALT PRINT PARIZQ listParams PARDER PYC { $pr = instructions.NewPrint(0,0,$listParams.l) }))) (RULE declaration (returns ) (BLOCK (ALT LET MUT ID D_PTS types IGUAL expression PYC) (ALT LET MUT ID IGUAL expression PYC) (ALT LET ID D_PTS types IGUAL expression PYC) (ALT LET ID IGUAL expression PYC))) (RULE function (returns ) (BLOCK (ALT FUNC ID PARIZQ listParams PARDER LLAVEIZQ instructions LLAVEDER))) (RULE module (returns ) (BLOCK (ALT MODULE ID LLAVEIZQ LLAVEDER))) (RULE types (returns ) (BLOCK (ALT (SET INT FLOAT BOOL CHAR STR1 VECTOR STRUCT)))) (RULE listParams (returns *arrayList.List l) (BLOCK (ALT (= list listParams) COMA expression {
+                                        $list.l.Add($expression.p)
+                                        $l = $list.l
+                                     }) (ALT expression {
+                $l = arrayList.New()
+                $l.Add($expression.p)
+             }))) (RULE expression (returns interfaces.Expression p) (BLOCK (ALT expr_arit { $p = $expr_arit.p }))) (RULE expr_arit (returns interfaces.Expression p) (BLOCK (ALT (= opIz expr_arit) (= op (SET MUL DIV)) (= opDe expr_arit) {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}) (ALT (= opIz expr_arit) (= op (SET ADD SUB)) (= opDe expr_arit) {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}) (ALT (= opIz expr_arit) (= op (SET MENOR MENORIGUAL MAYORIGUAL MAYOR)) (= opDe expr_arit) {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}) (ALT CORIZQ listParams CORDER) (ALT PARIZQ expression PARDER { $p = $expression.p }) (ALT primitive { $p = $primitive.p }))) (RULE primitive (returns interfaces.Expression p) (BLOCK (ALT NUMBER {
+            if (strings.Contains($NUMBER.text,".")){
+            num,err := strconv.ParseFloat($NUMBER.text, 64);
+            if err!= nil{
+                fmt.Println(err)
+            }
+            $p = expressions.NewPrimitive(0,0,num,environment.FLOAT)
+            }else{
+            num,err := strconv.Atoi($NUMBER.text)
+            if err!= nil{
+                fmt.Println(err)
+            }
+            $p = expressions.NewPrimitive(0,0,num,environment.INTEGER)
+            }
+        }) (ALT STRING)))))
+2022-03-04 01:00:19:166 left-recursion LogManager.java:25 listParams returns [*arrayList.List l]
+    :   ( {} expression<tokenIndex=321> {
+                $l = arrayList.New()
+                $l.Add($expression.p)
+             } 
+        )
+        (
+          {p.Precpred(p.GetParserRuleContext(), 2)}?<p=2> COMA<tokenIndex=313> expression<tokenIndex=315>   {
+                                                  $list.l.Add($expression.p)
+                                                  $l = $list.l
+                                               }
+        )*
+    ;
+2022-03-04 01:00:19:170 grammar LogManager.java:25 added: (RULE listParams (returns *arrayList.List l) (BLOCK (ALT (BLOCK (ALT {} (expression (ELEMENT_OPTIONS (= tokenIndex 321))) {
+                $l = arrayList.New()
+                $l.Add($expression.p)
+             })) (* (BLOCK (ALT ({p.Precpred(p.GetParserRuleContext(), 2)}? (ELEMENT_OPTIONS (= p 2))) (COMA (ELEMENT_OPTIONS (= tokenIndex 313))) (expression (ELEMENT_OPTIONS (= tokenIndex 315))) {
+                                                  $list.l.Add($expression.p)
+                                                  $l = $list.l
+                                               }))))))
+2022-03-04 01:00:19:238 left-recursion LogManager.java:25 expr_arit returns [interfaces.Expression p]
+    :   ( {} CORIZQ<tokenIndex=411> listParams<tokenIndex=413> CORDER<tokenIndex=415> 
+        | PARIZQ<tokenIndex=419> expression<tokenIndex=421> PARDER<tokenIndex=423> { $p = $expression.p } 
+        | primitive<tokenIndex=429> { $p = $primitive.p } 
+        )
+        (
+          {p.Precpred(p.GetParserRuleContext(), 6)}?<p=6> op=(MUL<tokenIndex=354>|DIV<tokenIndex=356>) opDe=expr_arit<tokenIndex=361,p=7> {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}
+                  | {p.Precpred(p.GetParserRuleContext(), 5)}?<p=5> op=(ADD<tokenIndex=374>|SUB<tokenIndex=376>) opDe=expr_arit<tokenIndex=381,p=6> {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}
+                  | {p.Precpred(p.GetParserRuleContext(), 4)}?<p=4> op=(MENOR<tokenIndex=394>|MENORIGUAL<tokenIndex=396>|MAYORIGUAL<tokenIndex=398>|MAYOR<tokenIndex=400>) opDe=expr_arit<tokenIndex=405,p=5> {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}
+        )*
+    ;
+2022-03-04 01:00:19:242 grammar LogManager.java:25 added: (RULE expr_arit (returns interfaces.Expression p) (BLOCK (ALT (BLOCK (ALT {} (CORIZQ (ELEMENT_OPTIONS (= tokenIndex 411))) (listParams (ELEMENT_OPTIONS (= tokenIndex 413))) (CORDER (ELEMENT_OPTIONS (= tokenIndex 415)))) (ALT (PARIZQ (ELEMENT_OPTIONS (= tokenIndex 419))) (expression (ELEMENT_OPTIONS (= tokenIndex 421))) (PARDER (ELEMENT_OPTIONS (= tokenIndex 423))) { $p = $expression.p }) (ALT (primitive (ELEMENT_OPTIONS (= tokenIndex 429))) { $p = $primitive.p })) (* (BLOCK (ALT ({p.Precpred(p.GetParserRuleContext(), 6)}? (ELEMENT_OPTIONS (= p 6))) (= op (SET (MUL (ELEMENT_OPTIONS (= tokenIndex 354))) (DIV (ELEMENT_OPTIONS (= tokenIndex 356))))) (= opDe (expr_arit (ELEMENT_OPTIONS (= tokenIndex 361) (= p 7)))) {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}) (ALT ({p.Precpred(p.GetParserRuleContext(), 5)}? (ELEMENT_OPTIONS (= p 5))) (= op (SET (ADD (ELEMENT_OPTIONS (= tokenIndex 374))) (SUB (ELEMENT_OPTIONS (= tokenIndex 376))))) (= opDe (expr_arit (ELEMENT_OPTIONS (= tokenIndex 381) (= p 6)))) {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}) (ALT ({p.Precpred(p.GetParserRuleContext(), 4)}? (ELEMENT_OPTIONS (= p 4))) (= op (SET (MENOR (ELEMENT_OPTIONS (= tokenIndex 394))) (MENORIGUAL (ELEMENT_OPTIONS (= tokenIndex 396))) (MAYORIGUAL (ELEMENT_OPTIONS (= tokenIndex 398))) (MAYOR (ELEMENT_OPTIONS (= tokenIndex 400))))) (= opDe (expr_arit (ELEMENT_OPTIONS (= tokenIndex 405) (= p 5)))) {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}))))))
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import INT=1
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import FLOAT=2
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import BOOL=3
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import CHAR=4
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import STR1=5
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import STR2=6
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import USIZE=7
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import VECTOR=8
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import STRUCT=9
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import POW=10
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import PRINT=11
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import LET=12
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import MUT=13
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import FUNC=14
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import ARROW1=15
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import ARROW2=16
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import ABS=17
+2022-03-04 01:00:19:258 grammar LogManager.java:25 import SQRT=18
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import TOSTR=19
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import CLONE=20
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import NEW=21
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import LEN=22
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import PUSH=23
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import REMOVE=24
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import CONTAINS=25
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import INSERT=26
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import CAPACITY=27
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import WCAPACITY=28
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import MAIN=29
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import IF=30
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import MATCH=31
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import LOOP=32
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import WHILE=33
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import FOR=34
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import IN=35
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import BREAK=36
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import CONTINUE=37
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import RETURN=38
+2022-03-04 01:00:19:259 grammar LogManager.java:25 import MODULE=39
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import PUB=40
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import NUMBER=41
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import STRING=42
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import ID=43
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import PUNTO=44
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import C_PTS=45
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import D_PTS=46
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import PYC=47
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import COMA=48
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import DIFERENTE=49
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import IG_IG=50
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import NOT=51
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import OR=52
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import AND=53
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import IGUAL=54
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import MAYORIGUAL=55
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import MENORIGUAL=56
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import MAYOR=57
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import MENOR=58
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import MUL=59
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import DIV=60
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import ADD=61
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import SUB=62
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import MOD=63
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import PARIZQ=64
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import PARDER=65
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import LLAVEIZQ=66
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import LLAVEDER=67
+2022-03-04 01:00:19:260 grammar LogManager.java:25 import CORIZQ=68
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import CORDER=69
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import WHITESPACE=70
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import COMMENT=71
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import LINE_COMMENT=72
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'i64'=1
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'f64'=2
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'bool'=3
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'char'=4
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'String'=5
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import '&str'=6
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'usize'=7
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'vec'=8
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'struct'=9
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'pow'=10
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'println!'=11
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'let'=12
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'mut'=13
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'fn'=14
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import '->'=15
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import '=>'=16
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'abs'=17
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'sqrt'=18
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'to_string'=19
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'clone'=20
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'new'=21
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'len'=22
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'push'=23
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'remove'=24
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'contains'=25
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'insert'=26
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'capacity'=27
+2022-03-04 01:00:19:261 grammar LogManager.java:25 import 'with_capacity'=28
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import 'main'=29
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import 'if'=30
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import 'match'=31
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import 'loop'=32
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import 'while'=33
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import 'for'=34
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import 'in'=35
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import 'break'=36
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import 'continue'=37
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import 'return'=38
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import 'mod'=39
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import 'pub'=40
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '.'=44
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '::'=45
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import ':'=46
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import ';'=47
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import ','=48
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '!='=49
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '=='=50
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '!'=51
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '||'=52
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '&&'=53
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '='=54
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '>='=55
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '<='=56
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '>'=57
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '<'=58
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '*'=59
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '/'=60
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '+'=61
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '-'=62
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '%'=63
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '('=64
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import ')'=65
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '{'=66
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '}'=67
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import '['=68
+2022-03-04 01:00:19:262 grammar LogManager.java:25 import ']'=69
+2022-03-04 01:00:19:263 grammar LogManager.java:25 tokens={INT=1, FLOAT=2, BOOL=3, CHAR=4, STR1=5, STR2=6, USIZE=7, VECTOR=8, STRUCT=9, POW=10, PRINT=11, LET=12, MUT=13, FUNC=14, ARROW1=15, ARROW2=16, ABS=17, SQRT=18, TOSTR=19, CLONE=20, NEW=21, LEN=22, PUSH=23, REMOVE=24, CONTAINS=25, INSERT=26, CAPACITY=27, WCAPACITY=28, MAIN=29, IF=30, MATCH=31, LOOP=32, WHILE=33, FOR=34, IN=35, BREAK=36, CONTINUE=37, RETURN=38, MODULE=39, PUB=40, NUMBER=41, STRING=42, ID=43, PUNTO=44, C_PTS=45, D_PTS=46, PYC=47, COMA=48, DIFERENTE=49, IG_IG=50, NOT=51, OR=52, AND=53, IGUAL=54, MAYORIGUAL=55, MENORIGUAL=56, MAYOR=57, MENOR=58, MUL=59, DIV=60, ADD=61, SUB=62, MOD=63, PARIZQ=64, PARDER=65, LLAVEIZQ=66, LLAVEDER=67, CORIZQ=68, CORDER=69, WHITESPACE=70, COMMENT=71, LINE_COMMENT=72, 'i64'=1, 'f64'=2, 'bool'=3, 'char'=4, 'String'=5, '&str'=6, 'usize'=7, 'vec'=8, 'struct'=9, 'pow'=10, 'println!'=11, 'let'=12, 'mut'=13, 'fn'=14, '->'=15, '=>'=16, 'abs'=17, 'sqrt'=18, 'to_string'=19, 'clone'=20, 'new'=21, 'len'=22, 'push'=23, 'remove'=24, 'contains'=25, 'insert'=26, 'capacity'=27, 'with_capacity'=28, 'main'=29, 'if'=30, 'match'=31, 'loop'=32, 'while'=33, 'for'=34, 'in'=35, 'break'=36, 'continue'=37, 'return'=38, 'mod'=39, 'pub'=40, '.'=44, '::'=45, ':'=46, ';'=47, ','=48, '!='=49, '=='=50, '!'=51, '||'=52, '&&'=53, '='=54, '>='=55, '<='=56, '>'=57, '<'=58, '*'=59, '/'=60, '+'=61, '-'=62, '%'=63, '('=64, ')'=65, '{'=66, '}'=67, '['=68, ']'=69}
+2022-03-04 01:00:19:263 semantics LogManager.java:25 tokens={EOF=-1, INT=1, FLOAT=2, BOOL=3, CHAR=4, STR1=5, STR2=6, USIZE=7, VECTOR=8, STRUCT=9, POW=10, PRINT=11, LET=12, MUT=13, FUNC=14, ARROW1=15, ARROW2=16, ABS=17, SQRT=18, TOSTR=19, CLONE=20, NEW=21, LEN=22, PUSH=23, REMOVE=24, CONTAINS=25, INSERT=26, CAPACITY=27, WCAPACITY=28, MAIN=29, IF=30, MATCH=31, LOOP=32, WHILE=33, FOR=34, IN=35, BREAK=36, CONTINUE=37, RETURN=38, MODULE=39, PUB=40, NUMBER=41, STRING=42, ID=43, PUNTO=44, C_PTS=45, D_PTS=46, PYC=47, COMA=48, DIFERENTE=49, IG_IG=50, NOT=51, OR=52, AND=53, IGUAL=54, MAYORIGUAL=55, MENORIGUAL=56, MAYOR=57, MENOR=58, MUL=59, DIV=60, ADD=61, SUB=62, MOD=63, PARIZQ=64, PARDER=65, LLAVEIZQ=66, LLAVEDER=67, CORIZQ=68, CORDER=69, WHITESPACE=70, COMMENT=71, LINE_COMMENT=72}
+2022-03-04 01:00:19:263 semantics LogManager.java:25 strings={'i64'=1, 'f64'=2, 'bool'=3, 'char'=4, 'String'=5, '&str'=6, 'usize'=7, 'vec'=8, 'struct'=9, 'pow'=10, 'println!'=11, 'let'=12, 'mut'=13, 'fn'=14, '->'=15, '=>'=16, 'abs'=17, 'sqrt'=18, 'to_string'=19, 'clone'=20, 'new'=21, 'len'=22, 'push'=23, 'remove'=24, 'contains'=25, 'insert'=26, 'capacity'=27, 'with_capacity'=28, 'main'=29, 'if'=30, 'match'=31, 'loop'=32, 'while'=33, 'for'=34, 'in'=35, 'break'=36, 'continue'=37, 'return'=38, 'mod'=39, 'pub'=40, '.'=44, '::'=45, ':'=46, ';'=47, ','=48, '!='=49, '=='=50, '!'=51, '||'=52, '&&'=53, '='=54, '>='=55, '<='=56, '>'=57, '<'=58, '*'=59, '/'=60, '+'=61, '-'=62, '%'=63, '('=64, ')'=65, '{'=66, '}'=67, '['=68, ']'=69}
+2022-03-04 01:00:19:296 LL1 LogManager.java:25 
+DECISION 0 in rule start
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 look=[{12, 14, 39}, 14]
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 LL(1)? false
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 
+DECISION 1 in rule start
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 look=[{12, 14, 39}, <EOF>]
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 LL(1)? true
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 
+DECISION 2 in rule global_env
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 look=[12, 14, 39]
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 LL(1)? true
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 
+DECISION 3 in rule instructions
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 look=[11, 67]
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 LL(1)? true
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 
+DECISION 4 in rule declaration
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 look=[12, 12, 12, 12]
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 LL(1)? false
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 
+DECISION 5 in rule listParams
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 look=[null, {65, 69}]
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 LL(1)? false
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 
+DECISION 6 in rule expr_arit
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 look=[68, 64, {41..42}]
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 LL(1)? true
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 
+DECISION 7 in rule expr_arit
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 look=[null, null, null]
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 LL(1)? false
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 
+DECISION 8 in rule expr_arit
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 look=[null, null]
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 LL(1)? false
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 
+DECISION 9 in rule primitive
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 look=[41, 42]
+2022-03-04 01:00:19:297 LL1 LogManager.java:25 LL(1)? true
+2022-03-04 01:00:19:312 action-translator LogManager.java:25 translate 
+    import arrayList "github.com/colegno/arraylist"
+    import "OLC2/interfaces"
+    import "OLC2/expressions"
+    import "OLC2/instructions"
+    import "OLC2/environment"
+    import "strings"
+
+2022-03-04 01:00:19:379 action-translator LogManager.java:25 translate 
+        global := arrayList.New()
+        listInt := localctx.(*StartContext).GetE()
+        for _, e := range listInt {
+            global.Add(e.GetHi())
+        }
+        $ast = environment.NewAST($main.mainInst, global)
+    
+2022-03-04 01:00:19:380 action-translator LogManager.java:25 attr [@-1,181:183='ast',<0>,24:9]
+2022-03-04 01:00:19:380 action-translator LogManager.java:25 qattr [@-1,207:210='main',<0>,24:35].[@-1,212:219='mainInst',<0>,24:40]
+2022-03-04 01:00:19:381 action-translator LogManager.java:25 translate $hi = "declaration"
+2022-03-04 01:00:19:382 action-translator LogManager.java:25 attr [@-1,1:2='hi',<0>,29:15]
+2022-03-04 01:00:19:382 action-translator LogManager.java:25 translate $hi = "function"
+2022-03-04 01:00:19:382 action-translator LogManager.java:25 attr [@-1,1:2='hi',<0>,30:12]
+2022-03-04 01:00:19:382 action-translator LogManager.java:25 translate $hi = "module"
+2022-03-04 01:00:19:382 action-translator LogManager.java:25 attr [@-1,1:2='hi',<0>,31:10]
+2022-03-04 01:00:19:383 action-translator LogManager.java:25 translate  $mainInst = $instructions.insts 
+2022-03-04 01:00:19:384 action-translator LogManager.java:25 attr [@-1,2:9='mainInst',<0>,35:59]
+2022-03-04 01:00:19:384 action-translator LogManager.java:25 qattr [@-1,14:25='instructions',<0>,35:71].[@-1,27:31='insts',<0>,35:84]
+2022-03-04 01:00:19:384 action-translator LogManager.java:25 translate 
+    $insts = arrayList.New()
+  
+2022-03-04 01:00:19:384 action-translator LogManager.java:25 attr [@-1,7:11='insts',<0>,40:5]
+2022-03-04 01:00:19:384 action-translator LogManager.java:25 translate 
+        listInt := localctx.(*InstructionsContext).GetE()
+        for _, e := range listInt {
+            $insts.Add(e.GetInst())
+        }
+    
+2022-03-04 01:00:19:385 action-translator LogManager.java:25 attr [@-1,111:115='insts',<0>,46:13]
+2022-03-04 01:00:19:385 action-translator LogManager.java:25 translate  $inst = $println.pr 
+2022-03-04 01:00:19:385 action-translator LogManager.java:25 attr [@-1,2:5='inst',<0>,52:15]
+2022-03-04 01:00:19:385 action-translator LogManager.java:25 qattr [@-1,10:16='println',<0>,52:23].[@-1,18:19='pr',<0>,52:31]
+2022-03-04 01:00:19:386 action-translator LogManager.java:25 translate  $pr = instructions.NewPrint(0,0,$listParams.l) 
+2022-03-04 01:00:19:386 action-translator LogManager.java:25 attr [@-1,2:3='pr',<0>,56:39]
+2022-03-04 01:00:19:386 action-translator LogManager.java:25 qattr [@-1,34:43='listParams',<0>,56:71].[@-1,45:45='l',<0>,56:82]
+2022-03-04 01:00:19:390 action-translator LogManager.java:25 translate 
+2022-03-04 01:00:19:390 action-translator LogManager.java:25 translate 
+                $l = arrayList.New()
+                $l.Add($expression.p)
+             
+2022-03-04 01:00:19:390 action-translator LogManager.java:25 attr [@-1,19:19='l',<0>,3:17]
+2022-03-04 01:00:19:391 action-translator LogManager.java:25 attr [@-1,57:57='l',<0>,4:17]
+2022-03-04 01:00:19:391 action-translator LogManager.java:25 qattr [@-1,64:73='expression',<0>,4:24].[@-1,75:75='p',<0>,4:35]
+2022-03-04 01:00:19:391 action-translator LogManager.java:25 translate p.Precpred(p.GetParserRuleContext(), 2)
+2022-03-04 01:00:19:392 action-translator LogManager.java:25 translate 
+                                                  $list.l.Add($expression.p)
+                                                  $l = $list.l
+                                               
+2022-03-04 01:00:19:392 action-translator LogManager.java:25 qattr [@-1,53:56='list',<0>,9:51].[@-1,58:58='l',<0>,9:56]
+2022-03-04 01:00:19:392 action-translator LogManager.java:25 qattr [@-1,65:74='expression',<0>,9:63].[@-1,76:76='p',<0>,9:74]
+2022-03-04 01:00:19:392 action-translator LogManager.java:25 attr [@-1,131:131='l',<0>,10:51]
+2022-03-04 01:00:19:392 action-translator LogManager.java:25 qattr [@-1,136:139='list',<0>,10:56].[@-1,141:141='l',<0>,10:61]
+2022-03-04 01:00:19:394 action-translator LogManager.java:25 translate p.Precpred(p.GetParserRuleContext(), 2)
+2022-03-04 01:00:19:394 action-translator LogManager.java:25 translate  $p = $expr_arit.p 
+2022-03-04 01:00:19:394 action-translator LogManager.java:25 attr [@-1,2:2='p',<0>,96:14]
+2022-03-04 01:00:19:395 action-translator LogManager.java:25 qattr [@-1,7:15='expr_arit',<0>,96:19].[@-1,17:17='p',<0>,96:29]
+2022-03-04 01:00:19:396 action-translator LogManager.java:25 translate 
+2022-03-04 01:00:19:396 action-translator LogManager.java:25 translate  $p = $expression.p 
+2022-03-04 01:00:19:397 action-translator LogManager.java:25 attr [@-1,2:2='p',<0>,3:85]
+2022-03-04 01:00:19:397 action-translator LogManager.java:25 qattr [@-1,7:16='expression',<0>,3:90].[@-1,18:18='p',<0>,3:101]
+2022-03-04 01:00:19:397 action-translator LogManager.java:25 translate  $p = $primitive.p 
+2022-03-04 01:00:19:397 action-translator LogManager.java:25 attr [@-1,2:2='p',<0>,4:38]
+2022-03-04 01:00:19:397 action-translator LogManager.java:25 qattr [@-1,7:15='primitive',<0>,4:43].[@-1,17:17='p',<0>,4:53]
+2022-03-04 01:00:19:397 action-translator LogManager.java:25 translate p.Precpred(p.GetParserRuleContext(), 6)
+2022-03-04 01:00:19:398 action-translator LogManager.java:25 translate $p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)
+2022-03-04 01:00:19:398 action-translator LogManager.java:25 attr [@-1,1:1='p',<0>,7:139]
+2022-03-04 01:00:19:398 action-translator LogManager.java:25 qattr [@-1,35:38='opIz',<0>,7:173].[@-1,40:40='p',<0>,7:178]
+2022-03-04 01:00:19:398 action-translator LogManager.java:25 qattr [@-1,43:44='op',<0>,7:181].[@-1,46:49='text',<0>,7:184]
+2022-03-04 01:00:19:398 action-translator LogManager.java:25 qattr [@-1,52:55='opDe',<0>,7:190].[@-1,57:57='p',<0>,7:195]
+2022-03-04 01:00:19:399 action-translator LogManager.java:25 translate p.Precpred(p.GetParserRuleContext(), 5)
+2022-03-04 01:00:19:399 action-translator LogManager.java:25 translate $p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)
+2022-03-04 01:00:19:399 action-translator LogManager.java:25 attr [@-1,1:1='p',<0>,8:149]
+2022-03-04 01:00:19:399 action-translator LogManager.java:25 qattr [@-1,35:38='opIz',<0>,8:183].[@-1,40:40='p',<0>,8:188]
+2022-03-04 01:00:19:399 action-translator LogManager.java:25 qattr [@-1,43:44='op',<0>,8:191].[@-1,46:49='text',<0>,8:194]
+2022-03-04 01:00:19:399 action-translator LogManager.java:25 qattr [@-1,52:55='opDe',<0>,8:200].[@-1,57:57='p',<0>,8:205]
+2022-03-04 01:00:19:399 action-translator LogManager.java:25 translate p.Precpred(p.GetParserRuleContext(), 4)
+2022-03-04 01:00:19:399 action-translator LogManager.java:25 translate $p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)
+2022-03-04 01:00:19:399 action-translator LogManager.java:25 attr [@-1,1:1='p',<0>,9:207]
+2022-03-04 01:00:19:400 action-translator LogManager.java:25 qattr [@-1,35:38='opIz',<0>,9:241].[@-1,40:40='p',<0>,9:246]
+2022-03-04 01:00:19:400 action-translator LogManager.java:25 qattr [@-1,43:44='op',<0>,9:249].[@-1,46:49='text',<0>,9:252]
+2022-03-04 01:00:19:400 action-translator LogManager.java:25 qattr [@-1,52:55='opDe',<0>,9:258].[@-1,57:57='p',<0>,9:263]
+2022-03-04 01:00:19:400 action-translator LogManager.java:25 translate p.Precpred(p.GetParserRuleContext(), 6)
+2022-03-04 01:00:19:400 action-translator LogManager.java:25 translate p.Precpred(p.GetParserRuleContext(), 5)
+2022-03-04 01:00:19:400 action-translator LogManager.java:25 translate p.Precpred(p.GetParserRuleContext(), 4)
+2022-03-04 01:00:19:400 action-translator LogManager.java:25 translate 
+            if (strings.Contains($NUMBER.text,".")){
+            num,err := strconv.ParseFloat($NUMBER.text, 64);
+            if err!= nil{
+                fmt.Println(err)
+            }
+            $p = expressions.NewPrimitive(0,0,num,environment.FLOAT)
+            }else{
+            num,err := strconv.Atoi($NUMBER.text)
+            if err!= nil{
+                fmt.Println(err)
+            }
+            $p = expressions.NewPrimitive(0,0,num,environment.INTEGER)
+            }
+        
+2022-03-04 01:00:19:400 action-translator LogManager.java:25 qattr [@-1,36:41='NUMBER',<0>,110:34].[@-1,43:46='text',<0>,110:41]
+2022-03-04 01:00:19:400 action-translator LogManager.java:25 qattr [@-1,99:104='NUMBER',<0>,111:43].[@-1,106:109='text',<0>,111:50]
+2022-03-04 01:00:19:400 action-translator LogManager.java:25 attr [@-1,207:207='p',<0>,115:13]
+2022-03-04 01:00:19:400 action-translator LogManager.java:25 qattr [@-1,321:326='NUMBER',<0>,117:37].[@-1,328:331='text',<0>,117:44]
+2022-03-04 01:00:19:401 action-translator LogManager.java:25 attr [@-1,424:424='p',<0>,121:13]
+2022-03-04 01:00:19:607 action-translator LogManager.java:25 translate 
+    import arrayList "github.com/colegno/arraylist"
+    import "OLC2/interfaces"
+    import "OLC2/expressions"
+    import "OLC2/instructions"
+    import "OLC2/environment"
+    import "strings"
+
+2022-03-04 01:00:19:608 action-translator LogManager.java:25 translate 
+    import arrayList "github.com/colegno/arraylist"
+    import "OLC2/interfaces"
+    import "OLC2/expressions"
+    import "OLC2/instructions"
+    import "OLC2/environment"
+    import "strings"
+
+2022-03-04 01:00:19:710 action-translator LogManager.java:25 translate 
+    import arrayList "github.com/colegno/arraylist"
+    import "OLC2/interfaces"
+    import "OLC2/expressions"
+    import "OLC2/instructions"
+    import "OLC2/environment"
+    import "strings"
+
+2022-03-04 01:00:19:710 action-translator LogManager.java:25 translate 
+    import arrayList "github.com/colegno/arraylist"
+    import "OLC2/interfaces"
+    import "OLC2/expressions"
+    import "OLC2/instructions"
+    import "OLC2/environment"
+    import "strings"
+

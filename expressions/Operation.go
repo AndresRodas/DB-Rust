@@ -14,7 +14,7 @@ type Operation struct {
 	Op_der   interfaces.Expression
 }
 
-func (o Operation) Ejecutar(ast, env interface{}) environment.Symbol {
+func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 	var dominante environment.TipoExpresion
 	suma_resta_dominante := [5][5]environment.TipoExpresion{
 		{environment.INTEGER, environment.FLOAT, environment.STRING, environment.NULL, environment.NULL},
@@ -42,7 +42,7 @@ func (o Operation) Ejecutar(ast, env interface{}) environment.Symbol {
 		op1 := o.Op_izq.Ejecutar(ast, env)
 		op2 := o.Op_der.Ejecutar(ast, env)
 		switch o.Operador {
-		case "SUMA":
+		case "+":
 			{
 				dominante = suma_resta_dominante[op1.Tipo][op2.Tipo]
 				if dominante == environment.INTEGER {
@@ -57,7 +57,7 @@ func (o Operation) Ejecutar(ast, env interface{}) environment.Symbol {
 					fmt.Print("ERROR: No es posible sumar")
 				}
 			}
-		case "RESTA":
+		case "-":
 			{
 				dominante = suma_resta_dominante[op1.Tipo][op2.Tipo]
 
@@ -72,7 +72,7 @@ func (o Operation) Ejecutar(ast, env interface{}) environment.Symbol {
 					fmt.Print("ERROR: No es posible restar")
 				}
 			}
-		case "MULT":
+		case "*":
 			{
 				dominante = multi_division_dominante[op1.Tipo][op2.Tipo]
 
@@ -87,7 +87,7 @@ func (o Operation) Ejecutar(ast, env interface{}) environment.Symbol {
 				}
 
 			}
-		case "DIV":
+		case "/":
 			{
 				dominante = multi_division_dominante[op1.Tipo][op2.Tipo]
 
@@ -102,7 +102,7 @@ func (o Operation) Ejecutar(ast, env interface{}) environment.Symbol {
 				}
 
 			}
-		case "MENOR":
+		case "<":
 			{
 				dominante = relacional_dominante[op1.Tipo][op2.Tipo]
 
@@ -117,7 +117,7 @@ func (o Operation) Ejecutar(ast, env interface{}) environment.Symbol {
 					fmt.Print("ERROR: No es posible comparar <")
 				}
 			}
-		case "MAYOR":
+		case ">":
 			{
 				dominante = relacional_dominante[op1.Tipo][op2.Tipo]
 
@@ -132,7 +132,7 @@ func (o Operation) Ejecutar(ast, env interface{}) environment.Symbol {
 					fmt.Print("ERROR: No es posible comparar <")
 				}
 			}
-		case "MENOR_IG":
+		case "<=":
 			{
 				dominante = relacional_dominante[op1.Tipo][op2.Tipo]
 
@@ -147,7 +147,7 @@ func (o Operation) Ejecutar(ast, env interface{}) environment.Symbol {
 					fmt.Print("ERROR: No es posible comparar <")
 				}
 			}
-		case "MAYOR_IG":
+		case ">=":
 			{
 				dominante = relacional_dominante[op1.Tipo][op2.Tipo]
 

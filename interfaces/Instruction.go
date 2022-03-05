@@ -1,5 +1,7 @@
 package interfaces
 
+import "OLC2/environment"
+
 type Instruction interface {
-	Ejecutar(ast, env interface{}) interface{}
+	Ejecutar(ast *environment.AST, env interface{}) interface{}
 }

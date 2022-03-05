@@ -51,6 +51,12 @@ func (s *BaseRustListener) EnterInstruction(ctx *InstructionContext) {}
 // ExitInstruction is called when production instruction is exited.
 func (s *BaseRustListener) ExitInstruction(ctx *InstructionContext) {}
 
+// EnterImpression is called when production impression is entered.
+func (s *BaseRustListener) EnterImpression(ctx *ImpressionContext) {}
+
+// ExitImpression is called when production impression is exited.
+func (s *BaseRustListener) ExitImpression(ctx *ImpressionContext) {}
+
 // EnterDeclaration is called when production declaration is entered.
 func (s *BaseRustListener) EnterDeclaration(ctx *DeclarationContext) {}
 

@@ -4,9 +4,12 @@ import (
 	/* "OLC2/environment"
 	"OLC2/interfaces"*/
 
+	"OLC2/environment"
+	"OLC2/interfaces"
 	"OLC2/parser"
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"strings"
 )
 
 func main() {
@@ -34,9 +37,17 @@ func NewTreeShapeListener() *TreeShapeListener {
 }
 
 func (this *TreeShapeListener) ExitStart(ctx *parser.StartContext) {
-	result := ctx.GetAst() //obtenemos AST generado en arbol
 
-	fmt.Println(result.Main.ToArray())
-	fmt.Println(result.Instructions.ToArray())
+	var Ast environment.AST
+	Ast = ctx.GetAst()
+	var globalEnv environment.Environment
+	globalEnv = environment.NewEnvironment(nil, "Global")
 
+	for _, inst := range Ast.Main.ToArray() {
+		inst.(interfaces.Instruction).Ejecutar(&Ast, globalEnv)
+	}
+	//print values
+	fmt.Println(Ast.GetPrint())
+	stri := "{} {} {}"
+	fmt.Println(strings.Replace(stri, "{}", "a", 1))
 }

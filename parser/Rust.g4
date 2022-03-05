@@ -8,6 +8,7 @@ options {
     import arrayList "github.com/colegno/arraylist"
     import "OLC2/interfaces"
     import "OLC2/expressions"
+    import "OLC2/instructions"
     import "OLC2/environment"
     import "strings"
 }
@@ -20,7 +21,7 @@ start returns [environment.AST ast]
         for _, e := range listInt {
             global.Add(e.GetHi())
         }
-        $ast = environment.NewAST($main.mainInst, global)
+        $ast = environment.NewAST($main.mainInst, global, "")
     }
 ;
 
@@ -47,8 +48,12 @@ instructions returns[*arrayList.List insts]
     }
 ;
 
-instruction returns [string inst]
-: PRINT PYC { $inst = "Impresion!" }
+instruction returns [interfaces.Instruction inst]
+: impression { $inst = $impression.pr }
+;
+
+impression returns [interfaces.Instruction pr]
+: PRINT PARIZQ listParams PARDER PYC { $pr = instructions.NewPrint(0,0,$listParams.l) }
 ;
 
 declaration returns []
@@ -77,8 +82,14 @@ types returns[]
 ;
 
 listParams returns[*arrayList.List l]
-: listParams COMA expression { }
-| expression { }
+: list=listParams COMA expression   {
+                                        $list.l.Add($expression.p)
+                                        $l = $list.l
+                                     }
+| expression {
+                $l = arrayList.New()
+                $l.Add($expression.p)
+             }
 ;
 
 expression returns[interfaces.Expression p]
@@ -97,18 +108,21 @@ expr_arit returns[interfaces.Expression p]
 primitive returns[interfaces.Expression p]
 : NUMBER{
             if (strings.Contains($NUMBER.text,".")){
-            num,err := strconv.ParseFloat($NUMBER.text, 64);
-            if err!= nil{
-                fmt.Println(err)
-            }
-            $p = expressions.NewPrimitive(0,0,num,environment.FLOAT)
+                num,err := strconv.ParseFloat($NUMBER.text, 64);
+                if err!= nil{
+                    fmt.Println(err)
+                }
+                $p = expressions.NewPrimitive(0,0,num,environment.FLOAT)
             }else{
-            num,err := strconv.Atoi($NUMBER.text)
-            if err!= nil{
-                fmt.Println(err)
-            }
-            $p = expressions.NewPrimitive(0,0,num,environment.INTEGER)
+                num,err := strconv.Atoi($NUMBER.text)
+                if err!= nil{
+                    fmt.Println(err)
+                }
+                $p = expressions.NewPrimitive(0,0,num,environment.INTEGER)
             }
         }
-| STRING
+| STRING    {
+                str := $STRING.text
+                $p = expressions.NewPrimitive(0,0,str[1:len(str)-1],environment.STRING)
+            }
 ;

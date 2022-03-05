@@ -11,7 +11,7 @@ type Primitive struct {
 	Tipo  environment.TipoExpresion
 }
 
-func (p Primitive) Ejecutar(ast, env interface{}) environment.Symbol {
+func (p Primitive) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 
 	return environment.Symbol{
 		Lin:   p.Lin,
