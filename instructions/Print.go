@@ -5,6 +5,7 @@ import (
 	"OLC2/interfaces"
 	"fmt"
 	arrayList "github.com/colegno/arraylist"
+	"strings"
 )
 
 type Print struct {
@@ -14,10 +15,20 @@ type Print struct {
 }
 
 func (p Print) Ejecutar(ast *environment.AST, env interface{}) interface{} {
-
 	var ToPrint string
+	if p.Values.Len() > 1 {
+		//Con formato
+		format := fmt.Sprintf("%v", p.Values.GetValue(0).(interfaces.Expression).Ejecutar(ast, env).Valor)
+		p.Values.RemoveAtIndex(0)
+		for _, p := range p.Values.ToArray() {
+			format = strings.Replace(format, "{}", fmt.Sprintf("%v", p.(interfaces.Expression).Ejecutar(ast, env).Valor), 1)
+		}
+		ToPrint = ToPrint + format
+		ast.SetPrint(ToPrint + "\n")
+		return nil
+	}
+	//Sin formato
 	for _, p := range p.Values.ToArray() {
-		//fmt.Println(p.(interfaces.Expression).Ejecutar(ast, env))
 		ToPrint = ToPrint + fmt.Sprintf("%v", p.(interfaces.Expression).Ejecutar(ast, env).Valor)
 	}
 	ast.SetPrint(ToPrint + "\n")

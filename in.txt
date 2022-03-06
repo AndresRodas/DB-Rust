@@ -3,8 +3,7 @@ let mut var1 : i64 = 64+5-2*9;
 let var2 = "holis";
 
 fn main(){
-    println!(5+5);
-    println!("hola mundaco",34," bye");
+    println!("{} {} {}","hola mundaco",34," bye");
 }
 
 let var2 = "holis";

@@ -9,7 +9,6 @@ import (
 	"OLC2/parser"
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"strings"
 )
 
 func main() {
@@ -48,6 +47,6 @@ func (this *TreeShapeListener) ExitStart(ctx *parser.StartContext) {
 	}
 	//print values
 	fmt.Println(Ast.GetPrint())
-	stri := "{} {} {}"
-	fmt.Println(strings.Replace(stri, "{}", "a", 1))
+	//stri := "{} {} {}"
+	//fmt.Println(strings.Replace(stri, "{}", "a", 1))
 }
