@@ -36,15 +36,18 @@ func NewTreeShapeListener() *TreeShapeListener {
 }
 
 func (this *TreeShapeListener) ExitStart(ctx *parser.StartContext) {
-
+	//create ast
 	var Ast environment.AST
-	Ast = ctx.GetAst()
+	//get code
+	var Code = ctx.GetCode()
+	//create environment
 	var globalEnv environment.Environment
 	globalEnv = environment.NewEnvironment(nil, "Global")
 
-	for _, inst := range Ast.Main.ToArray() {
+	for _, inst := range Code.Main.ToArray() {
 		inst.(interfaces.Instruction).Ejecutar(&Ast, globalEnv)
 	}
+	fmt.Println(globalEnv.GetVariable("test2"))
 	//print values
 	fmt.Println(Ast.GetPrint())
 	//stri := "{} {} {}"

@@ -13,7 +13,7 @@ options {
     import "strings"
 }
 
-start returns [environment.AST ast]
+start returns [environment.Code code]
   : e+=global_env* main e+=global_env*
     {
         global := arrayList.New()
@@ -21,7 +21,7 @@ start returns [environment.AST ast]
         for _, e := range listInt {
             global.Add(e.GetHi())
         }
-        $ast = environment.NewAST($main.mainInst, global, "")
+        $code = environment.NewCode($main.mainInst, global)
     }
 ;
 

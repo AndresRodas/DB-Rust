@@ -279,11 +279,11 @@ type IStartContext interface {
 	// SetE sets the e rule context list.
 	SetE([]IGlobal_envContext)
 
-	// GetAst returns the ast attribute.
-	GetAst() environment.AST
+	// GetCode returns the code attribute.
+	GetCode() environment.Code
 
-	// SetAst sets the ast attribute.
-	SetAst(environment.AST)
+	// SetCode sets the code attribute.
+	SetCode(environment.Code)
 
 	// IsStartContext differentiates from other interfaces.
 	IsStartContext()
@@ -292,7 +292,7 @@ type IStartContext interface {
 type StartContext struct {
 	*antlr.BaseParserRuleContext
 	parser      antlr.Parser
-	ast         environment.AST
+	code        environment.Code
 	_global_env IGlobal_envContext
 	e           []IGlobal_envContext
 	_main       IMainContext
@@ -332,9 +332,9 @@ func (s *StartContext) GetE() []IGlobal_envContext { return s.e }
 
 func (s *StartContext) SetE(v []IGlobal_envContext) { s.e = v }
 
-func (s *StartContext) GetAst() environment.AST { return s.ast }
+func (s *StartContext) GetCode() environment.Code { return s.code }
 
-func (s *StartContext) SetAst(v environment.AST) { s.ast = v }
+func (s *StartContext) SetCode(v environment.Code) { s.code = v }
 
 func (s *StartContext) Main() IMainContext {
 	var t = s.GetTypedRuleContext(reflect.TypeOf((*IMainContext)(nil)).Elem(), 0)
@@ -464,7 +464,7 @@ func (p *Rust) Start() (localctx IStartContext) {
 	for _, e := range listInt {
 		global.Add(e.GetHi())
 	}
-	localctx.(*StartContext).ast = environment.NewAST(localctx.(*StartContext).Get_main().GetMainInst(), global, "")
+	localctx.(*StartContext).code = environment.NewCode(localctx.(*StartContext).Get_main().GetMainInst(), global)
 
 	return localctx
 }
