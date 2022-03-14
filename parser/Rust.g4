@@ -26,7 +26,7 @@ start returns [environment.Code code]
 ;
 
 global_env returns [string hi]
-: declaration {$hi = "declaration"}
+: declaration PYC {$hi = "declaration"}
 | function {$hi = "function"}
 | module {$hi = "module"}
 ;
@@ -49,18 +49,34 @@ instructions returns[*arrayList.List insts]
 ;
 
 instruction returns [interfaces.Instruction inst]
-: impression { $inst = $impression.pr }
+: impression PYC { $inst = $impression.pr }
+| declaration PYC { $inst = $declaration.dec }
 ;
 
 impression returns [interfaces.Instruction pr]
-: PRINT PARIZQ listParams PARDER PYC { $pr = instructions.NewPrint(0,0,$listParams.l) }
+: PRINT PARIZQ listParams PARDER { $pr = instructions.NewPrint($PRINT.line,$PRINT.pos,$listParams.l) }
 ;
 
-declaration returns []
-: LET MUT ID D_PTS types IGUAL expression PYC 
-| LET MUT ID IGUAL expression PYC
-| LET ID D_PTS types IGUAL expression PYC
-| LET ID IGUAL expression PYC
+declaration returns [interfaces.Instruction dec]
+: LET MUT ID D_PTS types IGUAL expression   { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expression.p, true) }
+| LET MUT ID IGUAL expression               { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, environment.WILDCARD, $expression.p, true) }
+| LET ID D_PTS types IGUAL expression       { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expression.p, false) }
+| LET ID IGUAL expression                   { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, environment.WILDCARD, $expression.p, false) }
+| LET MUT ID D_PTS arrayType IGUAL expression { $dec = instructions.NewArrayDeclaration($LET.line, $LET.pos, $ID.text, $arrayType.t, $expression.p, true) }
+| LET ID D_PTS arrayType IGUAL expression   { $dec = instructions.NewArrayDeclaration($LET.line, $LET.pos, $ID.text, $arrayType.t, $expression.p, false) }
+;
+
+arrayType returns [*arrayList.List t]
+: CORIZQ arrayType PYC expression CORDER {
+                                               newType := environment.NewArrayType(environment.ARRAY, $expression.p)
+                                               $arrayType.t.Add(newType)
+                                               $t = $arrayType.t
+                                            }
+| CORIZQ types PYC expression CORDER{
+                                        $t = arrayList.New()
+                                        newType := environment.NewArrayType($types.ty, $expression.p)
+                                        $t.Add(newType)
+                                     }
 ;
 
 function returns []
@@ -71,14 +87,14 @@ module returns[]
 : MODULE ID LLAVEIZQ LLAVEDER
 ;
 
-types returns[]
-: INT
-| FLOAT
-| BOOL
-| CHAR
-| STR1
-| VECTOR
-| STRUCT
+types returns[environment.TipoExpresion ty]
+: INT { $ty = environment.INTEGER }
+| FLOAT { $ty = environment.FLOAT }
+| BOOL { $ty = environment.BOOLEAN }
+| CHAR { $ty = environment.CHAR }
+| STR1 { $ty = environment.STRING }
+| VECTOR { $ty = environment.VECTOR }
+| STRUCT { $ty = environment.STRUCT }
 ;
 
 listParams returns[*arrayList.List l]
@@ -97,10 +113,10 @@ expression returns[interfaces.Expression p]
 ;
 
 expr_arit returns[interfaces.Expression p]
-: opIz=expr_arit op=(MUL|DIV) opDe=expr_arit {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}
+: opIz=expr_arit op=(MUL|DIV) opDe=expr_arit {$p = expressions.NewOperation($opIz.start.GetLine(),$opIz.start.GetColumn(),$opIz.p,$op.text,$opDe.p)}
 | opIz=expr_arit op=(ADD|SUB) opDe=expr_arit {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}
 | opIz=expr_arit op=(MENOR|MENORIGUAL|MAYORIGUAL|MAYOR) opDe=expr_arit {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}
-| CORIZQ listParams CORDER
+| CORIZQ listParams CORDER { $p = expressions.NewArray($CORIZQ.line, $CORIZQ.pos, $listParams.l) }
 | PARIZQ expression PARDER { $p = $expression.p }
 | primitive { $p = $primitive.p }
 ;

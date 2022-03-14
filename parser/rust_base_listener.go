@@ -63,6 +63,12 @@ func (s *BaseRustListener) EnterDeclaration(ctx *DeclarationContext) {}
 // ExitDeclaration is called when production declaration is exited.
 func (s *BaseRustListener) ExitDeclaration(ctx *DeclarationContext) {}
 
+// EnterArrayType is called when production arrayType is entered.
+func (s *BaseRustListener) EnterArrayType(ctx *ArrayTypeContext) {}
+
+// ExitArrayType is called when production arrayType is exited.
+func (s *BaseRustListener) ExitArrayType(ctx *ArrayTypeContext) {}
+
 // EnterFunction is called when production function is entered.
 func (s *BaseRustListener) EnterFunction(ctx *FunctionContext) {}
 

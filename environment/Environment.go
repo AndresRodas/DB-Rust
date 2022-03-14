@@ -16,12 +16,12 @@ func NewEnvironment(ant interface{}, id string) Environment {
 	return Environment{ant, make(map[string]Symbol), make(map[string]Symbol), id}
 }
 
-func (env Environment) SaveVariable(id string, value Symbol, tipo TipoExpresion) {
+func (env Environment) SaveVariable(id string, value Symbol, tipo TipoExpresion, mut bool) {
 	if variable, ok := env.Tabla[id]; ok {
 		fmt.Println("La variable " + variable.Id + " ya existe")
 		return
 	}
-	env.Tabla[id] = Symbol{Lin: 0, Col: 0, Id: id, Tipo: tipo, Valor: value}
+	env.Tabla[id] = Symbol{Lin: 0, Col: 0, Id: id, Tipo: tipo, Valor: value, Mutable: mut}
 }
 
 func (env Environment) GetVariable(id string) Symbol {
@@ -38,7 +38,7 @@ func (env Environment) GetVariable(id string) Symbol {
 		}
 	}
 	fmt.Println("La variable no existe")
-	return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NULL, Valor: 0}
+	return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NULL, Valor: 0, Mutable: false}
 }
 
 func (env Environment) SetVariable(id string, value Symbol) Symbol {
@@ -46,8 +46,13 @@ func (env Environment) SetVariable(id string, value Symbol) Symbol {
 	tmpEnv = env
 	for {
 		if variable, ok := tmpEnv.Tabla[id]; ok {
-			tmpEnv.Tabla[id] = Symbol{Lin: 0, Col: 0, Id: id, Tipo: variable.Tipo, Valor: value}
-			return variable
+			if tmpEnv.Tabla[id].Mutable {
+				tmpEnv.Tabla[id] = Symbol{Lin: 0, Col: 0, Id: id, Tipo: variable.Tipo, Valor: value, Mutable: true}
+				return variable
+			} else {
+				fmt.Println("La variable no es mutable")
+				return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NULL, Valor: 0, Mutable: false}
+			}
 		}
 		if tmpEnv.Anterior == nil {
 			break
@@ -56,15 +61,15 @@ func (env Environment) SetVariable(id string, value Symbol) Symbol {
 		}
 	}
 	fmt.Println("La variable no existe")
-	return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NULL, Valor: 0}
+	return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NULL, Valor: 0, Mutable: false}
 }
 
-func (env Environment) SaveStruct(id string, list *arrayList.List) {
+func (env Environment) SaveStruct(id string, list *arrayList.List, mut bool) {
 	if structs, ok := env.Structs[id]; ok {
 		fmt.Println("El struct " + structs.Id + " ya existe")
 		return
 	}
-	env.Structs[id] = Symbol{Lin: 0, Col: 0, Id: id, Tipo: STRUCT, Valor: list}
+	env.Structs[id] = Symbol{Lin: 0, Col: 0, Id: id, Tipo: STRUCT, Valor: list, Mutable: mut}
 	//fmt.Println(env.Structs[id].Valor)
 }
 
@@ -86,5 +91,5 @@ func (env Environment) GetStruct(id string) Symbol {
 	}
 
 	fmt.Println("El struct no existe")
-	return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NULL, Valor: 0}
+	return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NULL, Valor: 0, Mutable: false}
 }

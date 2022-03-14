@@ -14,11 +14,12 @@ type Primitive struct {
 func (p Primitive) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 
 	return environment.Symbol{
-		Lin:   p.Lin,
-		Col:   p.Col,
-		Id:    "",
-		Tipo:  p.Tipo,
-		Valor: p.Valor,
+		Lin:     p.Lin,
+		Col:     p.Col,
+		Id:      "",
+		Tipo:    p.Tipo,
+		Valor:   p.Valor,
+		Mutable: true,
 	}
 }
 

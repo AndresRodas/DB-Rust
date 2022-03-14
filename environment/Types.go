@@ -10,4 +10,7 @@ const (
 	ARRAY
 	NULL
 	STRUCT
+	CHAR
+	VECTOR
+	WILDCARD
 )

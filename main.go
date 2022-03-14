@@ -1,9 +1,6 @@
 package main
 
 import (
-	/* "OLC2/environment"
-	"OLC2/interfaces"*/
-
 	"OLC2/environment"
 	"OLC2/interfaces"
 	"OLC2/parser"
@@ -39,7 +36,8 @@ func (this *TreeShapeListener) ExitStart(ctx *parser.StartContext) {
 	//create ast
 	var Ast environment.AST
 	//get code
-	var Code = ctx.GetCode()
+	var Code environment.Code
+	Code = ctx.GetCode()
 	//create environment
 	var globalEnv environment.Environment
 	globalEnv = environment.NewEnvironment(nil, "Global")
@@ -47,9 +45,8 @@ func (this *TreeShapeListener) ExitStart(ctx *parser.StartContext) {
 	for _, inst := range Code.Main.ToArray() {
 		inst.(interfaces.Instruction).Ejecutar(&Ast, globalEnv)
 	}
-	fmt.Println(globalEnv.GetVariable("test2"))
+	fmt.Println(globalEnv.Tabla)
 	//print values
 	fmt.Println(Ast.GetPrint())
-	//stri := "{} {} {}"
-	//fmt.Println(strings.Replace(stri, "{}", "a", 1))
+
 }
