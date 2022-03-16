@@ -21,7 +21,8 @@ func (env Environment) SaveVariable(id string, value Symbol, tipo TipoExpresion,
 		fmt.Println("La variable " + variable.Id + " ya existe")
 		return
 	}
-	env.Tabla[id] = Symbol{Lin: 0, Col: 0, Id: id, Tipo: tipo, Valor: value, Mutable: mut}
+	env.Tabla[id] = value
+	//env.Tabla[id] = Symbol{Lin: 0, Col: 0, Id: id, Tipo: tipo, Valor: value, Mutable: mut}
 }
 
 func (env Environment) GetVariable(id string) Symbol {

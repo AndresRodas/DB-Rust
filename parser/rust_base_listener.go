@@ -110,3 +110,9 @@ func (s *BaseRustListener) EnterPrimitive(ctx *PrimitiveContext) {}
 
 // ExitPrimitive is called when production primitive is exited.
 func (s *BaseRustListener) ExitPrimitive(ctx *PrimitiveContext) {}
+
+// EnterListArray is called when production listArray is entered.
+func (s *BaseRustListener) EnterListArray(ctx *ListArrayContext) {}
+
+// ExitListArray is called when production listArray is exited.
+func (s *BaseRustListener) ExitListArray(ctx *ListArrayContext) {}

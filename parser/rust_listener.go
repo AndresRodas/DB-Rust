@@ -53,6 +53,9 @@ type RustListener interface {
 	// EnterPrimitive is called when entering the primitive production.
 	EnterPrimitive(c *PrimitiveContext)
 
+	// EnterListArray is called when entering the listArray production.
+	EnterListArray(c *ListArrayContext)
+
 	// ExitStart is called when exiting the start production.
 	ExitStart(c *StartContext)
 
@@ -97,4 +100,7 @@ type RustListener interface {
 
 	// ExitPrimitive is called when exiting the primitive production.
 	ExitPrimitive(c *PrimitiveContext)
+
+	// ExitListArray is called when exiting the listArray production.
+	ExitListArray(c *ListArrayContext)
 }

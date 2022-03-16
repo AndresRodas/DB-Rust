@@ -45,7 +45,7 @@ func (this *TreeShapeListener) ExitStart(ctx *parser.StartContext) {
 	for _, inst := range Code.Main.ToArray() {
 		inst.(interfaces.Instruction).Ejecutar(&Ast, globalEnv)
 	}
-	fmt.Println(globalEnv.Tabla)
+	//fmt.Println(globalEnv.Tabla)
 	//print values
 	fmt.Println(Ast.GetPrint())
 

@@ -3,15 +3,13 @@
 //let var2 = "holis";
 
 fn main(){
-    println!("{} {}","hola",34," bye");
-    let mut arr3: [[[i64; 4];2]; 2] = [
-    [ [ 1, 3, 5, 7], [ 9, 11, 13, 15] ],
-    [ [ 2, 4, 6, 5], [10, 12, 54, 16] ]
-    ];
+    println!("{} {} {}","hola",34,"bye");
+    let mut arr3: [[i64;3];2] = [[1,2,3],[4,5,6]];
     let mut x : i64 = (3*5);
-    let stringo : String = 5;
-    let numi = 56;
-
+    //let stringo : String = "asdasd";
+    //let numi = 56;
+    println!(x);
+    println!(arr3[1][2]);
 }
 
 //let var2 = "holis";

@@ -68,9 +68,9 @@ declaration returns [interfaces.Instruction dec]
 
 arrayType returns [*arrayList.List t]
 : CORIZQ arrayType PYC expression CORDER {
-                                               newType := environment.NewArrayType(environment.ARRAY, $expression.p)
-                                               $arrayType.t.Add(newType)
-                                               $t = $arrayType.t
+                                            newType := environment.NewArrayType(environment.ARRAY, $expression.p)
+                                           $arrayType.t.Add(newType)
+                                           $t = $arrayType.t
                                             }
 | CORIZQ types PYC expression CORDER{
                                         $t = arrayList.New()
@@ -141,4 +141,10 @@ primitive returns[interfaces.Expression p]
                 str := $STRING.text
                 $p = expressions.NewPrimitive(0,0,str[1:len(str)-1],environment.STRING)
             }
+| list=listArray { $p = $list.p}
+;
+
+listArray returns[interfaces.Expression p]
+: list = listArray CORIZQ expression CORDER { $p = expressions.NewArrayAccess($list.start.GetLine(), $list.start.GetColumn(), $list.p, $expression.p) }
+| ID { $p = expressions.NewCallVar($ID.line, $ID.pos, $ID.text)}
 ;
