@@ -14,7 +14,8 @@ type Print struct {
 	Values *arrayList.List
 }
 
-func (p Print) Ejecutar(ast *environment.AST, env interface{}) interface{} {
+func (p Print) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
+	var result environment.Symbol
 	var ToPrint string
 	if p.Values.Len() > 1 {
 		//Con formato
@@ -25,14 +26,14 @@ func (p Print) Ejecutar(ast *environment.AST, env interface{}) interface{} {
 		}
 		ToPrint = ToPrint + format
 		ast.SetPrint(ToPrint + "\n")
-		return nil
+		return result
 	}
 	//Sin formato
 	for _, p := range p.Values.ToArray() {
 		ToPrint = ToPrint + fmt.Sprintf("%v", p.(interfaces.Expression).Ejecutar(ast, env).Valor)
 	}
 	ast.SetPrint(ToPrint + "\n")
-	return nil
+	return result
 }
 
 func NewPrint(lin int, col int, val *arrayList.List) Print {

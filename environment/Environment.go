@@ -48,7 +48,8 @@ func (env Environment) SetVariable(id string, value Symbol) Symbol {
 	for {
 		if variable, ok := tmpEnv.Tabla[id]; ok {
 			if tmpEnv.Tabla[id].Mutable {
-				tmpEnv.Tabla[id] = Symbol{Lin: 0, Col: 0, Id: id, Tipo: variable.Tipo, Valor: value, Mutable: true}
+				tmpEnv.Tabla[id] = value
+				//tmpEnv.Tabla[id] = Symbol{Lin: 0, Col: 0, Id: id, Tipo: variable.Tipo, Valor: value, Mutable: true}
 				return variable
 			} else {
 				fmt.Println("La variable no es mutable")

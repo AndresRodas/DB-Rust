@@ -6,10 +6,19 @@ fn main(){
     println!("{} {} {}","hola",34,"bye");
     let mut arr3: [[i64;3];2] = [[1,2,3],[4,5,6]];
     let mut x : i64 = (3*5);
-    //let stringo : String = "asdasd";
-    //let numi = 56;
+    println!(x);
+    x = arr3[0][2];
     println!(x);
     println!(arr3[1][2]);
+    println!("*********************IF****************");
+    let mut valif = if 4>3 {
+        println!("jaja");
+        let elpepe = 65;
+        println!(elpepe);
+        "Rafael Music"
+        if True { 100 }
+    };
+    println!("Hola me llamo {}",valif);
 }
 
 //let var2 = "holis";

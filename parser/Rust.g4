@@ -51,7 +51,30 @@ instructions returns[*arrayList.List insts]
 instruction returns [interfaces.Instruction inst]
 : impression PYC { $inst = $impression.pr }
 | declaration PYC { $inst = $declaration.dec }
+| assignment PYC { $inst = $assignment.ass }
+| condIf { $inst = $condIf.ifCond}
 ;
+
+condIf returns [ interfaces.Instruction ifCond ]
+: IF expression LLAVEIZQ block LLAVEDER { $ifCond = instructions.NewIf($IF.line, $IF.pos, $expression.p, $block.blk) }
+;
+
+block returns[*arrayList.List blk]
+@init{
+    $blk = arrayList.New()
+  }
+: bloque=block instruction {
+                            $bloque.blk.Add($instruction.inst)
+                            $blk = $bloque.blk
+                            }
+| bloque=block expression {
+                            $bloque.blk.Add($expression.p)
+                            $blk = $bloque.blk
+                           }
+| instruction { $blk.Add($instruction.inst) }
+| expression { $blk.Add($expression.p) }
+;
+
 
 impression returns [interfaces.Instruction pr]
 : PRINT PARIZQ listParams PARDER { $pr = instructions.NewPrint($PRINT.line,$PRINT.pos,$listParams.l) }
@@ -64,6 +87,10 @@ declaration returns [interfaces.Instruction dec]
 | LET ID IGUAL expression                   { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, environment.WILDCARD, $expression.p, false) }
 | LET MUT ID D_PTS arrayType IGUAL expression { $dec = instructions.NewArrayDeclaration($LET.line, $LET.pos, $ID.text, $arrayType.t, $expression.p, true) }
 | LET ID D_PTS arrayType IGUAL expression   { $dec = instructions.NewArrayDeclaration($LET.line, $LET.pos, $ID.text, $arrayType.t, $expression.p, false) }
+;
+
+assignment returns [interfaces.Instruction ass]
+: ID IGUAL expression { $ass = instructions.NewAssignment($ID.line, $ID.pos, $ID.text, $expression.p)}
 ;
 
 arrayType returns [*arrayList.List t]
@@ -110,6 +137,7 @@ listParams returns[*arrayList.List l]
 
 expression returns[interfaces.Expression p]
 : expr_arit { $p = $expr_arit.p }
+| condIf { $p = $condIf.ifCond }
 ;
 
 expr_arit returns[interfaces.Expression p]

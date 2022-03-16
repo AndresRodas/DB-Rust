@@ -23,11 +23,20 @@ type RustListener interface {
 	// EnterInstruction is called when entering the instruction production.
 	EnterInstruction(c *InstructionContext)
 
+	// EnterCondIf is called when entering the condIf production.
+	EnterCondIf(c *CondIfContext)
+
+	// EnterBlock is called when entering the block production.
+	EnterBlock(c *BlockContext)
+
 	// EnterImpression is called when entering the impression production.
 	EnterImpression(c *ImpressionContext)
 
 	// EnterDeclaration is called when entering the declaration production.
 	EnterDeclaration(c *DeclarationContext)
+
+	// EnterAssignment is called when entering the assignment production.
+	EnterAssignment(c *AssignmentContext)
 
 	// EnterArrayType is called when entering the arrayType production.
 	EnterArrayType(c *ArrayTypeContext)
@@ -71,11 +80,20 @@ type RustListener interface {
 	// ExitInstruction is called when exiting the instruction production.
 	ExitInstruction(c *InstructionContext)
 
+	// ExitCondIf is called when exiting the condIf production.
+	ExitCondIf(c *CondIfContext)
+
+	// ExitBlock is called when exiting the block production.
+	ExitBlock(c *BlockContext)
+
 	// ExitImpression is called when exiting the impression production.
 	ExitImpression(c *ImpressionContext)
 
 	// ExitDeclaration is called when exiting the declaration production.
 	ExitDeclaration(c *DeclarationContext)
+
+	// ExitAssignment is called when exiting the assignment production.
+	ExitAssignment(c *AssignmentContext)
 
 	// ExitArrayType is called when exiting the arrayType production.
 	ExitArrayType(c *ArrayTypeContext)

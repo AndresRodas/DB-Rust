@@ -21,7 +21,7 @@ func NewArrayDeclaration(lin int, col int, id string, tipo *arrayList.List, val 
 	return instr
 }
 
-func (p ArrayDeclaration) Ejecutar(ast *environment.AST, env interface{}) interface{} {
+func (p ArrayDeclaration) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 	//Traer simbolo
 	var result environment.Symbol
 	result = p.Expresion.Ejecutar(ast, env)
@@ -31,7 +31,7 @@ func (p ArrayDeclaration) Ejecutar(ast *environment.AST, env interface{}) interf
 	} else {
 		fmt.Println("Los tipos no coinciden")
 	}
-	return result.Valor
+	return result
 }
 
 func (p ArrayDeclaration) ValidarArray(ast *environment.AST, env interface{}, arr1 environment.Symbol, tip *arrayList.List) bool {

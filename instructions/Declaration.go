@@ -20,18 +20,19 @@ func NewDeclaration(lin int, col int, id string, tipo environment.TipoExpresion,
 	return instr
 }
 
-func (p Declaration) Ejecutar(ast *environment.AST, env interface{}) interface{} {
+func (p Declaration) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 
 	var result environment.Symbol
 
 	result = p.Expresion.Ejecutar(ast, env)
+	result.Mutable = p.Mutable
 
 	if result.Tipo == p.Tipo {
 		env.(environment.Environment).SaveVariable(p.Id, result, p.Tipo, p.Mutable)
-	} else if p.Tipo == environment.WILDCARD {
+	} else if p.Tipo == environment.WILDCARD { //aqui no se define tipo
 		env.(environment.Environment).SaveVariable(p.Id, result, result.Tipo, p.Mutable)
 	} else {
 		fmt.Println("Los tipos no coinciden")
 	}
-	return result.Valor
+	return result
 }

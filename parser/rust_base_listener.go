@@ -51,6 +51,18 @@ func (s *BaseRustListener) EnterInstruction(ctx *InstructionContext) {}
 // ExitInstruction is called when production instruction is exited.
 func (s *BaseRustListener) ExitInstruction(ctx *InstructionContext) {}
 
+// EnterCondIf is called when production condIf is entered.
+func (s *BaseRustListener) EnterCondIf(ctx *CondIfContext) {}
+
+// ExitCondIf is called when production condIf is exited.
+func (s *BaseRustListener) ExitCondIf(ctx *CondIfContext) {}
+
+// EnterBlock is called when production block is entered.
+func (s *BaseRustListener) EnterBlock(ctx *BlockContext) {}
+
+// ExitBlock is called when production block is exited.
+func (s *BaseRustListener) ExitBlock(ctx *BlockContext) {}
+
 // EnterImpression is called when production impression is entered.
 func (s *BaseRustListener) EnterImpression(ctx *ImpressionContext) {}
 
@@ -62,6 +74,12 @@ func (s *BaseRustListener) EnterDeclaration(ctx *DeclarationContext) {}
 
 // ExitDeclaration is called when production declaration is exited.
 func (s *BaseRustListener) ExitDeclaration(ctx *DeclarationContext) {}
+
+// EnterAssignment is called when production assignment is entered.
+func (s *BaseRustListener) EnterAssignment(ctx *AssignmentContext) {}
+
+// ExitAssignment is called when production assignment is exited.
+func (s *BaseRustListener) ExitAssignment(ctx *AssignmentContext) {}
 
 // EnterArrayType is called when production arrayType is entered.
 func (s *BaseRustListener) EnterArrayType(ctx *ArrayTypeContext) {}
