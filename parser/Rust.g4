@@ -52,7 +52,8 @@ instruction returns [interfaces.Instruction inst]
 : impression PYC { $inst = $impression.pr }
 | declaration PYC { $inst = $declaration.dec }
 | assignment PYC { $inst = $assignment.ass }
-| condIf { $inst = $condIf.ifCond}
+| condIf { $inst = $condIf.ifCond }
+| condMatch { $inst = $condMatch.mtch }
 ;
 
 condIf returns [ interfaces.Instruction ifCond ]
@@ -79,9 +80,6 @@ condElse returns [*arrayList.List blkelse]
 | { $blkelse = arrayList.New() }
 ;
 
-
-
-
 block returns[*arrayList.List blk]
 @init{
     $blk = arrayList.New()
@@ -98,6 +96,43 @@ block returns[*arrayList.List blk]
 | expression { $blk.Add($expression.p) }
 ;
 
+condMatch returns [interfaces.Instruction mtch]
+: MATCH expression LLAVEIZQ e+=listArms+ defaultArm LLAVEDER
+        {
+        arrarms := arrayList.New()
+        larms := localctx.(*CondMatchContext).GetE()
+        for _, e := range larms {
+            arrarms.Add(e.GetArms())
+        }
+        $mtch = instructions.NewMatch($MATCH.line, $MATCH.pos, $expression.p, arrarms, $defaultArm.defa)
+        }
+;
+
+listArms returns [interfaces.Instruction arms]
+: listMatch ARROW2 block COMA{
+         $arms = instructions.NewArm($listMatch.start.GetLine(),$listMatch.start.GetColumn(), $listMatch.ma, $block.blk)
+         }
+| listMatch ARROW2 LLAVEIZQ block LLAVEDER COMA {
+        $arms = instructions.NewArm($listMatch.start.GetLine(),$listMatch.start.GetColumn(), $listMatch.ma, $block.blk)
+        }
+;
+
+listMatch returns[*arrayList.List ma]
+: lma=listMatch PLEC expression {
+                                $lma.ma.Add($expression.p)
+                                $ma = $lma.ma
+                             }
+| expression {
+                 $ma = arrayList.New()
+                 $ma.Add($expression.p)
+              }
+;
+
+defaultArm returns[*arrayList.List defa]
+: UNDERSCORE ARROW2 block COMA { $defa = $block.blk }
+| UNDERSCORE ARROW2 LLAVEIZQ block LLAVEDER COMA { $defa = $block.blk }
+| { $defa = arrayList.New() }
+;
 
 impression returns [interfaces.Instruction pr]
 : PRINT PARIZQ listParams PARDER { $pr = instructions.NewPrint($PRINT.line,$PRINT.pos,$listParams.l) }
@@ -161,6 +196,7 @@ listParams returns[*arrayList.List l]
 expression returns[interfaces.Expression p]
 : expr_arit { $p = $expr_arit.p }
 | condIf { $p = $condIf.ifCond }
+| condMatch { $p = $condMatch.mtch }
 ;
 
 expr_arit returns[interfaces.Expression p]
@@ -179,19 +215,21 @@ primitive returns[interfaces.Expression p]
                 if err!= nil{
                     fmt.Println(err)
                 }
-                $p = expressions.NewPrimitive(0,0,num,environment.FLOAT)
+                $p = expressions.NewPrimitive($NUMBER.line,$NUMBER.pos,num,environment.FLOAT)
             }else{
                 num,err := strconv.Atoi($NUMBER.text)
                 if err!= nil{
                     fmt.Println(err)
                 }
-                $p = expressions.NewPrimitive(0,0,num,environment.INTEGER)
+                $p = expressions.NewPrimitive($NUMBER.line,$NUMBER.pos,num,environment.INTEGER)
             }
         }
 | STRING    {
                 str := $STRING.text
-                $p = expressions.NewPrimitive(0,0,str[1:len(str)-1],environment.STRING)
+                $p = expressions.NewPrimitive($STRING.line, $STRING.pos,str[1:len(str)-1],environment.STRING)
             }
+| TRU { $p = expressions.NewPrimitive($TRU.line, $TRU.pos,true,environment.BOOLEAN) }
+| FAL { $p = expressions.NewPrimitive($FAL.line, $FAL.pos,false,environment.BOOLEAN) }
 | list=listArray { $p = $list.p}
 ;
 

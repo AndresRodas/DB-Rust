@@ -75,6 +75,30 @@ func (s *BaseRustListener) EnterBlock(ctx *BlockContext) {}
 // ExitBlock is called when production block is exited.
 func (s *BaseRustListener) ExitBlock(ctx *BlockContext) {}
 
+// EnterCondMatch is called when production condMatch is entered.
+func (s *BaseRustListener) EnterCondMatch(ctx *CondMatchContext) {}
+
+// ExitCondMatch is called when production condMatch is exited.
+func (s *BaseRustListener) ExitCondMatch(ctx *CondMatchContext) {}
+
+// EnterListArms is called when production listArms is entered.
+func (s *BaseRustListener) EnterListArms(ctx *ListArmsContext) {}
+
+// ExitListArms is called when production listArms is exited.
+func (s *BaseRustListener) ExitListArms(ctx *ListArmsContext) {}
+
+// EnterListMatch is called when production listMatch is entered.
+func (s *BaseRustListener) EnterListMatch(ctx *ListMatchContext) {}
+
+// ExitListMatch is called when production listMatch is exited.
+func (s *BaseRustListener) ExitListMatch(ctx *ListMatchContext) {}
+
+// EnterDefaultArm is called when production defaultArm is entered.
+func (s *BaseRustListener) EnterDefaultArm(ctx *DefaultArmContext) {}
+
+// ExitDefaultArm is called when production defaultArm is exited.
+func (s *BaseRustListener) ExitDefaultArm(ctx *DefaultArmContext) {}
+
 // EnterImpression is called when production impression is entered.
 func (s *BaseRustListener) EnterImpression(ctx *ImpressionContext) {}
 

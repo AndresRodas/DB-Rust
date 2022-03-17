@@ -14,6 +14,8 @@ VECTOR: 'vec';
 STRUCT: 'struct';
 
 // reserved words
+TRU: 'true';
+FAL: 'false';
 POW: 'pow';
 PRINT: 'println!';
 LET: 'let';
@@ -50,7 +52,7 @@ PUB: 'pub';
 // primitives
 NUMBER : [0-9]+ ('.'[0-9]+)?;
 STRING: '"'~["]*'"';
-ID: ([a-zA-Z_])[a-zA-Z0-9_]*;
+ID: ([a-zA-Z])[a-zA-Z0-9_]*;
 
 // symbols
 PUNTO:          '.';
@@ -62,6 +64,8 @@ DIFERENTE:      '!=';
 IG_IG:          '==';
 NOT:            '!';
 OR:             '||';
+PLEC:           '|';
+UNDERSCORE:     '_';
 AND:            '&&';
 IGUAL:          '=';
 MAYORIGUAL:     '>=';

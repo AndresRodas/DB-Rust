@@ -11,7 +11,6 @@ fn main(){
     println!(x);
     println!(arr3[1][2]);
     println!("*********************IF****************");
-
     let mut valorif = if 4>41{
         println!("if");
         1
@@ -25,7 +24,36 @@ fn main(){
         3
     };
     println!(valorif);
-
+    println!("*********************MATCH****************");
+    let flag = false;
+    match flag {
+        true => println!("es true");,
+        _=> println!("es false");,
+    }
+    match "jaja" {
+    	"jeje" => {
+    	    let mut risa1 = "jeje";
+    	    println!("la risa es {}",risa1);
+    	},
+    	"jiji" => {
+    	    let mut risa2 = "jiji";
+            println!("la risa es {}",risa2);
+    	},
+    	"jaja" => {
+    	    let mut risa3 = "jaja";
+            println!("la risa es {}",risa3);
+    	},
+    	"juasjuas" => {
+    	    let mut risa4 = "juasjuas";
+            println!("la risa es {}",risa4);
+    	},
+    	"no" => {
+            println!("no");
+    	},
+    	_ => {
+    	    println!("efe efe efe");
+    	},
+    }
 
 
 }

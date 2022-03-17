@@ -35,6 +35,18 @@ type RustListener interface {
 	// EnterBlock is called when entering the block production.
 	EnterBlock(c *BlockContext)
 
+	// EnterCondMatch is called when entering the condMatch production.
+	EnterCondMatch(c *CondMatchContext)
+
+	// EnterListArms is called when entering the listArms production.
+	EnterListArms(c *ListArmsContext)
+
+	// EnterListMatch is called when entering the listMatch production.
+	EnterListMatch(c *ListMatchContext)
+
+	// EnterDefaultArm is called when entering the defaultArm production.
+	EnterDefaultArm(c *DefaultArmContext)
+
 	// EnterImpression is called when entering the impression production.
 	EnterImpression(c *ImpressionContext)
 
@@ -97,6 +109,18 @@ type RustListener interface {
 
 	// ExitBlock is called when exiting the block production.
 	ExitBlock(c *BlockContext)
+
+	// ExitCondMatch is called when exiting the condMatch production.
+	ExitCondMatch(c *CondMatchContext)
+
+	// ExitListArms is called when exiting the listArms production.
+	ExitListArms(c *ListArmsContext)
+
+	// ExitListMatch is called when exiting the listMatch production.
+	ExitListMatch(c *ListMatchContext)
+
+	// ExitDefaultArm is called when exiting the defaultArm production.
+	ExitDefaultArm(c *DefaultArmContext)
 
 	// ExitImpression is called when exiting the impression production.
 	ExitImpression(c *ImpressionContext)
