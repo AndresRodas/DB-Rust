@@ -62,8 +62,14 @@ func (p Match) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 				for _, s := range arms.(Arm).Block.ToArray() {
 					if strings.Contains(fmt.Sprintf("%T", s), "instructions") {
 						result = s.(interfaces.Instruction).Ejecutar(ast, matchEnv)
+						if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE { //BREAK & CONTINUE
+							return result
+						}
 					} else if strings.Contains(fmt.Sprintf("%T", s), "expressions") {
 						result = s.(interfaces.Expression).Ejecutar(ast, matchEnv)
+						if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE { //BREAK & CONTINUE
+							return result
+						}
 					} else {
 						fmt.Println("error en bloque")
 					}
@@ -76,8 +82,14 @@ func (p Match) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 	for _, d := range p.DefArm.ToArray() {
 		if strings.Contains(fmt.Sprintf("%T", d), "instructions") {
 			result = d.(interfaces.Instruction).Ejecutar(ast, matchEnv)
+			if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE { //BREAK & CONTINUE
+				return result
+			}
 		} else if strings.Contains(fmt.Sprintf("%T", d), "expressions") {
 			result = d.(interfaces.Expression).Ejecutar(ast, matchEnv)
+			if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE { //BREAK & CONTINUE
+				return result
+			}
 		} else {
 			fmt.Println("error en bloque")
 			return result

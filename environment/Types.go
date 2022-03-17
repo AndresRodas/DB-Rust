@@ -13,4 +13,6 @@ const (
 	CHAR
 	VECTOR
 	WILDCARD
+	BREAK
+	CONTINUE
 )

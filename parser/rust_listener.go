@@ -23,6 +23,21 @@ type RustListener interface {
 	// EnterInstruction is called when entering the instruction production.
 	EnterInstruction(c *InstructionContext)
 
+	// EnterLoopWhile is called when entering the loopWhile production.
+	EnterLoopWhile(c *LoopWhileContext)
+
+	// EnterLoopBucle is called when entering the loopBucle production.
+	EnterLoopBucle(c *LoopBucleContext)
+
+	// EnterLoopForin is called when entering the loopForin production.
+	EnterLoopForin(c *LoopForinContext)
+
+	// EnterTransBreak is called when entering the transBreak production.
+	EnterTransBreak(c *TransBreakContext)
+
+	// EnterTransContinue is called when entering the transContinue production.
+	EnterTransContinue(c *TransContinueContext)
+
 	// EnterCondIf is called when entering the condIf production.
 	EnterCondIf(c *CondIfContext)
 
@@ -97,6 +112,21 @@ type RustListener interface {
 
 	// ExitInstruction is called when exiting the instruction production.
 	ExitInstruction(c *InstructionContext)
+
+	// ExitLoopWhile is called when exiting the loopWhile production.
+	ExitLoopWhile(c *LoopWhileContext)
+
+	// ExitLoopBucle is called when exiting the loopBucle production.
+	ExitLoopBucle(c *LoopBucleContext)
+
+	// ExitLoopForin is called when exiting the loopForin production.
+	ExitLoopForin(c *LoopForinContext)
+
+	// ExitTransBreak is called when exiting the transBreak production.
+	ExitTransBreak(c *TransBreakContext)
+
+	// ExitTransContinue is called when exiting the transContinue production.
+	ExitTransContinue(c *TransContinueContext)
 
 	// ExitCondIf is called when exiting the condIf production.
 	ExitCondIf(c *CondIfContext)

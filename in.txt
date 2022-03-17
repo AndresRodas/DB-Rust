@@ -3,62 +3,17 @@
 //let var2 = "holis";
 
 fn main(){
-    println!("{} {} {}","hola",34,"bye");
-    let mut arr3: [[i64;3];2] = [[1,2,3],[4,5,6]];
-    let mut x : i64 = (3*5);
-    println!(x);
-    x = arr3[0][2];
-    println!(x);
-    println!(arr3[1][2]);
-    println!("*********************IF****************");
-    let mut valorif = if 4>41{
-        println!("if");
-        1
-    }else if 60 > 55 {
-        println!("elseif 1");
-        2
-    }else if x + 1 > 30{
-        println!("elseif 2");
-        let mut valif = if 4>35 { "Rafael Music"}else{50};
-        println!("Hola me llamo {}",valif);
-        3
-    };
-    println!(valorif);
-    println!("*********************MATCH****************");
-    let flag = false;
-    match flag {
-        true => println!("es true");,
-        _=> println!("es false");,
-    }
-    match "jaja" {
-    	"jeje" => {
-    	    let mut risa1 = "jeje";
-    	    println!("la risa es {}",risa1);
-    	},
-    	"jiji" => {
-    	    let mut risa2 = "jiji";
-            println!("la risa es {}",risa2);
-    	},
-    	"jaja" => {
-    	    let mut risa3 = "jaja";
-            println!("la risa es {}",risa3);
-    	},
-    	"juasjuas" => {
-    	    let mut risa4 = "juasjuas";
-            println!("la risa es {}",risa4);
-    	},
-    	"no" => {
-            println!("no");
-    	},
-    	_ => {
-    	    println!("efe efe efe");
-    	},
+    println!("****************FORIN***************");
+    for vali in [0,1,2,3,4,5] {
+        println!(vali);
+        if vali > 3 {
+            break;
+        }
     }
 
 
 }
 
-//let var2 = "holis";
 
 
 

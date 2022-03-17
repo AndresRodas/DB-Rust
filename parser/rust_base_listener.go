@@ -51,6 +51,36 @@ func (s *BaseRustListener) EnterInstruction(ctx *InstructionContext) {}
 // ExitInstruction is called when production instruction is exited.
 func (s *BaseRustListener) ExitInstruction(ctx *InstructionContext) {}
 
+// EnterLoopWhile is called when production loopWhile is entered.
+func (s *BaseRustListener) EnterLoopWhile(ctx *LoopWhileContext) {}
+
+// ExitLoopWhile is called when production loopWhile is exited.
+func (s *BaseRustListener) ExitLoopWhile(ctx *LoopWhileContext) {}
+
+// EnterLoopBucle is called when production loopBucle is entered.
+func (s *BaseRustListener) EnterLoopBucle(ctx *LoopBucleContext) {}
+
+// ExitLoopBucle is called when production loopBucle is exited.
+func (s *BaseRustListener) ExitLoopBucle(ctx *LoopBucleContext) {}
+
+// EnterLoopForin is called when production loopForin is entered.
+func (s *BaseRustListener) EnterLoopForin(ctx *LoopForinContext) {}
+
+// ExitLoopForin is called when production loopForin is exited.
+func (s *BaseRustListener) ExitLoopForin(ctx *LoopForinContext) {}
+
+// EnterTransBreak is called when production transBreak is entered.
+func (s *BaseRustListener) EnterTransBreak(ctx *TransBreakContext) {}
+
+// ExitTransBreak is called when production transBreak is exited.
+func (s *BaseRustListener) ExitTransBreak(ctx *TransBreakContext) {}
+
+// EnterTransContinue is called when production transContinue is entered.
+func (s *BaseRustListener) EnterTransContinue(ctx *TransContinueContext) {}
+
+// ExitTransContinue is called when production transContinue is exited.
+func (s *BaseRustListener) ExitTransContinue(ctx *TransContinueContext) {}
+
 // EnterCondIf is called when production condIf is entered.
 func (s *BaseRustListener) EnterCondIf(ctx *CondIfContext) {}
 

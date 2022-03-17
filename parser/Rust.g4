@@ -54,6 +54,32 @@ instruction returns [interfaces.Instruction inst]
 | assignment PYC { $inst = $assignment.ass }
 | condIf { $inst = $condIf.ifCond }
 | condMatch { $inst = $condMatch.mtch }
+| loopWhile { $inst = $loopWhile.lw }
+| loopBucle { $inst = $loopBucle.lb }
+| loopForin { $inst = $loopForin.lfi }
+| transBreak PYC { $inst = $transBreak.brk }
+| transContinue PYC { $inst = $transContinue.cnt }
+;
+
+loopWhile returns[interfaces.Instruction lw]
+: WHILE expression LLAVEIZQ block LLAVEDER { $lw = instructions.NewWhile($WHILE.line, $WHILE.pos, $expression.p, $block.blk ) }
+;
+
+loopBucle returns[interfaces.Instruction lb]
+: LOOP LLAVEIZQ block LLAVEDER { $lb = instructions.NewLoop($LOOP.line, $LOOP.pos, $block.blk) }
+;
+
+loopForin returns[interfaces.Instruction lfi]
+: FOR ID IN expression LLAVEIZQ instructions LLAVEDER { $lfi = instructions.NewForIn($FOR.line, $FOR.pos, $ID.text, $expression.p, $instructions.insts) }
+;
+
+transBreak returns[interfaces.Instruction brk]
+: BREAK expression { $brk = instructions.NewBreak($BREAK.line, $BREAK.pos, $expression.p) }
+| BREAK { $brk = instructions.NewBreak($BREAK.line, $BREAK.pos, nil) }
+;
+
+transContinue returns[interfaces.Instruction cnt]
+: CONTINUE { $cnt = instructions.NewContinue($CONTINUE.line, $CONTINUE.pos) }
 ;
 
 condIf returns [ interfaces.Instruction ifCond ]
@@ -195,8 +221,7 @@ listParams returns[*arrayList.List l]
 
 expression returns[interfaces.Expression p]
 : expr_arit { $p = $expr_arit.p }
-| condIf { $p = $condIf.ifCond }
-| condMatch { $p = $condMatch.mtch }
+| expuno=expression PUNTO PUNTO expdos=expression { $p = expressions.NewRange($expuno.start.GetLine(),$expuno.start.GetColumn(), $expuno.p, $expdos.p) }
 ;
 
 expr_arit returns[interfaces.Expression p]
@@ -206,6 +231,9 @@ expr_arit returns[interfaces.Expression p]
 | CORIZQ listParams CORDER { $p = expressions.NewArray($CORIZQ.line, $CORIZQ.pos, $listParams.l) }
 | PARIZQ expression PARDER { $p = $expression.p }
 | primitive { $p = $primitive.p }
+| condIf { $p = $condIf.ifCond }
+| condMatch { $p = $condMatch.mtch }
+| loopBucle { $p = $loopBucle.lb }
 ;
 
 primitive returns[interfaces.Expression p]

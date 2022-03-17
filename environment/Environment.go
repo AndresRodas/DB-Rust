@@ -95,3 +95,20 @@ func (env Environment) GetStruct(id string) Symbol {
 	fmt.Println("El struct no existe")
 	return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NULL, Valor: 0, Mutable: false}
 }
+
+func (env Environment) LoopValidation() bool {
+	var tmpEnv Environment
+	tmpEnv = env
+	for {
+		if tmpEnv.Id == "WHILE" || tmpEnv.Id == "FOR-IN" || tmpEnv.Id == "LOOP" {
+			return true
+		}
+		if tmpEnv.Anterior == nil {
+			break
+		} else {
+			tmpEnv = tmpEnv.Anterior.(Environment)
+		}
+	}
+	fmt.Println("la sentencia tiene que estar dentro de un ciclo")
+	return false
+}
