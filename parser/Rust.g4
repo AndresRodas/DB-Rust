@@ -56,8 +56,31 @@ instruction returns [interfaces.Instruction inst]
 ;
 
 condIf returns [ interfaces.Instruction ifCond ]
-: IF expression LLAVEIZQ block LLAVEDER { $ifCond = instructions.NewIf($IF.line, $IF.pos, $expression.p, $block.blk) }
+: IF expression LLAVEIZQ block LLAVEDER e+=condElseIf* condElse{
+            elif := arrayList.New()
+            listElif := localctx.(*CondIfContext).GetE()
+            for _, e := range listElif {
+                elif.Add(e.GetElif())
+            }
+            $ifCond = instructions.NewIf($IF.line, $IF.pos, $expression.p, $block.blk, elif, $condElse.blkelse)
+            }
 ;
+
+condElseIf returns [interfaces.Instruction elif]
+: ELSE IF expression LLAVEIZQ block LLAVEDER {
+    elif := arrayList.New()
+    condelse := arrayList.New()
+    $elif = instructions.NewIf($ELSE.line, $ELSE.pos, $expression.p, $block.blk, elif, condelse)
+    }
+;
+
+condElse returns [*arrayList.List blkelse]
+: ELSE LLAVEIZQ block LLAVEDER { $blkelse = $block.blk }
+| { $blkelse = arrayList.New() }
+;
+
+
+
 
 block returns[*arrayList.List blk]
 @init{

@@ -35,6 +35,7 @@ CAPACITY: 'capacity';
 WCAPACITY: 'with_capacity';
 MAIN: 'main';
 IF: 'if';
+ELSE: 'else';
 MATCH: 'match';
 LOOP: 'loop';
 WHILE: 'while';

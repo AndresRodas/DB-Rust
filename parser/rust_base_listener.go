@@ -57,6 +57,18 @@ func (s *BaseRustListener) EnterCondIf(ctx *CondIfContext) {}
 // ExitCondIf is called when production condIf is exited.
 func (s *BaseRustListener) ExitCondIf(ctx *CondIfContext) {}
 
+// EnterCondElseIf is called when production condElseIf is entered.
+func (s *BaseRustListener) EnterCondElseIf(ctx *CondElseIfContext) {}
+
+// ExitCondElseIf is called when production condElseIf is exited.
+func (s *BaseRustListener) ExitCondElseIf(ctx *CondElseIfContext) {}
+
+// EnterCondElse is called when production condElse is entered.
+func (s *BaseRustListener) EnterCondElse(ctx *CondElseContext) {}
+
+// ExitCondElse is called when production condElse is exited.
+func (s *BaseRustListener) ExitCondElse(ctx *CondElseContext) {}
+
 // EnterBlock is called when production block is entered.
 func (s *BaseRustListener) EnterBlock(ctx *BlockContext) {}
 

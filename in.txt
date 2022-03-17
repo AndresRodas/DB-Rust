@@ -11,14 +11,23 @@ fn main(){
     println!(x);
     println!(arr3[1][2]);
     println!("*********************IF****************");
-    let mut valif = if 4>3 {
-        println!("jaja");
-        let elpepe = 65;
-        println!(elpepe);
-        "Rafael Music"
-        if True { 100 }
+
+    let mut valorif = if 4>41{
+        println!("if");
+        1
+    }else if 60 > 55 {
+        println!("elseif 1");
+        2
+    }else if x + 1 > 30{
+        println!("elseif 2");
+        let mut valif = if 4>35 { "Rafael Music"}else{50};
+        println!("Hola me llamo {}",valif);
+        3
     };
-    println!("Hola me llamo {}",valif);
+    println!(valorif);
+
+
+
 }
 
 //let var2 = "holis";

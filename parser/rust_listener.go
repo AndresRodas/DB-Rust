@@ -26,6 +26,12 @@ type RustListener interface {
 	// EnterCondIf is called when entering the condIf production.
 	EnterCondIf(c *CondIfContext)
 
+	// EnterCondElseIf is called when entering the condElseIf production.
+	EnterCondElseIf(c *CondElseIfContext)
+
+	// EnterCondElse is called when entering the condElse production.
+	EnterCondElse(c *CondElseContext)
+
 	// EnterBlock is called when entering the block production.
 	EnterBlock(c *BlockContext)
 
@@ -82,6 +88,12 @@ type RustListener interface {
 
 	// ExitCondIf is called when exiting the condIf production.
 	ExitCondIf(c *CondIfContext)
+
+	// ExitCondElseIf is called when exiting the condElseIf production.
+	ExitCondElseIf(c *CondElseIfContext)
+
+	// ExitCondElse is called when exiting the condElse production.
+	ExitCondElse(c *CondElseContext)
 
 	// ExitBlock is called when exiting the block production.
 	ExitBlock(c *BlockContext)
