@@ -15,6 +15,7 @@ type Print struct {
 }
 
 func (p Print) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
+	//fmt.Println(env.(environment.Environment).Structs["Personaje"].Valor)
 	var result environment.Symbol
 	var ToPrint string
 	if p.Values.Len() > 1 {

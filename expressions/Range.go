@@ -48,7 +48,7 @@ func (p Range) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 	return environment.Symbol{
 		Lin:     p.Lin,
 		Col:     p.Col,
-		Id:      "RANGE",
+		Id:      "",
 		Tipo:    environment.ARRAY,
 		Valor:   arr,
 		Mutable: false,

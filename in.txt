@@ -3,14 +3,19 @@
 //let var2 = "holis";
 
 fn main(){
-    println!("****************FORIN***************");
-    for vali in [0,1,2,3,4,5] {
-        println!(vali);
-        if vali > 3 {
+
+    struct Mascota{
+        nombre: String,
+        edad: i64
+    }
+
+    while 3>num{
+        print
+        let
+        if{
             break;
         }
     }
-
 
 }
 

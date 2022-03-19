@@ -141,11 +141,29 @@ func (s *BaseRustListener) EnterDeclaration(ctx *DeclarationContext) {}
 // ExitDeclaration is called when production declaration is exited.
 func (s *BaseRustListener) ExitDeclaration(ctx *DeclarationContext) {}
 
+// EnterStructCreation is called when production structCreation is entered.
+func (s *BaseRustListener) EnterStructCreation(ctx *StructCreationContext) {}
+
+// ExitStructCreation is called when production structCreation is exited.
+func (s *BaseRustListener) ExitStructCreation(ctx *StructCreationContext) {}
+
+// EnterListStructDec is called when production listStructDec is entered.
+func (s *BaseRustListener) EnterListStructDec(ctx *ListStructDecContext) {}
+
+// ExitListStructDec is called when production listStructDec is exited.
+func (s *BaseRustListener) ExitListStructDec(ctx *ListStructDecContext) {}
+
 // EnterAssignment is called when production assignment is entered.
 func (s *BaseRustListener) EnterAssignment(ctx *AssignmentContext) {}
 
 // ExitAssignment is called when production assignment is exited.
 func (s *BaseRustListener) ExitAssignment(ctx *AssignmentContext) {}
+
+// EnterListAccessStruct is called when production listAccessStruct is entered.
+func (s *BaseRustListener) EnterListAccessStruct(ctx *ListAccessStructContext) {}
+
+// ExitListAccessStruct is called when production listAccessStruct is exited.
+func (s *BaseRustListener) ExitListAccessStruct(ctx *ListAccessStructContext) {}
 
 // EnterArrayType is called when production arrayType is entered.
 func (s *BaseRustListener) EnterArrayType(ctx *ArrayTypeContext) {}
@@ -200,3 +218,9 @@ func (s *BaseRustListener) EnterListArray(ctx *ListArrayContext) {}
 
 // ExitListArray is called when production listArray is exited.
 func (s *BaseRustListener) ExitListArray(ctx *ListArrayContext) {}
+
+// EnterListStructExp is called when production listStructExp is entered.
+func (s *BaseRustListener) EnterListStructExp(ctx *ListStructExpContext) {}
+
+// ExitListStructExp is called when production listStructExp is exited.
+func (s *BaseRustListener) ExitListStructExp(ctx *ListStructExpContext) {}

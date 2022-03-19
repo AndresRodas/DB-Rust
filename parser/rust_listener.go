@@ -68,8 +68,17 @@ type RustListener interface {
 	// EnterDeclaration is called when entering the declaration production.
 	EnterDeclaration(c *DeclarationContext)
 
+	// EnterStructCreation is called when entering the structCreation production.
+	EnterStructCreation(c *StructCreationContext)
+
+	// EnterListStructDec is called when entering the listStructDec production.
+	EnterListStructDec(c *ListStructDecContext)
+
 	// EnterAssignment is called when entering the assignment production.
 	EnterAssignment(c *AssignmentContext)
+
+	// EnterListAccessStruct is called when entering the listAccessStruct production.
+	EnterListAccessStruct(c *ListAccessStructContext)
 
 	// EnterArrayType is called when entering the arrayType production.
 	EnterArrayType(c *ArrayTypeContext)
@@ -97,6 +106,9 @@ type RustListener interface {
 
 	// EnterListArray is called when entering the listArray production.
 	EnterListArray(c *ListArrayContext)
+
+	// EnterListStructExp is called when entering the listStructExp production.
+	EnterListStructExp(c *ListStructExpContext)
 
 	// ExitStart is called when exiting the start production.
 	ExitStart(c *StartContext)
@@ -158,8 +170,17 @@ type RustListener interface {
 	// ExitDeclaration is called when exiting the declaration production.
 	ExitDeclaration(c *DeclarationContext)
 
+	// ExitStructCreation is called when exiting the structCreation production.
+	ExitStructCreation(c *StructCreationContext)
+
+	// ExitListStructDec is called when exiting the listStructDec production.
+	ExitListStructDec(c *ListStructDecContext)
+
 	// ExitAssignment is called when exiting the assignment production.
 	ExitAssignment(c *AssignmentContext)
+
+	// ExitListAccessStruct is called when exiting the listAccessStruct production.
+	ExitListAccessStruct(c *ListAccessStructContext)
 
 	// ExitArrayType is called when exiting the arrayType production.
 	ExitArrayType(c *ArrayTypeContext)
@@ -187,4 +208,7 @@ type RustListener interface {
 
 	// ExitListArray is called when exiting the listArray production.
 	ExitListArray(c *ListArrayContext)
+
+	// ExitListStructExp is called when exiting the listStructExp production.
+	ExitListStructExp(c *ListStructExpContext)
 }

@@ -2,7 +2,6 @@ package instructions
 
 import (
 	"OLC2/environment"
-	"OLC2/expressions"
 	"OLC2/interfaces"
 	"fmt"
 	arrayList "github.com/colegno/arraylist"
@@ -25,22 +24,18 @@ func (p ForIn) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 	breakFlag := false
 	var result environment.Symbol
 	var arr *arrayList.List
-
+	//validar si es tipo array
 	if p.Exp.Ejecutar(ast, env).Tipo == environment.ARRAY {
-
+		//se extrae la lista
 		arr = p.Exp.Ejecutar(ast, env).Valor.(*arrayList.List)
+		//se recorre
 		for _, s := range arr.ToArray() {
+			//crendo entorno
 			var loopEnv environment.Environment
 			loopEnv = environment.NewEnvironment(env.(environment.Environment), "FOR-IN")
-			result = environment.Symbol{
-				Lin:     p.Lin,
-				Col:     p.Col,
-				Id:      p.Id,
-				Tipo:    p.Exp.(expressions.Range).Tipo,
-				Valor:   s,
-				Mutable: false,
-			}
-			loopEnv.SaveVariable(p.Id, result, environment.INTEGER, false)
+			//agregando variable al entorno
+			loopEnv.SaveVariable(p.Id, s.(environment.Symbol), environment.INTEGER, false)
+			//recorriendo bloque de instrucciones
 			for _, b := range p.Inst.ToArray() {
 				result = b.(interfaces.Instruction).Ejecutar(ast, loopEnv)
 				if result.Tipo == environment.BREAK {

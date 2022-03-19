@@ -162,6 +162,54 @@ func (o Operation) Ejecutar(ast *environment.AST, env interface{}) environment.S
 					fmt.Print("ERROR: No es posible comparar <")
 				}
 			}
+		case "==":
+			{
+				dominante = relacional_dominante[op1.Tipo][op2.Tipo]
+
+				return environment.Symbol{Lin: o.Lin, Col: o.Col, Id: "", Tipo: environment.BOOLEAN, Valor: op1.Valor.(int) == op2.Valor.(int), Mutable: true}
+			}
+		case "!=":
+			{
+				dominante = relacional_dominante[op1.Tipo][op2.Tipo]
+
+				return environment.Symbol{Lin: o.Lin, Col: o.Col, Id: "", Tipo: environment.BOOLEAN, Valor: op1.Valor.(int) != op2.Valor.(int), Mutable: true}
+			}
+		case "&&":
+			{
+				dominante = relacional_dominante[op1.Tipo][op2.Tipo]
+				if (op1.Tipo == environment.BOOLEAN) && (op2.Tipo == environment.BOOLEAN) {
+					return environment.Symbol{Lin: o.Lin, Col: o.Col, Id: "", Tipo: environment.BOOLEAN, Valor: op1.Valor.(bool) && op2.Valor.(bool), Mutable: true}
+				} else {
+					fmt.Print("ERROR: tipo no compatible")
+				}
+			}
+		case "||":
+			{
+				dominante = relacional_dominante[op1.Tipo][op2.Tipo]
+				if (op1.Tipo == environment.BOOLEAN) && (op2.Tipo == environment.BOOLEAN) {
+					return environment.Symbol{Lin: o.Lin, Col: o.Col, Id: "", Tipo: environment.BOOLEAN, Valor: op1.Valor.(bool) || op2.Valor.(bool), Mutable: true}
+				} else {
+					fmt.Print("ERROR: tipo no compatible")
+				}
+			}
+		case "NOT":
+			{
+				dominante = relacional_dominante[op1.Tipo][op2.Tipo]
+				if op1.Tipo == environment.BOOLEAN {
+					return environment.Symbol{Lin: o.Lin, Col: o.Col, Id: "", Tipo: environment.BOOLEAN, Valor: !op1.Valor.(bool), Mutable: true}
+				} else {
+					fmt.Print("ERROR: tipo no compatible")
+				}
+			}
+		case "MENOS_UNARIO":
+			{
+				dominante = relacional_dominante[op1.Tipo][op2.Tipo]
+				if (op1.Tipo == environment.INTEGER) || (op2.Tipo == environment.BOOLEAN) {
+					return environment.Symbol{Lin: o.Lin, Col: o.Col, Id: "", Tipo: environment.BOOLEAN, Valor: op1.Valor.(bool) && op2.Valor.(bool), Mutable: true}
+				} else {
+					fmt.Print("ERROR: tipo no compatible")
+				}
+			}
 		}
 	}
 	var result interface{}

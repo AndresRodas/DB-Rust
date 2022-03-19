@@ -59,6 +59,7 @@ instruction returns [interfaces.Instruction inst]
 | loopForin { $inst = $loopForin.lfi }
 | transBreak PYC { $inst = $transBreak.brk }
 | transContinue PYC { $inst = $transContinue.cnt }
+| structCreation { $inst = $structCreation.dec }
 ;
 
 loopWhile returns[interfaces.Instruction lw]
@@ -173,8 +174,37 @@ declaration returns [interfaces.Instruction dec]
 | LET ID D_PTS arrayType IGUAL expression   { $dec = instructions.NewArrayDeclaration($LET.line, $LET.pos, $ID.text, $arrayType.t, $expression.p, false) }
 ;
 
+structCreation returns[interfaces.Instruction dec]
+: STRUCT ID LLAVEIZQ listStructDec LLAVEDER { $dec = instructions.NewStruct($STRUCT.line, $STRUCT.pos, $ID.text, $listStructDec.l) }
+;
+
+listStructDec returns[*arrayList.List l]
+: list=listStructDec COMA ID D_PTS types {
+                                        StrDef := environment.NewStructType($ID.text, $types.ty)
+                                        $list.l.Add(StrDef);
+                                        $l = $list.l;
+                                    }
+| ID D_PTS types{
+                    StrDef := environment.NewStructType($ID.text, $types.ty)
+                    $l = arrayList.New();
+                    $l.Add(StrDef);
+                }
+;
+
 assignment returns [interfaces.Instruction ass]
 : ID IGUAL expression { $ass = instructions.NewAssignment($ID.line, $ID.pos, $ID.text, $expression.p)}
+| listAccessStruct IGUAL expression { $ass = instructions.NewStructAssign($listAccessStruct.start.GetLine(),$listAccessStruct.start.GetColumn(), $listAccessStruct.l, $expression.p) }
+;
+
+listAccessStruct returns[*arrayList.List l]
+: list=listAccessStruct PUNTO ID {
+                                   $list.l.Add($ID.text)
+                                   $l = $list.l
+                                  }
+| ID {
+            $l = arrayList.New()
+            $l.Add($ID.text)
+}
 ;
 
 arrayType returns [*arrayList.List t]
@@ -230,6 +260,7 @@ expr_arit returns[interfaces.Expression p]
 | opIz=expr_arit op=(MENOR|MENORIGUAL|MAYORIGUAL|MAYOR) opDe=expr_arit {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}
 | CORIZQ listParams CORDER { $p = expressions.NewArray($CORIZQ.line, $CORIZQ.pos, $listParams.l) }
 | PARIZQ expression PARDER { $p = $expression.p }
+| ID LLAVEIZQ listStructExp LLAVEDER { $p = expressions.NewStructExp($ID.line, $ID.pos, $ID.text, $listStructExp.l ) }
 | primitive { $p = $primitive.p }
 | condIf { $p = $condIf.ifCond }
 | condMatch { $p = $condMatch.mtch }
@@ -263,5 +294,20 @@ primitive returns[interfaces.Expression p]
 
 listArray returns[interfaces.Expression p]
 : list = listArray CORIZQ expression CORDER { $p = expressions.NewArrayAccess($list.start.GetLine(), $list.start.GetColumn(), $list.p, $expression.p) }
+| list = listArray PUNTO ID { $p = expressions.NewStructAccess($list.start.GetLine(), $list.start.GetColumn(), $list.p, $ID.text)  }
 | ID { $p = expressions.NewCallVar($ID.line, $ID.pos, $ID.text)}
+;
+
+
+listStructExp returns[*arrayList.List l]
+: list=listStructExp COMA ID D_PTS expression {
+                                        StrExp := environment.NewStructContent($ID.text, $expression.p)
+                                        $list.l.Add(StrExp);
+                                        $l = $list.l;
+                                    }
+| ID D_PTS expression{
+                    StrExp := environment.NewStructContent($ID.text, $expression.p)
+                    $l = arrayList.New();
+                    $l.Add(StrExp);
+                }
 ;
