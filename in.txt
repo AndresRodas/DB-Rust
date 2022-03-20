@@ -3,20 +3,9 @@
 //let var2 = "holis";
 
 fn main(){
-
-    struct Mascota{
-        nombre: String,
-        edad: i64
-    }
-
-    while 3>num{
-        print
-        let
-        if{
-            break;
-        }
-    }
-
+   let val1: String = "jajaja ".to_string();
+   let val2: &str = "holis";
+   println!("{}",val1+val2);
 }
 
 

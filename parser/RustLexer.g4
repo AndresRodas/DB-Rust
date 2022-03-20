@@ -25,7 +25,8 @@ ARROW1: '->';
 ARROW2: '=>';
 ABS: 'abs';
 SQRT: 'sqrt';
-TOSTR: 'to_string';
+TOSTR: 'to_string()';
+TOOWN: 'to_owned()';
 CLONE: 'clone';
 NEW: 'new';
 LEN: 'len';
@@ -53,6 +54,7 @@ PUB: 'pub';
 NUMBER : [0-9]+ ('.'[0-9]+)?;
 STRING: '"'~["]*'"';
 ID: ([a-zA-Z])[a-zA-Z0-9_]*;
+CHARACTER: ['][a-zA-Z]['];
 
 // symbols
 PUNTO:          '.';
@@ -83,6 +85,7 @@ LLAVEIZQ:       '{';
 LLAVEDER:       '}';
 CORIZQ:         '[';
 CORDER:         ']';
+AMP:            '&';
 
 
 // skip

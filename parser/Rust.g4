@@ -234,6 +234,7 @@ types returns[environment.TipoExpresion ty]
 | BOOL { $ty = environment.BOOLEAN }
 | CHAR { $ty = environment.CHAR }
 | STR1 { $ty = environment.STRING }
+| STR2 { $ty = environment.STR }
 | VECTOR { $ty = environment.VECTOR }
 | STRUCT { $ty = environment.STRUCT }
 ;
@@ -255,9 +256,11 @@ expression returns[interfaces.Expression p]
 ;
 
 expr_arit returns[interfaces.Expression p]
-: opIz=expr_arit op=(MUL|DIV) opDe=expr_arit {$p = expressions.NewOperation($opIz.start.GetLine(),$opIz.start.GetColumn(),$opIz.p,$op.text,$opDe.p)}
-| opIz=expr_arit op=(ADD|SUB) opDe=expr_arit {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}
-| opIz=expr_arit op=(MENOR|MENORIGUAL|MAYORIGUAL|MAYOR) opDe=expr_arit {$p = expressions.NewOperation(0,0,$opIz.p,$op.text,$opDe.p)}
+: opIz=expr_arit op=(MUL|DIV|MOD) opDe=expr_arit {$p = expressions.NewOperation($opIz.start.GetLine(),$opIz.start.GetColumn(),$opIz.p,$op.text,$opDe.p)}
+| opIz=expr_arit op=(ADD|SUB) opDe=expr_arit {$p = expressions.NewOperation($opIz.start.GetLine(),$opIz.start.GetColumn(),$opIz.p,$op.text,$opDe.p)}
+| opIz=expr_arit op=(MENOR|MENORIGUAL|MAYORIGUAL|MAYOR|IG_IG|DIFERENTE) opDe=expr_arit {$p = expressions.NewOperation($opIz.start.GetLine(),$opIz.start.GetColumn(),$opIz.p,$op.text,$opDe.p)}
+| SUB opDe=expr_arit {$p = expressions.NewOperation($SUB.line,$SUB.pos,$opDe.p,"MENOS_UNARIO",nil)}
+| NOT opDe=expr_arit {$p = expressions.NewOperation($NOT.line,$NOT.pos,$opDe.p,$NOT.text,nil)}
 | CORIZQ listParams CORDER { $p = expressions.NewArray($CORIZQ.line, $CORIZQ.pos, $listParams.l) }
 | PARIZQ expression PARDER { $p = $expression.p }
 | ID LLAVEIZQ listStructExp LLAVEDER { $p = expressions.NewStructExp($ID.line, $ID.pos, $ID.text, $listStructExp.l ) }
@@ -283,13 +286,22 @@ primitive returns[interfaces.Expression p]
                 $p = expressions.NewPrimitive($NUMBER.line,$NUMBER.pos,num,environment.INTEGER)
             }
         }
-| STRING    {
-                str := $STRING.text
-                $p = expressions.NewPrimitive($STRING.line, $STRING.pos,str[1:len(str)-1],environment.STRING)
-            }
+| stringsTypes    { $p = $stringsTypes.st  }
+| CHARACTER { $p = expressions.NewPrimitive($CHARACTER.line, $CHARACTER.pos,$CHARACTER.text,environment.CHAR) }
 | TRU { $p = expressions.NewPrimitive($TRU.line, $TRU.pos,true,environment.BOOLEAN) }
 | FAL { $p = expressions.NewPrimitive($FAL.line, $FAL.pos,false,environment.BOOLEAN) }
 | list=listArray { $p = $list.p}
+;
+
+stringsTypes returns[interfaces.Expression st]
+: STRING PUNTO fnc=(TOSTR|TOOWN) {
+                                     str := $STRING.text
+                                     $st = expressions.NewPrimitive($STRING.line, $STRING.pos,str[1:len(str)-1],environment.STRING)
+                                 }
+| AMP* STRING (PUNTO TOSTR|PUNTO TOOWN)* {
+              str := $STRING.text
+              $st = expressions.NewPrimitive($AMP.line, $AMP.pos,str[1:len(str)-1],environment.STR)
+          }
 ;
 
 listArray returns[interfaces.Expression p]
