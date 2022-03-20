@@ -6,6 +6,7 @@ import (
 	"OLC2/parser"
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"strings"
 )
 
 func main() {
@@ -40,12 +41,24 @@ func (this *TreeShapeListener) ExitStart(ctx *parser.StartContext) {
 	Code = ctx.GetCode()
 	//create environment
 	var globalEnv environment.Environment
-	globalEnv = environment.NewEnvironment(nil, "Global")
-
-	for _, inst := range Code.Main.ToArray() {
+	globalEnv = environment.NewEnvironment(nil, "GLOBAL")
+	//evaluando variables globales
+	for _, inst := range Code.Instructions.ToArray() {
 		inst.(interfaces.Instruction).Ejecutar(&Ast, globalEnv)
 	}
-	//fmt.Println(globalEnv.Tabla)
+	//evaluando el main
+	var mainEnv environment.Environment
+	mainEnv = environment.NewEnvironment(globalEnv, "MAIN")
+	for _, bloc := range Code.Main.ToArray() {
+		if strings.Contains(fmt.Sprintf("%T", bloc), "instructions") {
+			bloc.(interfaces.Instruction).Ejecutar(&Ast, mainEnv)
+
+		} else if strings.Contains(fmt.Sprintf("%T", bloc), "expressions") {
+			bloc.(interfaces.Expression).Ejecutar(&Ast, mainEnv)
+
+		}
+		//bloc.(interfaces.Instruction).Ejecutar(&Ast, mainEnv)
+	}
 	//print values
 	fmt.Println(Ast.GetPrint())
 

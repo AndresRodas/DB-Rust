@@ -25,14 +25,14 @@ start returns [environment.Code code]
     }
 ;
 
-global_env returns [string hi]
-: declaration PYC {$hi = "declaration"}
-| function {$hi = "function"}
-| module {$hi = "module"}
+global_env returns [interfaces.Instruction hi]
+: declaration PYC { $hi = $declaration.dec }
+| function { $hi = $function.fun }
+| module
 ;
 
 main returns [*arrayList.List mainInst]
-: FUNC MAIN PARIZQ PARDER LLAVEIZQ instructions LLAVEDER { $mainInst = $instructions.insts }
+: FUNC MAIN PARIZQ PARDER LLAVEIZQ block LLAVEDER { $mainInst = $block.blk }
 ;
 
 instructions returns[*arrayList.List insts]
@@ -60,6 +60,32 @@ instruction returns [interfaces.Instruction inst]
 | transBreak PYC { $inst = $transBreak.brk }
 | transContinue PYC { $inst = $transContinue.cnt }
 | structCreation { $inst = $structCreation.dec }
+;
+
+listParamsCall returns[*arrayList.List l]
+: list=listParamsCall COMA expression{
+                                         ByRef := environment.NewByReference($expression.p, false)
+                                         $list.l.Add(ByRef);
+                                         $l = $list.l;
+                                      }
+| list=listParamsCall COMA AMP MUT expression {
+                                            ByRef := environment.NewByReference($expression.p, true)
+                                            $list.l.Add(ByRef);
+                                            $l = $list.l;
+                                         }
+| expression {
+                 ByRef := environment.NewByReference($expression.p, false)
+                 $l = arrayList.New()
+                 $l.Add(ByRef)
+              }
+| AMP MUT expression {
+                        ByRef := environment.NewByReference($expression.p, true)
+                        $l = arrayList.New()
+                        $l.Add(ByRef)
+                     }
+|      {
+          $l = arrayList.New()
+       }
 ;
 
 loopWhile returns[interfaces.Instruction lw]
@@ -221,19 +247,48 @@ listAccessArray returns[*arrayList.List l]
 
 arrayType returns [*arrayList.List t]
 : CORIZQ arrayType PYC expression CORDER {
-                                            newType := environment.NewArrayType(environment.ARRAY, $expression.p)
-                                           $arrayType.t.Add(newType)
-                                           $t = $arrayType.t
-                                            }
+                                        newType := environment.NewArrayType(environment.ARRAY, $expression.p)
+                                       $arrayType.t.Add(newType)
+                                       $t = $arrayType.t
+                                        }
 | CORIZQ types PYC expression CORDER{
-                                        $t = arrayList.New()
-                                        newType := environment.NewArrayType($types.ty, $expression.p)
-                                        $t.Add(newType)
-                                     }
+                            $t = arrayList.New()
+                            newType := environment.NewArrayType($types.ty, $expression.p)
+                            $t.Add(newType)
+                         }
 ;
 
-function returns []
-: FUNC ID PARIZQ listParams PARDER LLAVEIZQ instructions LLAVEDER
+function returns [ interfaces.Instruction fun ]
+: FUNC ID PARIZQ listParamsFunc PARDER LLAVEIZQ block LLAVEDER {
+                        $fun = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParamsFunc.lpf, environment.NULL, $block.blk)
+                        }
+| FUNC ID PARIZQ listParamsFunc PARDER ARROW1 types LLAVEIZQ block LLAVEDER{
+                       $fun = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParamsFunc.lpf, $types.ty, $block.blk)
+                       }
+;
+
+listParamsFunc returns[*arrayList.List lpf]
+: list=listParamsFunc COMA ID D_PTS types {
+                   newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, $types.ty)
+                   $list.lpf.Add(newParam)
+                   $lpf = $list.lpf
+                    }
+| list=listParamsFunc COMA ID D_PTS AMP MUT arrayType {
+             newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, environment.ARRAY)
+             $list.lpf.Add(newParam)
+             $lpf = $list.lpf
+              }
+| ID D_PTS types{
+                $lpf = arrayList.New()
+                newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, $types.ty)
+                $lpf.Add(newParam)
+             }
+| ID D_PTS AMP MUT arrayType {
+                 $lpf = arrayList.New()
+                 newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, environment.ARRAY)
+                 $lpf.Add(newParam)
+              }
+|  { $lpf = arrayList.New() }
 ;
 
 module returns[] 
@@ -267,6 +322,11 @@ expression returns[interfaces.Expression p]
 | expuno=expression PUNTO PUNTO expdos=expression { $p = expressions.NewRange($expuno.start.GetLine(),$expuno.start.GetColumn(), $expuno.p, $expdos.p) }
 ;
 
+callFunction returns[interfaces.Expression cf]
+: ID PARIZQ listParamsCall PARDER PYC   { $cf = expressions.NewCallExp($ID.line, $ID.pos, $ID.text, $listParamsCall.l) }
+| ID PARIZQ listParamsCall PARDER       { $cf = expressions.NewCallExp($ID.line, $ID.pos, $ID.text, $listParamsCall.l) }
+;
+
 expr_arit returns[interfaces.Expression p]
 : opIz=expr_arit op=(MUL|DIV|MOD) opDe=expr_arit {$p = expressions.NewOperation($opIz.start.GetLine(),$opIz.start.GetColumn(),$opIz.p,$op.text,$opDe.p)}
 | opIz=expr_arit op=(ADD|SUB) opDe=expr_arit {$p = expressions.NewOperation($opIz.start.GetLine(),$opIz.start.GetColumn(),$opIz.p,$op.text,$opDe.p)}
@@ -276,6 +336,7 @@ expr_arit returns[interfaces.Expression p]
 | CORIZQ listParams CORDER { $p = expressions.NewArray($CORIZQ.line, $CORIZQ.pos, $listParams.l) }
 | PARIZQ expression PARDER { $p = $expression.p }
 | ID LLAVEIZQ listStructExp LLAVEDER { $p = expressions.NewStructExp($ID.line, $ID.pos, $ID.text, $listStructExp.l ) }
+| callFunction { $p = $callFunction.cf }
 | primitive { $p = $primitive.p }
 | condIf { $p = $condIf.ifCond }
 | condMatch { $p = $condMatch.mtch }

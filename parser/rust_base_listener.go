@@ -51,6 +51,12 @@ func (s *BaseRustListener) EnterInstruction(ctx *InstructionContext) {}
 // ExitInstruction is called when production instruction is exited.
 func (s *BaseRustListener) ExitInstruction(ctx *InstructionContext) {}
 
+// EnterListParamsCall is called when production listParamsCall is entered.
+func (s *BaseRustListener) EnterListParamsCall(ctx *ListParamsCallContext) {}
+
+// ExitListParamsCall is called when production listParamsCall is exited.
+func (s *BaseRustListener) ExitListParamsCall(ctx *ListParamsCallContext) {}
+
 // EnterLoopWhile is called when production loopWhile is entered.
 func (s *BaseRustListener) EnterLoopWhile(ctx *LoopWhileContext) {}
 
@@ -183,6 +189,12 @@ func (s *BaseRustListener) EnterFunction(ctx *FunctionContext) {}
 // ExitFunction is called when production function is exited.
 func (s *BaseRustListener) ExitFunction(ctx *FunctionContext) {}
 
+// EnterListParamsFunc is called when production listParamsFunc is entered.
+func (s *BaseRustListener) EnterListParamsFunc(ctx *ListParamsFuncContext) {}
+
+// ExitListParamsFunc is called when production listParamsFunc is exited.
+func (s *BaseRustListener) ExitListParamsFunc(ctx *ListParamsFuncContext) {}
+
 // EnterModule is called when production module is entered.
 func (s *BaseRustListener) EnterModule(ctx *ModuleContext) {}
 
@@ -206,6 +218,12 @@ func (s *BaseRustListener) EnterExpression(ctx *ExpressionContext) {}
 
 // ExitExpression is called when production expression is exited.
 func (s *BaseRustListener) ExitExpression(ctx *ExpressionContext) {}
+
+// EnterCallFunction is called when production callFunction is entered.
+func (s *BaseRustListener) EnterCallFunction(ctx *CallFunctionContext) {}
+
+// ExitCallFunction is called when production callFunction is exited.
+func (s *BaseRustListener) ExitCallFunction(ctx *CallFunctionContext) {}
 
 // EnterExpr_arit is called when production expr_arit is entered.
 func (s *BaseRustListener) EnterExpr_arit(ctx *Expr_aritContext) {}

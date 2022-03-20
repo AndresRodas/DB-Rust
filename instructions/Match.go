@@ -22,6 +22,7 @@ func NewMatch(lin int, col int, exp interfaces.Expression, arms *arrayList.List,
 }
 
 func (p Match) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
+
 	var exp, result environment.Symbol
 	exp = p.Exp.Ejecutar(ast, env)
 	//creando entorno
@@ -55,6 +56,7 @@ func (p Match) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 	}
 	//recorrindo brazos
 	for _, arms := range p.Arms.ToArray() {
+
 		//recorriendo matches
 		for _, matchs := range arms.(Arm).Matches.ToArray() {
 			//si un elemento hace match

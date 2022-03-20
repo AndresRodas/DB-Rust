@@ -23,6 +23,9 @@ type RustListener interface {
 	// EnterInstruction is called when entering the instruction production.
 	EnterInstruction(c *InstructionContext)
 
+	// EnterListParamsCall is called when entering the listParamsCall production.
+	EnterListParamsCall(c *ListParamsCallContext)
+
 	// EnterLoopWhile is called when entering the loopWhile production.
 	EnterLoopWhile(c *LoopWhileContext)
 
@@ -89,6 +92,9 @@ type RustListener interface {
 	// EnterFunction is called when entering the function production.
 	EnterFunction(c *FunctionContext)
 
+	// EnterListParamsFunc is called when entering the listParamsFunc production.
+	EnterListParamsFunc(c *ListParamsFuncContext)
+
 	// EnterModule is called when entering the module production.
 	EnterModule(c *ModuleContext)
 
@@ -100,6 +106,9 @@ type RustListener interface {
 
 	// EnterExpression is called when entering the expression production.
 	EnterExpression(c *ExpressionContext)
+
+	// EnterCallFunction is called when entering the callFunction production.
+	EnterCallFunction(c *CallFunctionContext)
 
 	// EnterExpr_arit is called when entering the expr_arit production.
 	EnterExpr_arit(c *Expr_aritContext)
@@ -130,6 +139,9 @@ type RustListener interface {
 
 	// ExitInstruction is called when exiting the instruction production.
 	ExitInstruction(c *InstructionContext)
+
+	// ExitListParamsCall is called when exiting the listParamsCall production.
+	ExitListParamsCall(c *ListParamsCallContext)
 
 	// ExitLoopWhile is called when exiting the loopWhile production.
 	ExitLoopWhile(c *LoopWhileContext)
@@ -197,6 +209,9 @@ type RustListener interface {
 	// ExitFunction is called when exiting the function production.
 	ExitFunction(c *FunctionContext)
 
+	// ExitListParamsFunc is called when exiting the listParamsFunc production.
+	ExitListParamsFunc(c *ListParamsFuncContext)
+
 	// ExitModule is called when exiting the module production.
 	ExitModule(c *ModuleContext)
 
@@ -208,6 +223,9 @@ type RustListener interface {
 
 	// ExitExpression is called when exiting the expression production.
 	ExitExpression(c *ExpressionContext)
+
+	// ExitCallFunction is called when exiting the callFunction production.
+	ExitCallFunction(c *CallFunctionContext)
 
 	// ExitExpr_arit is called when exiting the expr_arit production.
 	ExitExpr_arit(c *Expr_aritContext)

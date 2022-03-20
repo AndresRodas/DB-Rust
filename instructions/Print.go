@@ -57,16 +57,13 @@ func (p Print) ArrayToString(array *arrayList.List) string {
 			} else {
 				strBuffer = strBuffer + p.ArrayToString(val.(environment.Symbol).Valor.(*arrayList.List))
 			}
-
 		} else {
 			if contInd < array.Len() {
 				strBuffer = strBuffer + fmt.Sprintf("%v", val.(environment.Symbol).Valor) + ", "
 			} else {
 				strBuffer = strBuffer + fmt.Sprintf("%v", val.(environment.Symbol).Valor)
 			}
-
 		}
 	}
 	return strBuffer + "]"
-
 }
