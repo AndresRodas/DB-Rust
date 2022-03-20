@@ -38,6 +38,8 @@ func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Sym
 			symNewVar := p.Params.GetValue(i).(environment.ByReference).Exp.(interfaces.Expression).Ejecutar(ast, env) //guardando simbolo
 			//Comparar los tipos de los parametros
 			if typeNewVar == symNewVar.Tipo {
+				//setear muteabilidad
+				symNewVar.Mutable = true
 				//guardar simbolo en entorno de funcSym
 				funcSym.Ent.(environment.Environment).SaveVariable(idNewVar, symNewVar, typeNewVar, true)
 			} else {
