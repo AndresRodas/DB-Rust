@@ -194,6 +194,7 @@ listStructDec returns[*arrayList.List l]
 assignment returns [interfaces.Instruction ass]
 : ID IGUAL expression { $ass = instructions.NewAssignment($ID.line, $ID.pos, $ID.text, $expression.p)}
 | listAccessStruct IGUAL expression { $ass = instructions.NewStructAssign($listAccessStruct.start.GetLine(),$listAccessStruct.start.GetColumn(), $listAccessStruct.l, $expression.p) }
+| ID listAccessArray IGUAL expression { $ass = instructions.NewArrayAssign($ID.line, $ID.pos, $ID.text, $listAccessArray.l, $expression.p) }
 ;
 
 listAccessStruct returns[*arrayList.List l]
@@ -202,9 +203,20 @@ listAccessStruct returns[*arrayList.List l]
                                    $l = $list.l
                                   }
 | ID {
-            $l = arrayList.New()
-            $l.Add($ID.text)
+    $l = arrayList.New()
+    $l.Add($ID.text)
 }
+;
+
+listAccessArray returns[*arrayList.List l]
+: list=listAccessArray CORIZQ expression CORDER{
+                                                  $list.l.Add($expression.p)
+                                                  $l = $list.l
+                                                 }
+| CORIZQ expression CORDER{
+                              $l = arrayList.New()
+                              $l.Add($expression.p)
+                          }
 ;
 
 arrayType returns [*arrayList.List t]
@@ -286,14 +298,14 @@ primitive returns[interfaces.Expression p]
                 $p = expressions.NewPrimitive($NUMBER.line,$NUMBER.pos,num,environment.INTEGER)
             }
         }
-| stringsTypes    { $p = $stringsTypes.st  }
+| stringTypes    { $p = $stringTypes.st  }
 | CHARACTER { $p = expressions.NewPrimitive($CHARACTER.line, $CHARACTER.pos,$CHARACTER.text,environment.CHAR) }
 | TRU { $p = expressions.NewPrimitive($TRU.line, $TRU.pos,true,environment.BOOLEAN) }
 | FAL { $p = expressions.NewPrimitive($FAL.line, $FAL.pos,false,environment.BOOLEAN) }
 | list=listArray { $p = $list.p}
 ;
 
-stringsTypes returns[interfaces.Expression st]
+stringTypes returns[interfaces.Expression st]
 : STRING PUNTO fnc=(TOSTR|TOOWN) {
                                      str := $STRING.text
                                      $st = expressions.NewPrimitive($STRING.line, $STRING.pos,str[1:len(str)-1],environment.STRING)

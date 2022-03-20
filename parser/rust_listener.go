@@ -80,6 +80,9 @@ type RustListener interface {
 	// EnterListAccessStruct is called when entering the listAccessStruct production.
 	EnterListAccessStruct(c *ListAccessStructContext)
 
+	// EnterListAccessArray is called when entering the listAccessArray production.
+	EnterListAccessArray(c *ListAccessArrayContext)
+
 	// EnterArrayType is called when entering the arrayType production.
 	EnterArrayType(c *ArrayTypeContext)
 
@@ -104,8 +107,8 @@ type RustListener interface {
 	// EnterPrimitive is called when entering the primitive production.
 	EnterPrimitive(c *PrimitiveContext)
 
-	// EnterStringsTypes is called when entering the stringsTypes production.
-	EnterStringsTypes(c *StringsTypesContext)
+	// EnterStringTypes is called when entering the stringTypes production.
+	EnterStringTypes(c *StringTypesContext)
 
 	// EnterListArray is called when entering the listArray production.
 	EnterListArray(c *ListArrayContext)
@@ -185,6 +188,9 @@ type RustListener interface {
 	// ExitListAccessStruct is called when exiting the listAccessStruct production.
 	ExitListAccessStruct(c *ListAccessStructContext)
 
+	// ExitListAccessArray is called when exiting the listAccessArray production.
+	ExitListAccessArray(c *ListAccessArrayContext)
+
 	// ExitArrayType is called when exiting the arrayType production.
 	ExitArrayType(c *ArrayTypeContext)
 
@@ -209,8 +215,8 @@ type RustListener interface {
 	// ExitPrimitive is called when exiting the primitive production.
 	ExitPrimitive(c *PrimitiveContext)
 
-	// ExitStringsTypes is called when exiting the stringsTypes production.
-	ExitStringsTypes(c *StringsTypesContext)
+	// ExitStringTypes is called when exiting the stringTypes production.
+	ExitStringTypes(c *StringTypesContext)
 
 	// ExitListArray is called when exiting the listArray production.
 	ExitListArray(c *ListArrayContext)

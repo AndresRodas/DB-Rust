@@ -165,6 +165,12 @@ func (s *BaseRustListener) EnterListAccessStruct(ctx *ListAccessStructContext) {
 // ExitListAccessStruct is called when production listAccessStruct is exited.
 func (s *BaseRustListener) ExitListAccessStruct(ctx *ListAccessStructContext) {}
 
+// EnterListAccessArray is called when production listAccessArray is entered.
+func (s *BaseRustListener) EnterListAccessArray(ctx *ListAccessArrayContext) {}
+
+// ExitListAccessArray is called when production listAccessArray is exited.
+func (s *BaseRustListener) ExitListAccessArray(ctx *ListAccessArrayContext) {}
+
 // EnterArrayType is called when production arrayType is entered.
 func (s *BaseRustListener) EnterArrayType(ctx *ArrayTypeContext) {}
 
@@ -213,11 +219,11 @@ func (s *BaseRustListener) EnterPrimitive(ctx *PrimitiveContext) {}
 // ExitPrimitive is called when production primitive is exited.
 func (s *BaseRustListener) ExitPrimitive(ctx *PrimitiveContext) {}
 
-// EnterStringsTypes is called when production stringsTypes is entered.
-func (s *BaseRustListener) EnterStringsTypes(ctx *StringsTypesContext) {}
+// EnterStringTypes is called when production stringTypes is entered.
+func (s *BaseRustListener) EnterStringTypes(ctx *StringTypesContext) {}
 
-// ExitStringsTypes is called when production stringsTypes is exited.
-func (s *BaseRustListener) ExitStringsTypes(ctx *StringsTypesContext) {}
+// ExitStringTypes is called when production stringTypes is exited.
+func (s *BaseRustListener) ExitStringTypes(ctx *StringTypesContext) {}
 
 // EnterListArray is called when production listArray is entered.
 func (s *BaseRustListener) EnterListArray(ctx *ListArrayContext) {}
