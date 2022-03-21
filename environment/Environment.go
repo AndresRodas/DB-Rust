@@ -3,6 +3,7 @@ package environment
 import (
 	"fmt"
 	arrayList "github.com/colegno/arraylist"
+	"strings"
 )
 
 type Environment struct {
@@ -25,7 +26,8 @@ func NewEnvironment(ant interface{}, ide string) Environment {
 
 func (env Environment) SaveVariable(id string, value Symbol, tipo TipoExpresion, mut bool) {
 	if variable, ok := env.Tabla[id]; ok {
-		fmt.Println("La variable " + variable.Id + " ya existe")
+		fmt.Println(env.Id)
+		fmt.Println("La variable "+id+" ya existe", variable)
 		return
 	}
 	env.Tabla[id] = value
@@ -151,7 +153,6 @@ func (env Environment) SaveFunction(id string, value FunctionSymbol) {
 		return
 	}
 	env.Functions[id] = value
-
 }
 
 func (env Environment) GetFunction(id string) FunctionSymbol {
@@ -176,6 +177,23 @@ func (env Environment) LoopValidation() bool {
 	tmpEnv = env
 	for {
 		if tmpEnv.Id == "WHILE" || tmpEnv.Id == "FOR-IN" || tmpEnv.Id == "LOOP" {
+			return true
+		}
+		if tmpEnv.Anterior == nil {
+			break
+		} else {
+			tmpEnv = tmpEnv.Anterior.(Environment)
+		}
+	}
+	fmt.Println("la sentencia tiene que estar dentro de un ciclo")
+	return false
+}
+
+func (env Environment) FuncValidation() bool {
+	var tmpEnv Environment
+	tmpEnv = env
+	for {
+		if strings.Contains(tmpEnv.Id, "FUNCTION") {
 			return true
 		}
 		if tmpEnv.Anterior == nil {

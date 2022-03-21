@@ -25,7 +25,7 @@ func (p Function) Ejecutar(ast *environment.AST, env interface{}) environment.Sy
 
 	//creando nuevo entorno de funcion
 	var funcEnv environment.Environment
-	funcEnv = environment.NewEnvironment(env, p.Id)
+	funcEnv = environment.NewEnvironment(env, "FUNCTION-"+p.Id)
 
 	//creando simbolo funcion
 	function = environment.FunctionSymbol{

@@ -15,5 +15,6 @@ const (
 	NULL
 	BREAK
 	CONTINUE
+	RETURN
 	WILDCARD
 )

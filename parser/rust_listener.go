@@ -41,6 +41,9 @@ type RustListener interface {
 	// EnterTransContinue is called when entering the transContinue production.
 	EnterTransContinue(c *TransContinueContext)
 
+	// EnterTransReturn is called when entering the transReturn production.
+	EnterTransReturn(c *TransReturnContext)
+
 	// EnterCondIf is called when entering the condIf production.
 	EnterCondIf(c *CondIfContext)
 
@@ -157,6 +160,9 @@ type RustListener interface {
 
 	// ExitTransContinue is called when exiting the transContinue production.
 	ExitTransContinue(c *TransContinueContext)
+
+	// ExitTransReturn is called when exiting the transReturn production.
+	ExitTransReturn(c *TransReturnContext)
 
 	// ExitCondIf is called when exiting the condIf production.
 	ExitCondIf(c *CondIfContext)

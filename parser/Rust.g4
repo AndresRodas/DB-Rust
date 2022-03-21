@@ -59,6 +59,7 @@ instruction returns [interfaces.Instruction inst]
 | loopForin { $inst = $loopForin.lfi }
 | transBreak PYC { $inst = $transBreak.brk }
 | transContinue PYC { $inst = $transContinue.cnt }
+| transReturn PYC { $inst = $transReturn.rt }
 | structCreation { $inst = $structCreation.dec }
 ;
 
@@ -107,6 +108,11 @@ transBreak returns[interfaces.Instruction brk]
 
 transContinue returns[interfaces.Instruction cnt]
 : CONTINUE { $cnt = instructions.NewContinue($CONTINUE.line, $CONTINUE.pos) }
+;
+
+transReturn returns[interfaces.Instruction rt]
+: RETURN expression { $rt = instructions.NewReturn($RETURN.line, $RETURN.pos, $expression.p) }
+| RETURN { $rt = instructions.NewReturn($RETURN.line, $RETURN.pos, nil) }
 ;
 
 condIf returns [ interfaces.Instruction ifCond ]

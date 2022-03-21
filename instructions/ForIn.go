@@ -34,6 +34,8 @@ func (p ForIn) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 			var loopEnv environment.Environment
 			loopEnv = environment.NewEnvironment(env.(environment.Environment), "FOR-IN")
 			//agregando variable al entorno
+			//newSym := environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: environment.INTEGER, Valor: s, Mutable: true}
+
 			loopEnv.SaveVariable(p.Id, s.(environment.Symbol), environment.INTEGER, false)
 			//recorriendo bloque de instrucciones
 			for _, b := range p.Inst.ToArray() {
@@ -44,6 +46,9 @@ func (p ForIn) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 				}
 				if result.Tipo == environment.CONTINUE {
 					break
+				}
+				if result.Tipo == environment.RETURN {
+					return result
 				}
 			}
 			if breakFlag == true {

@@ -33,12 +33,13 @@ func (p If) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 		for _, s := range p.Bloque.ToArray() {
 			if strings.Contains(fmt.Sprintf("%T", s), "instructions") {
 				result = s.(interfaces.Instruction).Ejecutar(ast, ifEnv)
-				if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE { //BREAK & CONTINUE
+				//BREAK, CONTINUE & RETURN
+				if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE || result.Tipo == environment.RETURN {
 					return result
 				}
 			} else if strings.Contains(fmt.Sprintf("%T", s), "expressions") {
 				result = s.(interfaces.Expression).Ejecutar(ast, ifEnv)
-				if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE { //BREAK & CONTINUE
+				if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE || result.Tipo == environment.RETURN { //BREAK & CONTINUE
 					return result
 				}
 			} else {
@@ -57,12 +58,12 @@ func (p If) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 				for _, ns := range s.(If).Bloque.ToArray() {
 					if strings.Contains(fmt.Sprintf("%T", ns), "instructions") {
 						result = ns.(interfaces.Instruction).Ejecutar(ast, elifEnv)
-						if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE { //BREAK & CONTINUE
+						if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE || result.Tipo == environment.RETURN { //BREAK & CONTINUE
 							return result
 						}
 					} else if strings.Contains(fmt.Sprintf("%T", ns), "expressions") {
 						result = ns.(interfaces.Expression).Ejecutar(ast, elifEnv)
-						if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE { //BREAK & CONTINUE
+						if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE || result.Tipo == environment.RETURN { //BREAK & CONTINUE
 							return result
 						}
 					} else {
@@ -79,12 +80,12 @@ func (p If) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 			for _, ns := range p.ElseInst.ToArray() {
 				if strings.Contains(fmt.Sprintf("%T", ns), "instructions") {
 					result = ns.(interfaces.Instruction).Ejecutar(ast, elseEnv)
-					if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE { //BREAK & CONTINUE
+					if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE || result.Tipo == environment.RETURN { //BREAK & CONTINUE
 						return result
 					}
 				} else if strings.Contains(fmt.Sprintf("%T", ns), "expressions") {
 					result = ns.(interfaces.Expression).Ejecutar(ast, elseEnv)
-					if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE { //BREAK & CONTINUE
+					if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE || result.Tipo == environment.RETURN { //BREAK & CONTINUE
 						return result
 					}
 				} else {
@@ -101,12 +102,12 @@ func (p If) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 		for _, ns := range p.ElseInst.ToArray() {
 			if strings.Contains(fmt.Sprintf("%T", ns), "instructions") {
 				result = ns.(interfaces.Instruction).Ejecutar(ast, elseEnv)
-				if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE { //BREAK & CONTINUE
+				if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE || result.Tipo == environment.RETURN { //BREAK & CONTINUE
 					return result
 				}
 			} else if strings.Contains(fmt.Sprintf("%T", ns), "expressions") {
 				result = ns.(interfaces.Expression).Ejecutar(ast, elseEnv)
-				if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE { //BREAK & CONTINUE
+				if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE || result.Tipo == environment.RETURN { //BREAK & CONTINUE
 					return result
 				}
 			} else {

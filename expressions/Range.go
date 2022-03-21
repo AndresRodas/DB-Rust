@@ -30,13 +30,29 @@ func (p Range) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 	p.Tipo = val1.Tipo
 
 	if (val1.Valor.(int) < val2.Valor.(int)) && (val1.Tipo == environment.INTEGER) && (val2.Tipo == environment.INTEGER) {
-
+		var tmpSym environment.Symbol
 		cont := val1.Valor.(int)
-		arr.Add(cont)
+		tmpSym = environment.Symbol{
+			Lin:     p.Lin,
+			Col:     p.Col,
+			Id:      "",
+			Tipo:    environment.INTEGER,
+			Valor:   cont,
+			Mutable: true,
+		}
+		arr.Add(tmpSym)
 		for {
 			if cont < val2.Valor.(int) {
 				cont++
-				arr.Add(cont)
+				tmpSym = environment.Symbol{
+					Lin:     p.Lin,
+					Col:     p.Col,
+					Id:      "",
+					Tipo:    environment.INTEGER,
+					Valor:   cont,
+					Mutable: true,
+				}
+				arr.Add(tmpSym)
 			} else {
 				break
 			}

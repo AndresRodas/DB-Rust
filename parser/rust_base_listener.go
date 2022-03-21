@@ -87,6 +87,12 @@ func (s *BaseRustListener) EnterTransContinue(ctx *TransContinueContext) {}
 // ExitTransContinue is called when production transContinue is exited.
 func (s *BaseRustListener) ExitTransContinue(ctx *TransContinueContext) {}
 
+// EnterTransReturn is called when production transReturn is entered.
+func (s *BaseRustListener) EnterTransReturn(ctx *TransReturnContext) {}
+
+// ExitTransReturn is called when production transReturn is exited.
+func (s *BaseRustListener) ExitTransReturn(ctx *TransReturnContext) {}
+
 // EnterCondIf is called when production condIf is entered.
 func (s *BaseRustListener) EnterCondIf(ctx *CondIfContext) {}
 

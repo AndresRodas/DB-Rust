@@ -39,6 +39,9 @@ func (p Loop) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol
 				if result.Tipo == environment.CONTINUE {
 					break
 				}
+				if result.Tipo == environment.RETURN {
+					return result
+				}
 			} else if strings.Contains(fmt.Sprintf("%T", s), "expressions") {
 				result = s.(interfaces.Expression).Ejecutar(ast, loopEnv)
 				if result.Tipo == environment.BREAK { //BREAK
@@ -47,6 +50,9 @@ func (p Loop) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol
 				}
 				if result.Tipo == environment.CONTINUE {
 					break
+				}
+				if result.Tipo == environment.RETURN {
+					return result
 				}
 			} else {
 				fmt.Println("error en bloque")

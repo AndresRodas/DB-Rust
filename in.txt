@@ -1,28 +1,8 @@
 
-fn main(){
-    let varw = 55;
-    println!("hola mundo");
-    funcionNueva(varw);
-    println!("*****LET******");
-    let mut cont: i64 = 0;
-    let lup = loop {
-       cont = cont + 1;
-       if cont == 10 {
-          break cont * 2;
-       }
-    };
-    println!(lup);
+
+fn main() {
+    for n in 1..10 {
+        println!("{}", n);
+    }
 
 }
-
-fn funcionNueva(num: i64){
-    println!("It works!");
-    if num > 5 {
-        println!("El numero {} es mayor que 5",num);
-    }
-    while num < 100{
-        num = num + 10;
-        println!(num);
-    }
-}
-
