@@ -205,3 +205,9 @@ func (env Environment) FuncValidation() bool {
 	fmt.Println("la sentencia tiene que estar dentro de un ciclo")
 	return false
 }
+
+func (env Environment) ReplaceVars(vars map[string]Symbol) {
+	for key, element := range vars {
+		fmt.Println(key, element)
+	}
+}

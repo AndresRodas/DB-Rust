@@ -21,11 +21,12 @@ func NewPrint(lin int, col int, val *arrayList.List) Print {
 func (p Print) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 	var result environment.Symbol
 	var ToPrint string
-	if p.Values.Len() > 1 {
+	valuesCopy := p.Values.Clone()
+	if valuesCopy.Len() > 1 {
 		//Con formato
-		format := fmt.Sprintf("%v", p.Values.GetValue(0).(interfaces.Expression).Ejecutar(ast, env).Valor)
-		p.Values.RemoveAtIndex(0)                // removemos el formato
-		for _, val := range p.Values.ToArray() { //recorremos el resto
+		format := fmt.Sprintf("%v", valuesCopy.GetValue(0).(interfaces.Expression).Ejecutar(ast, env).Valor)
+		valuesCopy.RemoveAtIndex(0)                // removemos el formato
+		for _, val := range valuesCopy.ToArray() { //recorremos el resto
 			valToPrint := val.(interfaces.Expression).Ejecutar(ast, env)
 			if (valToPrint.Tipo == environment.ARRAY) || (valToPrint.Tipo == environment.VECTOR) {
 				format = strings.Replace(format, "{:?}", p.ArrayToString(valToPrint.Valor.(*arrayList.List)), 1)

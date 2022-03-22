@@ -42,8 +42,8 @@ func (p Range) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 		}
 		arr.Add(tmpSym)
 		for {
+			cont++
 			if cont < val2.Valor.(int) {
-				cont++
 				tmpSym = environment.Symbol{
 					Lin:     p.Lin,
 					Col:     p.Col,

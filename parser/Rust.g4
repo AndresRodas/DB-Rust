@@ -59,7 +59,7 @@ instruction returns [interfaces.Instruction inst]
 | loopForin { $inst = $loopForin.lfi }
 | transBreak PYC { $inst = $transBreak.brk }
 | transContinue PYC { $inst = $transContinue.cnt }
-| transReturn PYC { $inst = $transReturn.rt }
+| transReturn  { $inst = $transReturn.rt }
 | structCreation { $inst = $structCreation.dec }
 ;
 
@@ -111,7 +111,9 @@ transContinue returns[interfaces.Instruction cnt]
 ;
 
 transReturn returns[interfaces.Instruction rt]
-: RETURN expression { $rt = instructions.NewReturn($RETURN.line, $RETURN.pos, $expression.p) }
+: RETURN expression PYC { $rt = instructions.NewReturn($RETURN.line, $RETURN.pos, $expression.p) }
+| RETURN PYC{ $rt = instructions.NewReturn($RETURN.line, $RETURN.pos, nil) }
+| RETURN expression { $rt = instructions.NewReturn($RETURN.line, $RETURN.pos, $expression.p) }
 | RETURN { $rt = instructions.NewReturn($RETURN.line, $RETURN.pos, nil) }
 ;
 
@@ -204,6 +206,7 @@ declaration returns [interfaces.Instruction dec]
 | LET ID IGUAL expression                   { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, environment.WILDCARD, $expression.p, false) }
 | LET MUT ID D_PTS arrayType IGUAL expression { $dec = instructions.NewArrayDeclaration($LET.line, $LET.pos, $ID.text, $arrayType.t, $expression.p, true) }
 | LET ID D_PTS arrayType IGUAL expression   { $dec = instructions.NewArrayDeclaration($LET.line, $LET.pos, $ID.text, $arrayType.t, $expression.p, false) }
+| LET ID 
 ;
 
 structCreation returns[interfaces.Instruction dec]
@@ -284,12 +287,22 @@ listParamsFunc returns[*arrayList.List lpf]
              $list.lpf.Add(newParam)
              $lpf = $list.lpf
               }
+| list=listParamsFunc COMA ID D_PTS arrayType {
+             newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, environment.ARRAY)
+             $list.lpf.Add(newParam)
+             $lpf = $list.lpf
+              }
 | ID D_PTS types{
                 $lpf = arrayList.New()
                 newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, $types.ty)
                 $lpf.Add(newParam)
              }
 | ID D_PTS AMP MUT arrayType {
+                 $lpf = arrayList.New()
+                 newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, environment.ARRAY)
+                 $lpf.Add(newParam)
+              }
+| ID D_PTS arrayType {
                  $lpf = arrayList.New()
                  newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, environment.ARRAY)
                  $lpf.Add(newParam)

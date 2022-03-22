@@ -24,6 +24,9 @@ func NewCallExp(lin int, col int, id string, par *arrayList.List) CallExp {
 func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 	var result environment.Symbol
 	var funcSym environment.FunctionSymbol
+	var listIdRef, listIdNew *arrayList.List
+	listIdRef = arrayList.New()
+	listIdNew = arrayList.New()
 	//obtener la funcion anteriormente guardada
 	funcSym = env.(environment.Environment).GetFunction(p.Id)
 
@@ -43,10 +46,13 @@ func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Sym
 			symNewVar := p.Params.GetValue(i).(environment.ByReference).Exp.(interfaces.Expression).Ejecutar(ast, env) //guardando simbolo
 			//Comparar los tipos de los parametros
 			if typeNewVar == symNewVar.Tipo {
-				//setear muteabilidad
+				//setear muteabilidad y paso por referencia
+				if p.Params.GetValue(i).(environment.ByReference).Ref && (typeNewVar == environment.ARRAY) || (typeNewVar == environment.VECTOR) {
+					listIdRef.Add(symNewVar.Id)
+					listIdNew.Add(idNewVar)
+				}
 				symNewVar.Mutable = true
-				//guardar simbolo en entorno de funcSym ******************************************
-				//funcSym.Ent.(environment.Environment).SaveVariable(idNewVar, symNewVar, typeNewVar, true)
+				//guardar simbolo en entorno de funcSym
 				funcEnv.SaveVariable(idNewVar, symNewVar, typeNewVar, true)
 			} else {
 				fmt.Println("Los parametros son incorrectos")
@@ -54,22 +60,21 @@ func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Sym
 			}
 		}
 	} else {
-		fmt.Println("La cantidad de parametros no es la indicada")
+		fmt.Println("La cantidad de parametros no es la correcta")
 		return result
 	}
 
-	//sacar entorno
-	//funcEnv = funcSym.Ent.(environment.Environment)
-
-	//ejecutar bloque con entorno funcSym.ent
+	//ejecutar bloque con entorno funcEnv
 	for _, s := range funcSym.Block.ToArray() {
 		if strings.Contains(fmt.Sprintf("%T", s), "instructions") {
 			result = s.(interfaces.Instruction).Ejecutar(ast, funcEnv)
+			p.SaveVarsReference(listIdRef, listIdNew, env.(environment.Environment), funcEnv)
 			if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE || result.Tipo == environment.RETURN { //BREAK, CONTINUE & RETURN
 				return result
 			}
 		} else if strings.Contains(fmt.Sprintf("%T", s), "expressions") {
 			result = s.(interfaces.Expression).Ejecutar(ast, funcEnv)
+			p.SaveVarsReference(listIdRef, listIdNew, env.(environment.Environment), funcEnv)
 			if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE || result.Tipo == environment.RETURN { //BREAK, CONTINUE & RETURN
 				return result
 			}
@@ -77,7 +82,6 @@ func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Sym
 			fmt.Println("error en bloque")
 		}
 	}
-
 	return result
 }
 
@@ -96,4 +100,14 @@ func (p CallExp) GetGlobal(env interface{}) environment.Environment {
 		}
 	}
 	return tmpEnvGbl
+}
+
+func (p CallExp) SaveVarsReference(listLocal, listFunc *arrayList.List, entLocal, entFunc environment.Environment) {
+	//recorrer lista de ids
+	for i := 0; i < listLocal.Len(); i++ {
+		//obtener simbolo en func
+		tmpSym := entFunc.GetVariable(listFunc.GetValue(i).(string))
+		//setear simbolo entorno local
+		entLocal.SetVariable(listLocal.GetValue(i).(string), tmpSym)
+	}
 }
