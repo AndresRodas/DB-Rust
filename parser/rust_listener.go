@@ -23,6 +23,9 @@ type RustListener interface {
 	// EnterInstruction is called when entering the instruction production.
 	EnterInstruction(c *InstructionContext)
 
+	// EnterInsVectors is called when entering the insVectors production.
+	EnterInsVectors(c *InsVectorsContext)
+
 	// EnterListParamsCall is called when entering the listParamsCall production.
 	EnterListParamsCall(c *ListParamsCallContext)
 
@@ -107,6 +110,9 @@ type RustListener interface {
 	// EnterListParams is called when entering the listParams production.
 	EnterListParams(c *ListParamsContext)
 
+	// EnterListVec is called when entering the listVec production.
+	EnterListVec(c *ListVecContext)
+
 	// EnterExpression is called when entering the expression production.
 	EnterExpression(c *ExpressionContext)
 
@@ -128,6 +134,9 @@ type RustListener interface {
 	// EnterListStructExp is called when entering the listStructExp production.
 	EnterListStructExp(c *ListStructExpContext)
 
+	// EnterExpVectors is called when entering the expVectors production.
+	EnterExpVectors(c *ExpVectorsContext)
+
 	// ExitStart is called when exiting the start production.
 	ExitStart(c *StartContext)
 
@@ -142,6 +151,9 @@ type RustListener interface {
 
 	// ExitInstruction is called when exiting the instruction production.
 	ExitInstruction(c *InstructionContext)
+
+	// ExitInsVectors is called when exiting the insVectors production.
+	ExitInsVectors(c *InsVectorsContext)
 
 	// ExitListParamsCall is called when exiting the listParamsCall production.
 	ExitListParamsCall(c *ListParamsCallContext)
@@ -227,6 +239,9 @@ type RustListener interface {
 	// ExitListParams is called when exiting the listParams production.
 	ExitListParams(c *ListParamsContext)
 
+	// ExitListVec is called when exiting the listVec production.
+	ExitListVec(c *ListVecContext)
+
 	// ExitExpression is called when exiting the expression production.
 	ExitExpression(c *ExpressionContext)
 
@@ -247,4 +262,7 @@ type RustListener interface {
 
 	// ExitListStructExp is called when exiting the listStructExp production.
 	ExitListStructExp(c *ListStructExpContext)
+
+	// ExitExpVectors is called when exiting the expVectors production.
+	ExitExpVectors(c *ExpVectorsContext)
 }

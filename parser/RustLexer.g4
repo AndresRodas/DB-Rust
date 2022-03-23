@@ -10,9 +10,9 @@ CHAR: 'char';
 STR1: 'String';
 STR2: '&str';
 USIZE: 'usize';
-VECTOR: 'vec';
+VECTOR1: 'vec';
+VECTOR2: 'Vec';
 STRUCT: 'struct';
-
 // reserved words
 TRU: 'true';
 FAL: 'false';

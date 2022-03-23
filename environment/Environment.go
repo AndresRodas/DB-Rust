@@ -58,7 +58,6 @@ func (env Environment) SetVariable(id string, value Symbol) Symbol {
 			if tmpEnv.Tabla[id].Mutable {
 				if tmpEnv.Tabla[id].Tipo == value.Tipo {
 					tmpEnv.Tabla[id] = value
-					//tmpEnv.Tabla[id] = Symbol{Lin: 0, Col: 0, Id: id, Tipo: variable.Tipo, Valor: value, Mutable: true}
 					return variable
 				} else {
 					fmt.Println("El tipo es incorrecto")

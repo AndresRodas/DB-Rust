@@ -62,18 +62,4 @@ func (this *TreeShapeListener) ExitStart(ctx *parser.StartContext) {
 	//print values
 	fmt.Println(Ast.GetPrint())
 
-	var arr [10]int
-	vect := arr[0:0]
-	fmt.Println("len: ", len(vect))
-	fmt.Println("cap: ", cap(vect))
-	fmt.Println(vect)
-	vect = append(vect, 1)
-	vect = append(vect, 2)
-	vect = append(vect, 3)
-	vect = append(vect, 4)
-	vect = append(vect, 5)
-	fmt.Println("len: ", len(vect))
-	fmt.Println("cap: ", cap(vect))
-	fmt.Println(vect)
-
 }

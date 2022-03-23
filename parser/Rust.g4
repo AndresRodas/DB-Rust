@@ -59,8 +59,14 @@ instruction returns [interfaces.Instruction inst]
 | loopForin { $inst = $loopForin.lfi }
 | transBreak PYC { $inst = $transBreak.brk }
 | transContinue PYC { $inst = $transContinue.cnt }
-| transReturn  { $inst = $transReturn.rt }
+| transReturn { $inst = $transReturn.rt }
 | structCreation { $inst = $structCreation.dec }
+| insVectors PYC { $inst = $insVectors.iv }
+;
+
+insVectors returns[interfaces.Instruction iv]
+: ID PUNTO PUSH PARIZQ expression PARDER { $iv = instructions.NewPush($ID.line, $ID.pos, $ID.text, $expression.p) }
+| ID PUNTO INSERT PARIZQ exp1=expression COMA exp2=expression PARDER { $iv = instructions.NewInsert($ID.line, $ID.pos, $ID.text, $exp1.p, $exp2.p) }
 ;
 
 listParamsCall returns[*arrayList.List l]
@@ -206,7 +212,10 @@ declaration returns [interfaces.Instruction dec]
 | LET ID IGUAL expression                   { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, environment.WILDCARD, $expression.p, false) }
 | LET MUT ID D_PTS arrayType IGUAL expression { $dec = instructions.NewArrayDeclaration($LET.line, $LET.pos, $ID.text, $arrayType.t, $expression.p, true) }
 | LET ID D_PTS arrayType IGUAL expression   { $dec = instructions.NewArrayDeclaration($LET.line, $LET.pos, $ID.text, $arrayType.t, $expression.p, false) }
-| LET ID 
+| LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, false) }
+| LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expression.p, false) }
+| LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, true) }
+| LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expression.p, true) }
 ;
 
 structCreation returns[interfaces.Instruction dec]
@@ -321,7 +330,7 @@ types returns[environment.TipoExpresion ty]
 | CHAR { $ty = environment.CHAR }
 | STR1 { $ty = environment.STRING }
 | STR2 { $ty = environment.STR }
-| VECTOR { $ty = environment.VECTOR }
+| VECTOR1 { $ty = environment.VECTOR }
 | STRUCT { $ty = environment.STRUCT }
 ;
 
@@ -334,6 +343,10 @@ listParams returns[*arrayList.List l]
                 $l = arrayList.New()
                 $l.Add($expression.p)
              }
+;
+
+listVec returns [interfaces.Expression lv]
+: exp1=expression PYC exp2=expression { $lv = expressions.NewVectorList($exp1.start.GetLine(),$exp1.start.GetColumn(), $exp1.p, $exp2.p) }
 ;
 
 expression returns[interfaces.Expression p]
@@ -353,6 +366,8 @@ expr_arit returns[interfaces.Expression p]
 | SUB opDe=expr_arit {$p = expressions.NewOperation($SUB.line,$SUB.pos,$opDe.p,"MENOS_UNARIO",nil)}
 | NOT opDe=expr_arit {$p = expressions.NewOperation($NOT.line,$NOT.pos,$opDe.p,$NOT.text,nil)}
 | CORIZQ listParams CORDER { $p = expressions.NewArray($CORIZQ.line, $CORIZQ.pos, $listParams.l) }
+| VECTOR1 NOT CORIZQ listParams CORDER { $p = expressions.NewVector($VECTOR1.line, $VECTOR1.pos, $listParams.l) }
+| VECTOR1 NOT CORIZQ listVec CORDER { $p = $listVec.lv }
 | PARIZQ expression PARDER { $p = $expression.p }
 | ID LLAVEIZQ listStructExp LLAVEDER { $p = expressions.NewStructExp($ID.line, $ID.pos, $ID.text, $listStructExp.l ) }
 | callFunction { $p = $callFunction.cf }
@@ -360,6 +375,7 @@ expr_arit returns[interfaces.Expression p]
 | condIf { $p = $condIf.ifCond }
 | condMatch { $p = $condMatch.mtch }
 | loopBucle { $p = $loopBucle.lb }
+| expVectors { $p = $expVectors.ev }
 ;
 
 primitive returns[interfaces.Expression p]
@@ -402,7 +418,6 @@ listArray returns[interfaces.Expression p]
 | ID { $p = expressions.NewCallVar($ID.line, $ID.pos, $ID.text)}
 ;
 
-
 listStructExp returns[*arrayList.List l]
 : list=listStructExp COMA ID D_PTS expression {
                                         StrExp := environment.NewStructContent($ID.text, $expression.p)
@@ -414,4 +429,11 @@ listStructExp returns[*arrayList.List l]
                     $l = arrayList.New();
                     $l.Add(StrExp);
                 }
+;
+
+expVectors returns[interfaces.Expression ev]
+: ID PUNTO REMOVE PARIZQ expression PARDER { $ev = expressions.NewRemove($ID.line, $ID.pos, $ID.text, $expression.p) }
+| ID PUNTO CONTAINS PARIZQ AMP expression PARDER { $ev = expressions.NewContains($ID.line, $ID.pos, $ID.text, $expression.p) }
+| ID PUNTO LEN PARIZQ PARDER { $ev = expressions.NewLen($ID.line, $ID.pos, $ID.text) }
+| ID PUNTO CAPACITY PARIZQ PARDER { $ev = expressions.NewCapacity($ID.line, $ID.pos, $ID.text) }
 ;

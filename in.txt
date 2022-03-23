@@ -1,8 +1,14 @@
 
 
-
 fn main() {
-    for letra in 0..4 {
-        println!("{}", letra);
-    }
+    let mut v: Vec<i64> = Vec::with_capacity(4);
+    println!("{:?}", v);
+    println!("El tamaño es: {}, La capacidad es: {}", v.len(), v.capacity());
+    v.push(1);
+    v.push(2);
+    v.push(3);
+    v.push(4);
+    v.insert(v.len()-1,5);
+    println!("{:?}", v);
+    println!("El tamaño es: {}, La capacidad es: {}", v.len(), v.capacity());
 }

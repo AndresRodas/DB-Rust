@@ -51,6 +51,12 @@ func (s *BaseRustListener) EnterInstruction(ctx *InstructionContext) {}
 // ExitInstruction is called when production instruction is exited.
 func (s *BaseRustListener) ExitInstruction(ctx *InstructionContext) {}
 
+// EnterInsVectors is called when production insVectors is entered.
+func (s *BaseRustListener) EnterInsVectors(ctx *InsVectorsContext) {}
+
+// ExitInsVectors is called when production insVectors is exited.
+func (s *BaseRustListener) ExitInsVectors(ctx *InsVectorsContext) {}
+
 // EnterListParamsCall is called when production listParamsCall is entered.
 func (s *BaseRustListener) EnterListParamsCall(ctx *ListParamsCallContext) {}
 
@@ -219,6 +225,12 @@ func (s *BaseRustListener) EnterListParams(ctx *ListParamsContext) {}
 // ExitListParams is called when production listParams is exited.
 func (s *BaseRustListener) ExitListParams(ctx *ListParamsContext) {}
 
+// EnterListVec is called when production listVec is entered.
+func (s *BaseRustListener) EnterListVec(ctx *ListVecContext) {}
+
+// ExitListVec is called when production listVec is exited.
+func (s *BaseRustListener) ExitListVec(ctx *ListVecContext) {}
+
 // EnterExpression is called when production expression is entered.
 func (s *BaseRustListener) EnterExpression(ctx *ExpressionContext) {}
 
@@ -260,3 +272,9 @@ func (s *BaseRustListener) EnterListStructExp(ctx *ListStructExpContext) {}
 
 // ExitListStructExp is called when production listStructExp is exited.
 func (s *BaseRustListener) ExitListStructExp(ctx *ListStructExpContext) {}
+
+// EnterExpVectors is called when production expVectors is entered.
+func (s *BaseRustListener) EnterExpVectors(ctx *ExpVectorsContext) {}
+
+// ExitExpVectors is called when production expVectors is exited.
+func (s *BaseRustListener) ExitExpVectors(ctx *ExpVectorsContext) {}

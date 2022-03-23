@@ -37,32 +37,32 @@ func (p While) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 			for _, s := range p.Bloque.ToArray() {
 				if strings.Contains(fmt.Sprintf("%T", s), "instructions") {
 					result = s.(interfaces.Instruction).Ejecutar(ast, whileEnv)
-					if result.Tipo == environment.BREAK { //BREAK
+					if result.Id == "BREAK" { //BREAK
 						breakFlag = true
 						if result.Valor != nil {
 							fmt.Println("No se permite retornar valor mediante un Break en un While")
 						}
 						break
 					}
-					if result.Tipo == environment.CONTINUE {
+					if result.Id == "CONTINUE" {
 						break
 					}
-					if result.Tipo == environment.RETURN {
+					if result.Id == "RETURN" {
 						return result
 					}
 				} else if strings.Contains(fmt.Sprintf("%T", s), "expressions") {
 					result = s.(interfaces.Expression).Ejecutar(ast, whileEnv)
-					if result.Tipo == environment.BREAK { //BREAK
+					if result.Id == "BREAK" { //BREAK
 						breakFlag = true
 						if result.Valor != nil {
 							fmt.Println("No se permite retornar valor mediante un Break en un While")
 						}
 						break
 					}
-					if result.Tipo == environment.CONTINUE {
+					if result.Id == "CONTINUE" {
 						break
 					}
-					if result.Tipo == environment.RETURN {
+					if result.Id == "RETURN" {
 						return result
 					}
 				} else {
@@ -75,7 +75,7 @@ func (p While) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 		} else {
 			break
 		}
-		if safeCont >= 1000 {
+		if safeCont >= 2500 {
 			fmt.Println("StackOverflowError: se ha excedido el máximo de ciclos permitidos")
 			break
 		}

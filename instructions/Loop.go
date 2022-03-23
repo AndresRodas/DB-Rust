@@ -32,26 +32,26 @@ func (p Loop) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol
 		for _, s := range p.Bloque.ToArray() {
 			if strings.Contains(fmt.Sprintf("%T", s), "instructions") {
 				result = s.(interfaces.Instruction).Ejecutar(ast, loopEnv)
-				if result.Tipo == environment.BREAK { //BREAK
+				if result.Id == "BREAK" { //BREAK
 					breakFlag = true
 					break
 				}
-				if result.Tipo == environment.CONTINUE {
+				if result.Id == "CONTINUE" {
 					break
 				}
-				if result.Tipo == environment.RETURN {
+				if result.Id == "RETURN" {
 					return result
 				}
 			} else if strings.Contains(fmt.Sprintf("%T", s), "expressions") {
 				result = s.(interfaces.Expression).Ejecutar(ast, loopEnv)
-				if result.Tipo == environment.BREAK { //BREAK
+				if result.Id == "BREAK" { //BREAK
 					breakFlag = true
 					break
 				}
-				if result.Tipo == environment.CONTINUE {
+				if result.Id == "CONTINUE" {
 					break
 				}
-				if result.Tipo == environment.RETURN {
+				if result.Id == "RETURN" {
 					return result
 				}
 			} else {
@@ -61,7 +61,7 @@ func (p Loop) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol
 		if breakFlag == true {
 			break
 		}
-		if safeCont >= 1000 {
+		if safeCont >= 2500 {
 			fmt.Println("StackOverflowError: se ha excedido el máximo de ciclos permitidos")
 			break
 		}

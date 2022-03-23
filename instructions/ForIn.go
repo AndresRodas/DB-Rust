@@ -40,14 +40,14 @@ func (p ForIn) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 			//recorriendo bloque de instrucciones
 			for _, b := range p.Inst.ToArray() {
 				result = b.(interfaces.Instruction).Ejecutar(ast, loopEnv)
-				if result.Tipo == environment.BREAK {
+				if result.Id == "BREAK" {
 					breakFlag = true
 					break
 				}
-				if result.Tipo == environment.CONTINUE {
+				if result.Id == "CONTINUE" {
 					break
 				}
-				if result.Tipo == environment.RETURN {
+				if result.Id == "RETURN" {
 					return result
 				}
 			}
