@@ -212,10 +212,12 @@ declaration returns [interfaces.Instruction dec]
 | LET ID IGUAL expression                   { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, environment.WILDCARD, $expression.p, false) }
 | LET MUT ID D_PTS arrayType IGUAL expression { $dec = instructions.NewArrayDeclaration($LET.line, $LET.pos, $ID.text, $arrayType.t, $expression.p, true) }
 | LET ID D_PTS arrayType IGUAL expression   { $dec = instructions.NewArrayDeclaration($LET.line, $LET.pos, $ID.text, $arrayType.t, $expression.p, false) }
-| LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, false) }
-| LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expression.p, false) }
-| LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, true) }
-| LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expression.p, true) }
+| LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, false, nil) }
+| LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expression.p, false, nil) }
+| LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, true, nil) }
+| LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expression.p, true, nil) }
+| LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL expression { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, false, $expression.p) }
+| LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL expression { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, true, $expression.p) }
 ;
 
 structCreation returns[interfaces.Instruction dec]
@@ -223,16 +225,26 @@ structCreation returns[interfaces.Instruction dec]
 ;
 
 listStructDec returns[*arrayList.List l]
-: list=listStructDec COMA ID D_PTS types {
-                                        StrDef := environment.NewStructType($ID.text, $types.ty)
+: list=listStructDec COMA id1=ID D_PTS types {
+                                        StrDef := environment.NewStructType($id1.text, $types.ty, "")
                                         $list.l.Add(StrDef);
                                         $l = $list.l;
                                     }
-| ID D_PTS types{
-                    StrDef := environment.NewStructType($ID.text, $types.ty)
+| list=listStructDec COMA id1=ID D_PTS id2=ID {
+                                          StrDef := environment.NewStructType($id1.text,environment.WILDCARD, $id2.text)
+                                          $list.l.Add(StrDef);
+                                          $l = $list.l;
+                                      }
+| id1=ID D_PTS types{
+                    StrDef := environment.NewStructType($id1.text, $types.ty, "")
                     $l = arrayList.New();
                     $l.Add(StrDef);
                 }
+| id1=ID D_PTS id2=ID {
+                      StrDef := environment.NewStructType($id1.text, environment.WILDCARD, $id2.text)
+                      $l = arrayList.New();
+                      $l.Add(StrDef);
+                  }
 ;
 
 assignment returns [interfaces.Instruction ass]

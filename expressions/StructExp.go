@@ -42,6 +42,7 @@ func (p StructExp) Ejecutar(ast *environment.AST, env interface{}) environment.S
 			for _, strAlm := range resultStruct.Valor.(*arrayList.List).ToArray() { //StructType
 				//recorrer los valores de entrada
 				for _, strEnt := range p.ListExp.ToArray() { // StructContent
+
 					//validar las coincidencias y los tipos
 					if strAlm.(environment.StructType).Id == strEnt.(environment.StructContent).Id {
 						tempVal := strEnt.(environment.StructContent).Exp.(interfaces.Expression).Ejecutar(ast, env)
@@ -49,6 +50,16 @@ func (p StructExp) Ejecutar(ast *environment.AST, env interface{}) environment.S
 							contDef++
 							valor[strAlm.(environment.StructType).Id] = tempVal
 							break
+						} else if strAlm.(environment.StructType).Tipo == environment.WILDCARD {
+							//si es tipo struct (trae id en vez de tipo)
+							if strAlm.(environment.StructType).StructId == tempVal.Id {
+								contDef++
+								valor[strAlm.(environment.StructType).Id] = tempVal
+								break
+							} else {
+								fmt.Println("El tipo de dato del struct no coincide")
+								return result
+							}
 						} else {
 							fmt.Println("El tipo de dato del struct no coincide")
 							return result
@@ -66,5 +77,6 @@ func (p StructExp) Ejecutar(ast *environment.AST, env interface{}) environment.S
 			fmt.Println("La cantidad de valores en el struct es incorrecta")
 		}
 	}
+
 	return result
 }

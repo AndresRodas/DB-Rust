@@ -1,24 +1,6 @@
 fn main() {
-    println!(letra());
-}
 
-fn letra() -> struct{
-    struct holi {
-        val: String,
-        per: String,
-        yan: i64,
-        tr: struct
-    }
-    struct test {
-        name: &str,
-        age: i64
-    }
-    return holi{
-        val: "jaja".to_string(),
-        per: "holis".to_string(),
-        yan: 666,
-        tr: test {
-            name: "juan",
-            age: 26
-        } };
+    let mut test : Vec<i64> = vec![1,2,3,4,5,6];
+
+    println!("{:?}",test);
 }
