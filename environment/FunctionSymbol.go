@@ -10,4 +10,5 @@ type FunctionSymbol struct {
 	ListDec     *arrayList.List
 	Block       *arrayList.List
 	TipoRetorno TipoExpresion
+	IdTipo      string
 }

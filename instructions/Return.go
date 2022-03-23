@@ -34,12 +34,15 @@ func (p Return) Ejecutar(ast *environment.AST, env interface{}) environment.Symb
 		} else { //RETURN CON VALOR
 			tmpVal := p.Expresion.Ejecutar(ast, env)
 			result = environment.Symbol{
-				Lin:     p.Lin,
-				Col:     p.Col,
-				Id:      "RETURN",
-				Tipo:    tmpVal.Tipo,
-				Valor:   tmpVal.Valor,
-				Mutable: true,
+				Lin:       p.Lin,
+				Col:       p.Col,
+				Id:        "RETURN",
+				Tipo:      tmpVal.Tipo,
+				Valor:     tmpVal.Valor,
+				Mutable:   true,
+				Capacity:  tmpVal.Capacity,
+				TipoArr:   tmpVal.TipoArr,
+				ExtraTipo: tmpVal.ExtraTipo,
 			}
 		}
 	} else {

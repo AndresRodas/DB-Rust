@@ -77,6 +77,9 @@ type RustListener interface {
 	// EnterDeclaration is called when entering the declaration production.
 	EnterDeclaration(c *DeclarationContext)
 
+	// EnterVectDeclaration is called when entering the vectDeclaration production.
+	EnterVectDeclaration(c *VectDeclarationContext)
+
 	// EnterStructCreation is called when entering the structCreation production.
 	EnterStructCreation(c *StructCreationContext)
 
@@ -208,6 +211,9 @@ type RustListener interface {
 
 	// ExitDeclaration is called when exiting the declaration production.
 	ExitDeclaration(c *DeclarationContext)
+
+	// ExitVectDeclaration is called when exiting the vectDeclaration production.
+	ExitVectDeclaration(c *VectDeclarationContext)
 
 	// ExitStructCreation is called when exiting the structCreation production.
 	ExitStructCreation(c *StructCreationContext)

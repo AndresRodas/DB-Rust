@@ -30,7 +30,7 @@ func (p Insert) Ejecutar(ast *environment.AST, env interface{}) environment.Symb
 	//validar que id sea vector
 	if tmpSymbol.Tipo == environment.VECTOR {
 		//validar tipo de expresion
-		if tmpExp2.Tipo == tmpSymbol.TipoArr && tmpExp1.Tipo == environment.INTEGER {
+		if (tmpExp2.Tipo == tmpSymbol.TipoArr || tmpExp2.Id == tmpSymbol.Id) && tmpExp1.Tipo == environment.INTEGER {
 			//validar indice
 			if tmpExp1.Valor.(int) < tmpSymbol.Valor.(*arrayList.List).Len() && tmpExp1.Valor.(int) >= 0 {
 				//recorrer indice

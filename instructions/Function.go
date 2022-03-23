@@ -12,10 +12,11 @@ type Function struct {
 	ListDec *arrayList.List
 	Tipo    environment.TipoExpresion
 	Bloque  *arrayList.List
+	FuncId  string
 }
 
-func NewFunction(lin int, col int, id string, listd *arrayList.List, tipo environment.TipoExpresion, bloc *arrayList.List) Function {
-	instr := Function{lin, col, id, listd, tipo, bloc}
+func NewFunction(lin int, col int, id string, listd *arrayList.List, tipo environment.TipoExpresion, bloc *arrayList.List, fid string) Function {
+	instr := Function{lin, col, id, listd, tipo, bloc, fid}
 	return instr
 }
 
@@ -36,6 +37,7 @@ func (p Function) Ejecutar(ast *environment.AST, env interface{}) environment.Sy
 		ListDec:     p.ListDec,
 		Block:       p.Bloque,
 		TipoRetorno: p.Tipo,
+		IdTipo:      p.FuncId,
 	}
 	//guardando simbolo funcion
 	env.(environment.Environment).SaveFunction(p.Id, function)

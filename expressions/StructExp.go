@@ -69,7 +69,7 @@ func (p StructExp) Ejecutar(ast *environment.AST, env interface{}) environment.S
 			}
 			//si es valido, guardarlo
 			if p.ListExp.Len() == contDef {
-				result = environment.Symbol{Lin: p.Lin, Col: p.Col, Id: p.Id, Tipo: environment.STRUCT, Valor: valor, Mutable: true}
+				result = environment.Symbol{Lin: p.Lin, Col: p.Col, Id: p.Id, Tipo: environment.STRUCT, Valor: valor, Mutable: true, ExtraTipo: p.Id}
 			} else {
 				fmt.Println("Faltan parámetros en el struct")
 			}

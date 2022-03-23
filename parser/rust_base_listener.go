@@ -159,6 +159,12 @@ func (s *BaseRustListener) EnterDeclaration(ctx *DeclarationContext) {}
 // ExitDeclaration is called when production declaration is exited.
 func (s *BaseRustListener) ExitDeclaration(ctx *DeclarationContext) {}
 
+// EnterVectDeclaration is called when production vectDeclaration is entered.
+func (s *BaseRustListener) EnterVectDeclaration(ctx *VectDeclarationContext) {}
+
+// ExitVectDeclaration is called when production vectDeclaration is exited.
+func (s *BaseRustListener) ExitVectDeclaration(ctx *VectDeclarationContext) {}
+
 // EnterStructCreation is called when production structCreation is entered.
 func (s *BaseRustListener) EnterStructCreation(ctx *StructCreationContext) {}
 

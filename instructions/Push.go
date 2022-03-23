@@ -21,12 +21,12 @@ func NewPush(lin int, col int, id string, exp interfaces.Expression) Push {
 
 func (p Push) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 	var result, tmpSymbol environment.Symbol
-	tmpSymbol = env.(environment.Environment).GetVariable(p.Id)
+	tmpSymbol = env.(environment.Environment).GetVariable(p.Id) //variable guardada
 	tmpExp := p.Expresion.Ejecutar(ast, env)
 	//validar que id sea vector
 	if tmpSymbol.Tipo == environment.VECTOR {
 		//validar tipo de expresion
-		if tmpExp.Tipo == tmpSymbol.TipoArr {
+		if tmpExp.Tipo == tmpSymbol.TipoArr || tmpSymbol.Id == tmpExp.Id {
 			//push valor
 			if tmpSymbol.Mutable {
 				//setear capacidad

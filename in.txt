@@ -1,6 +1,25 @@
 fn main() {
-
-    let mut test : Vec<i64> = vec![1,2,3,4,5,6];
-
+    /*struct persona{
+        name: &str,
+        age: i64
+    }
+    let mut test : Vec<persona> = vec![persona{ name: "andy", age: 26 }, persona{ name: "miriam", age: 23 }];
     println!("{:?}",test);
+    test.push(persona{name: "mishi", age: 3});
+    test.insert(1,persona{name: "new", age: 65});
+    println!("{:?}",test);
+    println!("{}", test.remove(1).name);*/
+
+    struct persona{
+                name: &str,
+                age: i64
+            }
+    let mut vtest : Vec<persona> = vec![persona{ name: "andy", age: 26 }, persona{ name: "miriam", age: 23 }];
+
+    println!("{}",test(vtest, 66));
+}
+
+fn test(tabla: Vec<persona>, id: i64)-> persona{
+
+    return tabla[1];
 }

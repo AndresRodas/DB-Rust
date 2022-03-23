@@ -38,14 +38,15 @@ func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Sym
 
 	//validar tamaños de parametros
 	if funcSym.ListDec.Len() == p.Params.Len() { // PARAMS: ByRef{ expression, bool(mut) }
-		//recorrer las listas						ListDec: ParamsDeclaration { id, tipo }
+		//recorrer las listas						ListDec: ParamsDeclaration { id, tipo, extratipo } funcSym
 		for i := 0; i < p.Params.Len(); i++ {
 			//valores a utilizar
-			idNewVar := funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).Id                                //guardando id
-			typeNewVar := funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).Tipo                            //guardando tipo
+			idNewVar := funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).Id     //guardando id
+			typeNewVar := funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).Tipo //guardando tipo
+			extraType := funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).ExtraTipo
 			symNewVar := p.Params.GetValue(i).(environment.ByReference).Exp.(interfaces.Expression).Ejecutar(ast, env) //guardando simbolo
 			//Comparar los tipos de los parametros
-			if typeNewVar == symNewVar.Tipo {
+			if typeNewVar == symNewVar.Tipo || extraType == symNewVar.Id {
 				//setear muteabilidad y paso por referencia
 				if p.Params.GetValue(i).(environment.ByReference).Ref && (typeNewVar == environment.ARRAY) || (typeNewVar == environment.VECTOR) {
 					listIdRef.Add(symNewVar.Id)
@@ -72,7 +73,7 @@ func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Sym
 			if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" { //BREAK, CONTINUE & RETURN
 				//comprobacion de tipo de retorno
 				if result.Id == "RETURN" {
-					if funcSym.TipoRetorno == result.Tipo || funcSym.TipoRetorno == environment.WILDCARD {
+					if funcSym.TipoRetorno == result.Tipo || funcSym.IdTipo == result.ExtraTipo {
 						return result
 					} else {
 						fmt.Println("El tipo del valor a retornar es incorrecto")
@@ -87,7 +88,7 @@ func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Sym
 			if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" { //BREAK, CONTINUE & RETURN
 				//comprobacion de tipo de retorno
 				if result.Id == "RETURN" {
-					if funcSym.TipoRetorno == result.Tipo || funcSym.TipoRetorno == environment.WILDCARD {
+					if funcSym.TipoRetorno == result.Tipo || funcSym.IdTipo == result.ExtraTipo {
 						return result
 					} else {
 						fmt.Println("El tipo del valor a retornar es incorrecto")

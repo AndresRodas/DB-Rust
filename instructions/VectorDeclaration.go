@@ -15,10 +15,11 @@ type VectorDeclaration struct {
 	Capacity  interface{}
 	Mutable   bool
 	Expresion interface{}
+	VectorId  string
 }
 
-func NewVectorDeclaration(lin int, col int, id string, tipo environment.TipoExpresion, cap interface{}, mut bool, exp interface{}) VectorDeclaration {
-	instr := VectorDeclaration{lin, col, id, tipo, cap, mut, exp}
+func NewVectorDeclaration(lin int, col int, id string, tipo environment.TipoExpresion, cap interface{}, mut bool, exp interface{}, vecid string) VectorDeclaration {
+	instr := VectorDeclaration{lin, col, id, tipo, cap, mut, exp, vecid}
 	return instr
 }
 
@@ -53,6 +54,14 @@ func (p VectorDeclaration) Ejecutar(ast *environment.AST, env interface{}) envir
 		if tmpExp.Tipo == environment.VECTOR {
 			//validando tipos en indices
 			for _, s := range tmpExp.Valor.(*arrayList.List).ToArray() {
+				//cuando no trae tipo
+				if p.Tipo == environment.WILDCARD {
+					//comparar ids
+					if p.VectorId == s.(environment.Symbol).Id {
+						continue
+					}
+				}
+				//tipos diferentes
 				if s.(environment.Symbol).Tipo != p.Tipo {
 					fmt.Println("Tipo de dato incorrecto")
 					return result
@@ -62,7 +71,7 @@ func (p VectorDeclaration) Ejecutar(ast *environment.AST, env interface{}) envir
 			result = environment.Symbol{
 				Lin:      tmpExp.Lin,
 				Col:      tmpExp.Col,
-				Id:       "",
+				Id:       p.VectorId,
 				Tipo:     environment.VECTOR,
 				Valor:    tmpExp.Valor,
 				Mutable:  p.Mutable,
@@ -78,7 +87,7 @@ func (p VectorDeclaration) Ejecutar(ast *environment.AST, env interface{}) envir
 		result = environment.Symbol{
 			Lin:      p.Lin,
 			Col:      p.Col,
-			Id:       "",
+			Id:       p.VectorId,
 			Tipo:     environment.VECTOR,
 			Valor:    templist,
 			Mutable:  p.Mutable,

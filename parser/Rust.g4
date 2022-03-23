@@ -212,12 +212,24 @@ declaration returns [interfaces.Instruction dec]
 | LET ID IGUAL expression                   { $dec = instructions.NewDeclaration($LET.line, $LET.pos, $ID.text, environment.WILDCARD, $expression.p, false) }
 | LET MUT ID D_PTS arrayType IGUAL expression { $dec = instructions.NewArrayDeclaration($LET.line, $LET.pos, $ID.text, $arrayType.t, $expression.p, true) }
 | LET ID D_PTS arrayType IGUAL expression   { $dec = instructions.NewArrayDeclaration($LET.line, $LET.pos, $ID.text, $arrayType.t, $expression.p, false) }
-| LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, false, nil) }
-| LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expression.p, false, nil) }
-| LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, true, nil) }
-| LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expression.p, true, nil) }
-| LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL expression { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, false, $expression.p) }
-| LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL expression { $dec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, true, $expression.p) }
+| vectDeclaration { $dec = $vectDeclaration.vec }
+;
+
+vectDeclaration returns[interfaces.Instruction vec]
+: LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, false, nil, "") }
+| LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expression.p, false, nil, "") }
+| LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, true, nil, "") }
+| LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expression.p, true, nil, "") }
+| LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL expression { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, false, $expression.p, "") }
+| LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL expression { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, true, $expression.p, "") }
+
+| LET id1=ID D_PTS VECTOR2 MENOR id2=ID MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $id1.text, environment.WILDCARD, nil, false, nil, $id2.text) }
+| LET id1=ID D_PTS VECTOR2 MENOR id2=ID MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $id1.text, environment.WILDCARD, $expression.p, false, nil, $id2.text) }
+| LET MUT id1=ID D_PTS VECTOR2 MENOR id2=ID MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $id1.text, environment.WILDCARD, nil, true, nil, $id2.text) }
+| LET MUT id1=ID D_PTS VECTOR2 MENOR id2=ID MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $id1.text, environment.WILDCARD, $expression.p, true, nil, $id2.text) }
+| LET id1=ID D_PTS VECTOR2 MENOR id2=ID MAYOR IGUAL expression { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $id1.text, environment.WILDCARD, nil, false, $expression.p, $id2.text) }
+| LET MUT id1=ID D_PTS VECTOR2 MENOR id2=ID MAYOR IGUAL expression { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $id1.text, environment.WILDCARD, nil, true, $expression.p, $id2.text) }
+
 ;
 
 structCreation returns[interfaces.Instruction dec]
@@ -290,42 +302,65 @@ arrayType returns [*arrayList.List t]
 
 function returns [ interfaces.Instruction fun ]
 : FUNC ID PARIZQ listParamsFunc PARDER LLAVEIZQ block LLAVEDER {
-                        $fun = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParamsFunc.lpf, environment.WILDCARD, $block.blk)
+                        $fun = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParamsFunc.lpf, environment.WILDCARD, $block.blk, "")
                         }
 | FUNC ID PARIZQ listParamsFunc PARDER ARROW1 types LLAVEIZQ block LLAVEDER{
-                       $fun = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParamsFunc.lpf, $types.ty, $block.blk)
+                       $fun = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParamsFunc.lpf, $types.ty, $block.blk, "")
+                       }
+| FUNC id1=ID PARIZQ listParamsFunc PARDER ARROW1 id2=ID LLAVEIZQ block LLAVEDER{
+                       $fun = instructions.NewFunction($FUNC.line, $FUNC.pos, $id1.text, $listParamsFunc.lpf, environment.WILDCARD, $block.blk, $id2.text)
                        }
 ;
 
 listParamsFunc returns[*arrayList.List lpf]
 : list=listParamsFunc COMA ID D_PTS types {
-                   newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, $types.ty)
+                   newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, $types.ty, "")
                    $list.lpf.Add(newParam)
                    $lpf = $list.lpf
                     }
 | list=listParamsFunc COMA ID D_PTS AMP MUT arrayType {
-             newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, environment.ARRAY)
+             newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, environment.ARRAY, "")
+             $list.lpf.Add(newParam)
+             $lpf = $list.lpf
+              }
+| list=listParamsFunc COMA id1=ID D_PTS AMP MUT VECTOR2 MENOR id2=ID MAYOR {
+             newParam := instructions.NewParamsDeclaration($id1.line, $id1.pos, $id1.text, environment.WILDCARD, $id2.text)
              $list.lpf.Add(newParam)
              $lpf = $list.lpf
               }
 | list=listParamsFunc COMA ID D_PTS arrayType {
-             newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, environment.ARRAY)
+             newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, environment.ARRAY, "")
+             $list.lpf.Add(newParam)
+             $lpf = $list.lpf
+              }
+| list=listParamsFunc COMA id1=ID D_PTS VECTOR2 MENOR id2=ID MAYOR  {
+             newParam := instructions.NewParamsDeclaration($id1.line, $id1.pos, $id1.text, environment.WILDCARD, $id2.text)
              $list.lpf.Add(newParam)
              $lpf = $list.lpf
               }
 | ID D_PTS types{
                 $lpf = arrayList.New()
-                newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, $types.ty)
+                newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, $types.ty, "")
                 $lpf.Add(newParam)
              }
 | ID D_PTS AMP MUT arrayType {
                  $lpf = arrayList.New()
-                 newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, environment.ARRAY)
+                 newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, environment.ARRAY, "")
+                 $lpf.Add(newParam)
+              }
+| id1=ID D_PTS AMP MUT VECTOR2 MENOR id2=ID MAYOR {
+                 $lpf = arrayList.New()
+                 newParam := instructions.NewParamsDeclaration($id1.line, $id1.pos, $id1.text, environment.WILDCARD, $id2.text)
                  $lpf.Add(newParam)
               }
 | ID D_PTS arrayType {
                  $lpf = arrayList.New()
-                 newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, environment.ARRAY)
+                 newParam := instructions.NewParamsDeclaration($ID.line, $ID.pos, $ID.text, environment.ARRAY,"")
+                 $lpf.Add(newParam)
+              }
+| id1=ID D_PTS VECTOR2 MENOR id2=ID MAYOR  {
+                 $lpf = arrayList.New()
+                 newParam := instructions.NewParamsDeclaration($id1.line, $id1.pos, $id1.text, environment.WILDCARD, $id2.text)
                  $lpf.Add(newParam)
               }
 |  { $lpf = arrayList.New() }
