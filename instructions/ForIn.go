@@ -25,7 +25,7 @@ func (p ForIn) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 	var result environment.Symbol
 	var arr *arrayList.List
 	//validar si es tipo array
-	if p.Exp.Ejecutar(ast, env).Tipo == environment.ARRAY {
+	if p.Exp.Ejecutar(ast, env).Tipo == environment.ARRAY || p.Exp.Ejecutar(ast, env).Tipo == environment.VECTOR {
 		//se extrae la lista
 		arr = p.Exp.Ejecutar(ast, env).Valor.(*arrayList.List)
 		//se recorre

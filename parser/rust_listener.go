@@ -104,6 +104,9 @@ type RustListener interface {
 	// EnterModule is called when entering the module production.
 	EnterModule(c *ModuleContext)
 
+	// EnterModuleContent is called when entering the moduleContent production.
+	EnterModuleContent(c *ModuleContentContext)
+
 	// EnterTypes is called when entering the types production.
 	EnterTypes(c *TypesContext)
 
@@ -232,6 +235,9 @@ type RustListener interface {
 
 	// ExitModule is called when exiting the module production.
 	ExitModule(c *ModuleContext)
+
+	// ExitModuleContent is called when exiting the moduleContent production.
+	ExitModuleContent(c *ModuleContentContext)
 
 	// ExitTypes is called when exiting the types production.
 	ExitTypes(c *TypesContext)

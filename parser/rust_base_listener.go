@@ -213,6 +213,12 @@ func (s *BaseRustListener) EnterModule(ctx *ModuleContext) {}
 // ExitModule is called when production module is exited.
 func (s *BaseRustListener) ExitModule(ctx *ModuleContext) {}
 
+// EnterModuleContent is called when production moduleContent is entered.
+func (s *BaseRustListener) EnterModuleContent(ctx *ModuleContentContext) {}
+
+// ExitModuleContent is called when production moduleContent is exited.
+func (s *BaseRustListener) ExitModuleContent(ctx *ModuleContentContext) {}
+
 // EnterTypes is called when production types is entered.
 func (s *BaseRustListener) EnterTypes(ctx *TypesContext) {}
 

@@ -30,6 +30,8 @@ func (p Print) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 			valToPrint := val.(interfaces.Expression).Ejecutar(ast, env)
 			if (valToPrint.Tipo == environment.ARRAY) || (valToPrint.Tipo == environment.VECTOR) {
 				format = strings.Replace(format, "{:?}", p.ArrayToString(valToPrint.Valor.(*arrayList.List)), 1)
+			} else if valToPrint.Tipo == environment.STRUCT { //imprimir struct
+				format = strings.Replace(format, "{}", fmt.Sprintf("%v", p.StructToString(valToPrint)), 1)
 			} else {
 				format = strings.Replace(format, "{}", fmt.Sprintf("%v", valToPrint.Valor), 1)
 			}
@@ -39,8 +41,13 @@ func (p Print) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 		return result
 	}
 	//Sin formato
-	for _, p := range p.Values.ToArray() {
-		ToPrint = ToPrint + fmt.Sprintf("%v", p.(interfaces.Expression).Ejecutar(ast, env).Valor)
+	for _, val := range p.Values.ToArray() {
+		valToPrint := val.(interfaces.Expression).Ejecutar(ast, env)
+		if valToPrint.Tipo == environment.STRUCT { //imprimir struct
+			ToPrint = ToPrint + p.StructToString(valToPrint)
+		} else {
+			ToPrint = ToPrint + fmt.Sprintf("%v", valToPrint.Valor)
+		}
 	}
 	ast.SetPrint(ToPrint + "\n")
 	return result
@@ -67,4 +74,18 @@ func (p Print) ArrayToString(array *arrayList.List) string {
 		}
 	}
 	return strBuffer + "]"
+}
+
+func (p Print) StructToString(structSymbol environment.Symbol) string {
+	tmpStructString := "{ "
+	for key, element := range structSymbol.Valor.(map[string]environment.Symbol) {
+		tmpStructString = tmpStructString + key + ": "
+		if element.Tipo == environment.STRUCT {
+			tmpStructString = tmpStructString + p.StructToString(element)
+		} else {
+			tmpStructString = tmpStructString + fmt.Sprintf("%v", element.Valor) + ", "
+		}
+	}
+	tmpStructString = strings.TrimRight(tmpStructString, ", ")
+	return tmpStructString + " }"
 }

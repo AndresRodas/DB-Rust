@@ -23,7 +23,7 @@ func (p Continue) Ejecutar(ast *environment.AST, env interface{}) environment.Sy
 			Lin:     p.Lin,
 			Col:     p.Col,
 			Id:      "CONTINUE",
-			Tipo:    environment.CONTINUE,
+			Tipo:    environment.NULL,
 			Valor:   nil,
 			Mutable: false,
 		}

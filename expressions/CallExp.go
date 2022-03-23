@@ -69,13 +69,31 @@ func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Sym
 		if strings.Contains(fmt.Sprintf("%T", s), "instructions") {
 			result = s.(interfaces.Instruction).Ejecutar(ast, funcEnv)
 			p.SaveVarsReference(listIdRef, listIdNew, env.(environment.Environment), funcEnv)
-			if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE || result.Tipo == environment.RETURN { //BREAK, CONTINUE & RETURN
+			if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" { //BREAK, CONTINUE & RETURN
+				//comprobacion de tipo de retorno
+				if result.Id == "RETURN" {
+					if funcSym.TipoRetorno == result.Tipo || funcSym.TipoRetorno == environment.WILDCARD {
+						return result
+					} else {
+						fmt.Println("El tipo del valor a retornar es incorrecto")
+						return environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: environment.NULL}
+					}
+				}
 				return result
 			}
 		} else if strings.Contains(fmt.Sprintf("%T", s), "expressions") {
 			result = s.(interfaces.Expression).Ejecutar(ast, funcEnv)
 			p.SaveVarsReference(listIdRef, listIdNew, env.(environment.Environment), funcEnv)
-			if result.Tipo == environment.BREAK || result.Tipo == environment.CONTINUE || result.Tipo == environment.RETURN { //BREAK, CONTINUE & RETURN
+			if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" { //BREAK, CONTINUE & RETURN
+				//comprobacion de tipo de retorno
+				if result.Id == "RETURN" {
+					if funcSym.TipoRetorno == result.Tipo || funcSym.TipoRetorno == environment.WILDCARD {
+						return result
+					} else {
+						fmt.Println("El tipo del valor a retornar es incorrecto")
+						return environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: environment.NULL}
+					}
+				}
 				return result
 			}
 		} else {

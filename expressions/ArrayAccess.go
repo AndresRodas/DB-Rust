@@ -25,7 +25,7 @@ func (p ArrayAccess) Ejecutar(ast *environment.AST, env interface{}) environment
 	var tempArray environment.Symbol
 	tempArray = p.Array.Ejecutar(ast, env) //sym{[1,2,3,4]}
 
-	if tempArray.Tipo == environment.ARRAY {
+	if tempArray.Tipo == environment.ARRAY || tempArray.Tipo == environment.VECTOR {
 		var tempIndex environment.Symbol
 		tempIndex = p.Index.Ejecutar(ast, env) //sym{3}
 

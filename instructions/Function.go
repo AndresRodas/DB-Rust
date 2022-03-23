@@ -29,12 +29,13 @@ func (p Function) Ejecutar(ast *environment.AST, env interface{}) environment.Sy
 
 	//creando simbolo funcion
 	function = environment.FunctionSymbol{
-		Lin:     p.Lin,
-		Col:     p.Col,
-		Id:      p.Id,
-		Ent:     funcEnv,
-		ListDec: p.ListDec,
-		Block:   p.Bloque,
+		Lin:         p.Lin,
+		Col:         p.Col,
+		Id:          p.Id,
+		Ent:         funcEnv,
+		ListDec:     p.ListDec,
+		Block:       p.Bloque,
+		TipoRetorno: p.Tipo,
 	}
 	//guardando simbolo funcion
 	env.(environment.Environment).SaveFunction(p.Id, function)

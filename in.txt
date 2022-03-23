@@ -1,14 +1,24 @@
-
-
 fn main() {
-    let mut v: Vec<i64> = Vec::with_capacity(4);
-    println!("{:?}", v);
-    println!("El tamaño es: {}, La capacidad es: {}", v.len(), v.capacity());
-    v.push(1);
-    v.push(2);
-    v.push(3);
-    v.push(4);
-    v.insert(v.len()-1,5);
-    println!("{:?}", v);
-    println!("El tamaño es: {}, La capacidad es: {}", v.len(), v.capacity());
+    println!(letra());
+}
+
+fn letra() -> struct{
+    struct holi {
+        val: String,
+        per: String,
+        yan: i64,
+        tr: struct
+    }
+    struct test {
+        name: &str,
+        age: i64
+    }
+    return holi{
+        val: "jaja".to_string(),
+        per: "holis".to_string(),
+        yan: 666,
+        tr: test {
+            name: "juan",
+            age: 26
+        } };
 }

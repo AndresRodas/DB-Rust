@@ -278,7 +278,7 @@ arrayType returns [*arrayList.List t]
 
 function returns [ interfaces.Instruction fun ]
 : FUNC ID PARIZQ listParamsFunc PARDER LLAVEIZQ block LLAVEDER {
-                        $fun = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParamsFunc.lpf, environment.NULL, $block.blk)
+                        $fun = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParamsFunc.lpf, environment.WILDCARD, $block.blk)
                         }
 | FUNC ID PARIZQ listParamsFunc PARDER ARROW1 types LLAVEIZQ block LLAVEDER{
                        $fun = instructions.NewFunction($FUNC.line, $FUNC.pos, $ID.text, $listParamsFunc.lpf, $types.ty, $block.blk)
@@ -320,7 +320,12 @@ listParamsFunc returns[*arrayList.List lpf]
 ;
 
 module returns[] 
-: MODULE ID LLAVEIZQ LLAVEDER
+: MODULE ID LLAVEIZQ moduleContent LLAVEDER
+;
+
+moduleContent returns[]
+: module
+| function
 ;
 
 types returns[environment.TipoExpresion ty]
