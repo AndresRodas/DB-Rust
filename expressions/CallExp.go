@@ -54,6 +54,7 @@ func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Sym
 				}
 				symNewVar.Mutable = true
 				//guardar simbolo en entorno de funcSym
+				symNewVar.ExtraTipo = funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).ExtraTipo
 				funcEnv.SaveVariable(idNewVar, symNewVar, typeNewVar, true)
 			} else {
 				fmt.Println("Los parametros son incorrectos")
