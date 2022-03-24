@@ -1,11 +1,26 @@
-fn main() {
-    struct persona{
-                name: &str,
-                age: i64
-            }
-    let mut vtest : Vec<persona> = vec![persona{ name: "andy", age: 26 }, persona{ name: "miriam", age: 23 }];
-    println!("{}",test(vtest, 1));
+mod Cine{
+    pub fn direccion() -> String {
+        return "6ta calle".to_string();
+    }
+    fn empleados() -> i64 {
+        return 23;
+    }
 }
-fn test(tabla: Vec<persona>, id: i64)-> Vec<persona>{
-    return tabla[id];
+mod Parque {
+    pub fn direccion() -> String {
+            return "6ta calle".to_string();
+    }
+    pub mod Lugar{
+        pub fn distancia() -> f64 {
+                    return 6.24;
+            }
+    }
+    pub fn arbol() -> i64 {
+                return 666;
+        }
+}
+
+fn main() {
+    println!("{}", "It Works!");
+    let var1 = Parque::Lugar::distancia();
 }

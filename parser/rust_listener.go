@@ -14,6 +14,15 @@ type RustListener interface {
 	// EnterGlobal_env is called when entering the global_env production.
 	EnterGlobal_env(c *Global_envContext)
 
+	// EnterModule is called when entering the module production.
+	EnterModule(c *ModuleContext)
+
+	// EnterModuleContent is called when entering the moduleContent production.
+	EnterModuleContent(c *ModuleContentContext)
+
+	// EnterModuleAction is called when entering the moduleAction production.
+	EnterModuleAction(c *ModuleActionContext)
+
 	// EnterMain is called when entering the main production.
 	EnterMain(c *MainContext)
 
@@ -104,12 +113,6 @@ type RustListener interface {
 	// EnterListParamsFunc is called when entering the listParamsFunc production.
 	EnterListParamsFunc(c *ListParamsFuncContext)
 
-	// EnterModule is called when entering the module production.
-	EnterModule(c *ModuleContext)
-
-	// EnterModuleContent is called when entering the moduleContent production.
-	EnterModuleContent(c *ModuleContentContext)
-
 	// EnterTypes is called when entering the types production.
 	EnterTypes(c *TypesContext)
 
@@ -143,11 +146,26 @@ type RustListener interface {
 	// EnterExpVectors is called when entering the expVectors production.
 	EnterExpVectors(c *ExpVectorsContext)
 
+	// EnterCallModule is called when entering the callModule production.
+	EnterCallModule(c *CallModuleContext)
+
+	// EnterListIdMod is called when entering the listIdMod production.
+	EnterListIdMod(c *ListIdModContext)
+
 	// ExitStart is called when exiting the start production.
 	ExitStart(c *StartContext)
 
 	// ExitGlobal_env is called when exiting the global_env production.
 	ExitGlobal_env(c *Global_envContext)
+
+	// ExitModule is called when exiting the module production.
+	ExitModule(c *ModuleContext)
+
+	// ExitModuleContent is called when exiting the moduleContent production.
+	ExitModuleContent(c *ModuleContentContext)
+
+	// ExitModuleAction is called when exiting the moduleAction production.
+	ExitModuleAction(c *ModuleActionContext)
 
 	// ExitMain is called when exiting the main production.
 	ExitMain(c *MainContext)
@@ -239,12 +257,6 @@ type RustListener interface {
 	// ExitListParamsFunc is called when exiting the listParamsFunc production.
 	ExitListParamsFunc(c *ListParamsFuncContext)
 
-	// ExitModule is called when exiting the module production.
-	ExitModule(c *ModuleContext)
-
-	// ExitModuleContent is called when exiting the moduleContent production.
-	ExitModuleContent(c *ModuleContentContext)
-
 	// ExitTypes is called when exiting the types production.
 	ExitTypes(c *TypesContext)
 
@@ -277,4 +289,10 @@ type RustListener interface {
 
 	// ExitExpVectors is called when exiting the expVectors production.
 	ExitExpVectors(c *ExpVectorsContext)
+
+	// ExitCallModule is called when exiting the callModule production.
+	ExitCallModule(c *CallModuleContext)
+
+	// ExitListIdMod is called when exiting the listIdMod production.
+	ExitListIdMod(c *ListIdModContext)
 }

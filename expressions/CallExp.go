@@ -34,7 +34,7 @@ func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Sym
 	var funcEnv environment.Environment
 
 	//creando entorno          //llamar funcion obtenerbglobal
-	funcEnv = environment.NewEnvironment(p.GetGlobal(env), "FUNCTION-"+p.Id)
+	funcEnv = environment.NewEnvironment(p.GetGlobal(env), p.Id+"(FUNCTION)")
 
 	//validar tamaños de parametros
 	if funcSym.ListDec.Len() == p.Params.Len() { // PARAMS: ByRef{ expression, bool(mut) }

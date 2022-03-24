@@ -33,6 +33,24 @@ func (s *BaseRustListener) EnterGlobal_env(ctx *Global_envContext) {}
 // ExitGlobal_env is called when production global_env is exited.
 func (s *BaseRustListener) ExitGlobal_env(ctx *Global_envContext) {}
 
+// EnterModule is called when production module is entered.
+func (s *BaseRustListener) EnterModule(ctx *ModuleContext) {}
+
+// ExitModule is called when production module is exited.
+func (s *BaseRustListener) ExitModule(ctx *ModuleContext) {}
+
+// EnterModuleContent is called when production moduleContent is entered.
+func (s *BaseRustListener) EnterModuleContent(ctx *ModuleContentContext) {}
+
+// ExitModuleContent is called when production moduleContent is exited.
+func (s *BaseRustListener) ExitModuleContent(ctx *ModuleContentContext) {}
+
+// EnterModuleAction is called when production moduleAction is entered.
+func (s *BaseRustListener) EnterModuleAction(ctx *ModuleActionContext) {}
+
+// ExitModuleAction is called when production moduleAction is exited.
+func (s *BaseRustListener) ExitModuleAction(ctx *ModuleActionContext) {}
+
 // EnterMain is called when production main is entered.
 func (s *BaseRustListener) EnterMain(ctx *MainContext) {}
 
@@ -213,18 +231,6 @@ func (s *BaseRustListener) EnterListParamsFunc(ctx *ListParamsFuncContext) {}
 // ExitListParamsFunc is called when production listParamsFunc is exited.
 func (s *BaseRustListener) ExitListParamsFunc(ctx *ListParamsFuncContext) {}
 
-// EnterModule is called when production module is entered.
-func (s *BaseRustListener) EnterModule(ctx *ModuleContext) {}
-
-// ExitModule is called when production module is exited.
-func (s *BaseRustListener) ExitModule(ctx *ModuleContext) {}
-
-// EnterModuleContent is called when production moduleContent is entered.
-func (s *BaseRustListener) EnterModuleContent(ctx *ModuleContentContext) {}
-
-// ExitModuleContent is called when production moduleContent is exited.
-func (s *BaseRustListener) ExitModuleContent(ctx *ModuleContentContext) {}
-
 // EnterTypes is called when production types is entered.
 func (s *BaseRustListener) EnterTypes(ctx *TypesContext) {}
 
@@ -290,3 +296,15 @@ func (s *BaseRustListener) EnterExpVectors(ctx *ExpVectorsContext) {}
 
 // ExitExpVectors is called when production expVectors is exited.
 func (s *BaseRustListener) ExitExpVectors(ctx *ExpVectorsContext) {}
+
+// EnterCallModule is called when production callModule is entered.
+func (s *BaseRustListener) EnterCallModule(ctx *CallModuleContext) {}
+
+// ExitCallModule is called when production callModule is exited.
+func (s *BaseRustListener) ExitCallModule(ctx *CallModuleContext) {}
+
+// EnterListIdMod is called when production listIdMod is entered.
+func (s *BaseRustListener) EnterListIdMod(ctx *ListIdModContext) {}
+
+// ExitListIdMod is called when production listIdMod is exited.
+func (s *BaseRustListener) ExitListIdMod(ctx *ListIdModContext) {}

@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 	//reading file
 	is, _ := antlr.NewFileStream("in.txt")
 	//creating lexer

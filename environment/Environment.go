@@ -11,6 +11,7 @@ type Environment struct {
 	Tabla     map[string]Symbol
 	Structs   map[string]Symbol
 	Functions map[string]FunctionSymbol
+	Modules   map[string]ModuleSymbol
 	Id        string
 }
 
@@ -20,13 +21,13 @@ func NewEnvironment(ant interface{}, ide string) Environment {
 		Tabla:     make(map[string]Symbol),
 		Structs:   make(map[string]Symbol),
 		Functions: make(map[string]FunctionSymbol),
+		Modules:   make(map[string]ModuleSymbol),
 		Id:        ide,
 	}
 }
 
 func (env Environment) SaveVariable(id string, value Symbol, tipo TipoExpresion, mut bool) {
 	if variable, ok := env.Tabla[id]; ok {
-		fmt.Println(env.Id)
 		fmt.Println("La variable "+id+" ya existe", variable)
 		return
 	}
@@ -155,6 +156,7 @@ func (env Environment) SaveFunction(id string, value FunctionSymbol) {
 }
 
 func (env Environment) GetFunction(id string) FunctionSymbol {
+	fmt.Println("EN ENV:", id)
 	var tmpEnv Environment
 	tmpEnv = env
 	for {
@@ -209,4 +211,29 @@ func (env Environment) ReplaceVars(vars map[string]Symbol) {
 	for key, element := range vars {
 		fmt.Println(key, element)
 	}
+}
+
+func (env Environment) SaveModule(id string, value ModuleSymbol) {
+	if variable, ok := env.Modules[id]; ok {
+		fmt.Println("El Modulo "+id+" ya existe", variable)
+		return
+	}
+	env.Modules[id] = value
+}
+
+func (env Environment) GetModule(id string) ModuleSymbol {
+	var tmpEnv Environment
+	tmpEnv = env
+	for {
+		if variable, ok := tmpEnv.Modules[id]; ok {
+			return variable
+		}
+		if tmpEnv.Anterior == nil {
+			break
+		} else {
+			tmpEnv = tmpEnv.Anterior.(Environment)
+		}
+	}
+	fmt.Println("El modulo ", id, " no existe")
+	return ModuleSymbol{}
 }

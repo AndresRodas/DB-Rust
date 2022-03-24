@@ -15,3 +15,12 @@ const (
 	NULL
 	WILDCARD
 )
+
+type TipoModulo int
+
+const (
+	PUBLIC TipoModulo = iota
+	PRIVATE
+	MOD
+	INST
+)

@@ -28,8 +28,62 @@ start returns [environment.Code code]
 global_env returns [interfaces.Instruction hi]
 : declaration PYC { $hi = $declaration.dec }
 | function { $hi = $function.fun }
-| module
+| module { $hi = $module.mod }
+| structCreation { $hi = $structCreation.dec }
 ;
+
+module returns[ interfaces.Instruction mod ]
+: MODULE ID LLAVEIZQ moduleContent LLAVEDER { $mod = instructions.NewModule($MODULE.line, $MODULE.pos, $ID.text, $moduleContent.m ) }
+;
+
+moduleContent returns[*arrayList.List m]
+: mc=moduleContent PUB module {
+                                    newObj := environment.NewModuleObject(environment.PUBLIC, environment.MOD, $module.mod)
+                                    $mc.m.Add(newObj)
+                                    $m = $mc.m
+                                 }
+| mc=moduleContent PUB moduleAction {
+                                       newObj := environment.NewModuleObject(environment.PUBLIC, environment.INST, $moduleAction.ma)
+                                       $mc.m.Add(newObj)
+                                       $m = $mc.m
+                                    }
+| mc=moduleContent module {
+                              newObj := environment.NewModuleObject(environment.PRIVATE, environment.MOD,  $module.mod)
+                              $mc.m.Add(newObj)
+                              $m = $mc.m
+                           }
+| mc=moduleContent moduleAction {
+                                newObj := environment.NewModuleObject(environment.PRIVATE, environment.INST, $moduleAction.ma)
+                                $mc.m.Add(newObj)
+                                $m = $mc.m
+                             }
+| PUB module {
+                  $m = arrayList.New()
+                  newObj := environment.NewModuleObject(environment.PUBLIC, environment.MOD,  $module.mod)
+                  $m.Add(newObj)
+               }
+| PUB moduleAction {
+                     $m = arrayList.New()
+                     newObj := environment.NewModuleObject(environment.PUBLIC, environment.INST, $moduleAction.ma)
+                     $m.Add(newObj)
+                  }
+| module {
+               $m = arrayList.New()
+               newObj := environment.NewModuleObject(environment.PRIVATE, environment.MOD, $module.mod)
+               $m.Add(newObj)
+            }
+| moduleAction {
+                  $m = arrayList.New()
+                  newObj := environment.NewModuleObject(environment.PRIVATE, environment.INST, $moduleAction.ma)
+                  $m.Add(newObj)
+               }
+;
+
+moduleAction returns [interfaces.Instruction ma]
+: function { $ma = $function.fun }
+| structCreation { $ma = $structCreation.dec }
+;
+
 
 main returns [*arrayList.List mainInst]
 : FUNC MAIN PARIZQ PARDER LLAVEIZQ block LLAVEDER { $mainInst = $block.blk }
@@ -222,7 +276,6 @@ vectDeclaration returns[interfaces.Instruction vec]
 | LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, $expression.p, true, nil, "") }
 | LET ID D_PTS VECTOR2 MENOR types MAYOR IGUAL expression { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, false, $expression.p, "") }
 | LET MUT ID D_PTS VECTOR2 MENOR types MAYOR IGUAL expression { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $ID.text, $types.ty, nil, true, $expression.p, "") }
-
 | LET id1=ID D_PTS VECTOR2 MENOR id2=ID MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $id1.text, environment.WILDCARD, nil, false, nil, $id2.text) }
 | LET id1=ID D_PTS VECTOR2 MENOR id2=ID MAYOR IGUAL VECTOR2 C_PTS WCAPACITY PARIZQ expression PARDER { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $id1.text, environment.WILDCARD, $expression.p, false, nil, $id2.text) }
 | LET MUT id1=ID D_PTS VECTOR2 MENOR id2=ID MAYOR IGUAL VECTOR2 C_PTS NEW PARIZQ PARDER { $vec = instructions.NewVectorDeclaration($LET.line, $LET.pos, $id1.text, environment.WILDCARD, nil, true, nil, $id2.text) }
@@ -369,15 +422,6 @@ listParamsFunc returns[*arrayList.List lpf]
 |  { $lpf = arrayList.New() }
 ;
 
-module returns[] 
-: MODULE ID LLAVEIZQ moduleContent LLAVEDER
-;
-
-moduleContent returns[]
-: module
-| function
-;
-
 types returns[environment.TipoExpresion ty]
 : INT { $ty = environment.INTEGER }
 | FLOAT { $ty = environment.FLOAT }
@@ -426,6 +470,9 @@ expr_arit returns[interfaces.Expression p]
 | PARIZQ expression PARDER { $p = $expression.p }
 | ID LLAVEIZQ listStructExp LLAVEDER { $p = expressions.NewStructExp($ID.line, $ID.pos, $ID.text, $listStructExp.l ) }
 | callFunction { $p = $callFunction.cf }
+| callFunction PYC { $p = $callFunction.cf }
+| callModule { $p = $callModule.cm }
+| callModule PYC { $p = $callModule.cm }
 | primitive { $p = $primitive.p }
 | condIf { $p = $condIf.ifCond }
 | condMatch { $p = $condMatch.mtch }
@@ -491,4 +538,19 @@ expVectors returns[interfaces.Expression ev]
 | ID PUNTO CONTAINS PARIZQ AMP expression PARDER { $ev = expressions.NewContains($ID.line, $ID.pos, $ID.text, $expression.p) }
 | ID PUNTO LEN PARIZQ PARDER { $ev = expressions.NewLen($ID.line, $ID.pos, $ID.text) }
 | ID PUNTO CAPACITY PARIZQ PARDER { $ev = expressions.NewCapacity($ID.line, $ID.pos, $ID.text) }
+;
+
+callModule returns[interfaces.Expression cm]
+: listIdMod expression { $cm = expressions.NewModuleAccess($listIdMod.start.GetLine(),$listIdMod.start.GetColumn(), $listIdMod.l, $expression.p ) }
+;
+
+listIdMod returns[*arrayList.List l]
+: list=listIdMod ID C_PTS {
+                              $list.l.Add($ID.text)
+                              $l = $list.l
+                           }
+| ID C_PTS {
+               $l = arrayList.New()
+               $l.Add($ID.text)
+            }
 ;
