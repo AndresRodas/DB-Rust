@@ -24,21 +24,19 @@ func (p Function) Ejecutar(ast *environment.AST, env interface{}) environment.Sy
 	var result environment.Symbol
 	var function environment.FunctionSymbol
 
-	//creando nuevo entorno de funcion
-	var funcEnv environment.Environment
-	funcEnv = environment.NewEnvironment(env, "FUNCTION-"+p.Id)
-
 	//creando simbolo funcion
 	function = environment.FunctionSymbol{
 		Lin:         p.Lin,
 		Col:         p.Col,
 		Id:          p.Id,
-		Ent:         funcEnv,
+		Ent:         nil,
 		ListDec:     p.ListDec,
 		Block:       p.Bloque,
 		TipoRetorno: p.Tipo,
 		IdTipo:      p.FuncId,
 	}
+	//fmt.Println("ESTA ES LA FUNCION ", p.Id)
+	//fmt.Println(p.ListDec.ToArray())
 	//guardando simbolo funcion
 	env.(environment.Environment).SaveFunction(p.Id, function)
 	return result

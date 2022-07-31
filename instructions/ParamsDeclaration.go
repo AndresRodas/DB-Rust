@@ -10,10 +10,11 @@ type ParamsDeclaration struct {
 	Id        string
 	Tipo      environment.TipoExpresion
 	ExtraTipo string
+	Vectipo   environment.TipoExpresion
 }
 
-func NewParamsDeclaration(lin int, col int, id string, tipo environment.TipoExpresion, extr string) ParamsDeclaration {
-	instr := ParamsDeclaration{lin, col, id, tipo, extr}
+func NewParamsDeclaration(lin int, col int, id string, tipo environment.TipoExpresion, extr string, vt environment.TipoExpresion) ParamsDeclaration {
+	instr := ParamsDeclaration{lin, col, id, tipo, extr, vt}
 	return instr
 }
 
@@ -29,9 +30,10 @@ func (p ParamsDeclaration) Ejecutar(ast *environment.AST, env interface{}) envir
 		Valor:     0,
 		Mutable:   true,
 		ExtraTipo: p.ExtraTipo,
+		Vectipo:   p.Vectipo,
 	}
 
-	env.(environment.Environment).SaveVariable(p.Id, result, p.Tipo, true)
+	env.(environment.Environment).SaveVariable(p.Id, result)
 
 	return result
 }

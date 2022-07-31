@@ -67,6 +67,6 @@ func (p ArrayAssign) ReplaceArray(array environment.Symbol, indexList *arrayList
 		}
 		contIndex++ //suma contador indice
 	}
-	result = environment.Symbol{Lin: array.Lin, Col: array.Col, Id: "", Tipo: array.Tipo, Valor: tempList, Mutable: array.Mutable}
+	result = environment.Symbol{Lin: array.Lin, Col: array.Col, Id: array.Id, Tipo: array.Tipo, Valor: tempList, Mutable: array.Mutable}
 	return result
 }

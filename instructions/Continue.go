@@ -20,12 +20,13 @@ func (p Continue) Ejecutar(ast *environment.AST, env interface{}) environment.Sy
 	//validar ciclo entorno
 	if env.(environment.Environment).LoopValidation() {
 		result = environment.Symbol{
-			Lin:     p.Lin,
-			Col:     p.Col,
-			Id:      "CONTINUE",
-			Tipo:    environment.NULL,
-			Valor:   nil,
-			Mutable: false,
+			Lin:          p.Lin,
+			Col:          p.Col,
+			Id:           "",
+			Tipo:         environment.NULL,
+			Valor:        nil,
+			Mutable:      false,
+			ContinueFlag: true,
 		}
 	} else {
 		fmt.Println("Error sentencia continue")

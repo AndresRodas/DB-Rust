@@ -23,23 +23,25 @@ func (p Break) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 	if env.(environment.Environment).LoopValidation() {
 		if p.Expresion == nil { //BREAK SIN VALOR
 			result = environment.Symbol{
-				Lin:     p.Lin,
-				Col:     p.Col,
-				Id:      "BREAK",
-				Tipo:    environment.NULL,
-				Valor:   nil,
-				Mutable: true,
+				Lin:        p.Lin,
+				Col:        p.Col,
+				Id:         "",
+				Tipo:       environment.NULL,
+				Valor:      nil,
+				Mutable:    true,
+				ReturnFlag: true,
 			}
 			return result
 		} else { //BREAK CON VALOR
 			tmpVal := p.Expresion.Ejecutar(ast, env)
 			result = environment.Symbol{
-				Lin:     p.Lin,
-				Col:     p.Col,
-				Id:      "BREAK",
-				Tipo:    tmpVal.Tipo,
-				Valor:   tmpVal.Valor,
-				Mutable: true,
+				Lin:       p.Lin,
+				Col:       p.Col,
+				Id:        tmpVal.Id,
+				Tipo:      tmpVal.Tipo,
+				Valor:     tmpVal.Valor,
+				Mutable:   true,
+				BreakFlag: true,
 			}
 		}
 	} else {

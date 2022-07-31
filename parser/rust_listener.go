@@ -89,6 +89,9 @@ type RustListener interface {
 	// EnterVectDeclaration is called when entering the vectDeclaration production.
 	EnterVectDeclaration(c *VectDeclarationContext)
 
+	// EnterTypeVect is called when entering the typeVect production.
+	EnterTypeVect(c *TypeVectContext)
+
 	// EnterStructCreation is called when entering the structCreation production.
 	EnterStructCreation(c *StructCreationContext)
 
@@ -97,6 +100,9 @@ type RustListener interface {
 
 	// EnterAssignment is called when entering the assignment production.
 	EnterAssignment(c *AssignmentContext)
+
+	// EnterListArrStr is called when entering the listArrStr production.
+	EnterListArrStr(c *ListArrStrContext)
 
 	// EnterListAccessStruct is called when entering the listAccessStruct production.
 	EnterListAccessStruct(c *ListAccessStructContext)
@@ -119,23 +125,17 @@ type RustListener interface {
 	// EnterListParams is called when entering the listParams production.
 	EnterListParams(c *ListParamsContext)
 
-	// EnterListVec is called when entering the listVec production.
-	EnterListVec(c *ListVecContext)
+	// EnterCallFunction is called when entering the callFunction production.
+	EnterCallFunction(c *CallFunctionContext)
 
 	// EnterExpression is called when entering the expression production.
 	EnterExpression(c *ExpressionContext)
-
-	// EnterCallFunction is called when entering the callFunction production.
-	EnterCallFunction(c *CallFunctionContext)
 
 	// EnterExpr_arit is called when entering the expr_arit production.
 	EnterExpr_arit(c *Expr_aritContext)
 
 	// EnterPrimitive is called when entering the primitive production.
 	EnterPrimitive(c *PrimitiveContext)
-
-	// EnterStringTypes is called when entering the stringTypes production.
-	EnterStringTypes(c *StringTypesContext)
 
 	// EnterListArray is called when entering the listArray production.
 	EnterListArray(c *ListArrayContext)
@@ -145,6 +145,9 @@ type RustListener interface {
 
 	// EnterExpVectors is called when entering the expVectors production.
 	EnterExpVectors(c *ExpVectorsContext)
+
+	// EnterListVec is called when entering the listVec production.
+	EnterListVec(c *ListVecContext)
 
 	// EnterCallModule is called when entering the callModule production.
 	EnterCallModule(c *CallModuleContext)
@@ -233,6 +236,9 @@ type RustListener interface {
 	// ExitVectDeclaration is called when exiting the vectDeclaration production.
 	ExitVectDeclaration(c *VectDeclarationContext)
 
+	// ExitTypeVect is called when exiting the typeVect production.
+	ExitTypeVect(c *TypeVectContext)
+
 	// ExitStructCreation is called when exiting the structCreation production.
 	ExitStructCreation(c *StructCreationContext)
 
@@ -241,6 +247,9 @@ type RustListener interface {
 
 	// ExitAssignment is called when exiting the assignment production.
 	ExitAssignment(c *AssignmentContext)
+
+	// ExitListArrStr is called when exiting the listArrStr production.
+	ExitListArrStr(c *ListArrStrContext)
 
 	// ExitListAccessStruct is called when exiting the listAccessStruct production.
 	ExitListAccessStruct(c *ListAccessStructContext)
@@ -263,23 +272,17 @@ type RustListener interface {
 	// ExitListParams is called when exiting the listParams production.
 	ExitListParams(c *ListParamsContext)
 
-	// ExitListVec is called when exiting the listVec production.
-	ExitListVec(c *ListVecContext)
+	// ExitCallFunction is called when exiting the callFunction production.
+	ExitCallFunction(c *CallFunctionContext)
 
 	// ExitExpression is called when exiting the expression production.
 	ExitExpression(c *ExpressionContext)
-
-	// ExitCallFunction is called when exiting the callFunction production.
-	ExitCallFunction(c *CallFunctionContext)
 
 	// ExitExpr_arit is called when exiting the expr_arit production.
 	ExitExpr_arit(c *Expr_aritContext)
 
 	// ExitPrimitive is called when exiting the primitive production.
 	ExitPrimitive(c *PrimitiveContext)
-
-	// ExitStringTypes is called when exiting the stringTypes production.
-	ExitStringTypes(c *StringTypesContext)
 
 	// ExitListArray is called when exiting the listArray production.
 	ExitListArray(c *ListArrayContext)
@@ -289,6 +292,9 @@ type RustListener interface {
 
 	// ExitExpVectors is called when exiting the expVectors production.
 	ExitExpVectors(c *ExpVectorsContext)
+
+	// ExitListVec is called when exiting the listVec production.
+	ExitListVec(c *ListVecContext)
 
 	// ExitCallModule is called when exiting the callModule production.
 	ExitCallModule(c *CallModuleContext)

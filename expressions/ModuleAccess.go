@@ -37,8 +37,7 @@ func (p ModuleAccess) Ejecutar(ast *environment.AST, env interface{}) environmen
 	//clonando temporales
 	var extraMod environment.ModuleSymbol
 	var tmpEnv environment.Environment
-	extraMod = tmpMod
-	tmpEnv = modEnv
+
 	//validar tamaño del array
 	if listClone.Len() > 0 {
 		//recorrer resto de ids
@@ -49,43 +48,41 @@ func (p ModuleAccess) Ejecutar(ast *environment.AST, env interface{}) environmen
 				if is.(environment.ModuleObject).Visibilidad == environment.PUBLIC {
 					//ejecutando funcion o guardando modulo en entorno
 					if is.(environment.ModuleObject).Tipo == environment.INST {
-						fmt.Println("UNA VEZ", is.(environment.ModuleObject))
 						//ejecutar instrucciones con entorno de modulo
-						fmt.Println(tmpEnv.Functions)
-						result = is.(environment.ModuleObject).Instruction.(interfaces.Instruction).Ejecutar(ast, tmpEnv)
+						result = is.(environment.ModuleObject).Instruction.(interfaces.Instruction).Ejecutar(ast, modEnv)
 					} else if is.(environment.ModuleObject).Tipo == environment.MOD {
 						//validar id con modulo
 						if is.(environment.ModuleObject).Instruction.(instructions.Module).Id == md.(string) {
 							//ejecuta modulo y lo guarda en entorno actual
-							is.(environment.ModuleObject).Instruction.(interfaces.Instruction).Ejecutar(ast, tmpEnv)
+							is.(environment.ModuleObject).Instruction.(interfaces.Instruction).Ejecutar(ast, modEnv)
 							//seteando el modulo actual
-							extraMod = tmpEnv.GetModule(md.(string))
-							fmt.Println("Modulo llamado lugar: ", extraMod.Id)
+							extraMod = modEnv.GetModule(md.(string))
 							//seteando el entorno actual
 							tmpEnv = environment.NewEnvironment(modEnv, extraMod.Id+"(MODULO)")
-							//fmt.Println("entorno recien creado: ", modEnv)
 						}
 					}
 				}
 			}
-			//setear entorno y modulo nuevo
 			tmpMod = extraMod
 			modEnv = tmpEnv
-			//fmt.Println(modEnv.Functions)
-		} // solo habia un acceso a modulos
-	} else {
-		for _, is := range tmpMod.Childs.ToArray() { //itera lista de ModuleObject{ visibilidad, tipo, instr }
-			//validando visibilidad
-			if is.(environment.ModuleObject).Visibilidad == environment.PUBLIC {
-				//ejecutando funcion o guardando modulo en entorno
-				if is.(environment.ModuleObject).Tipo == environment.INST {
-					//ejecutar instrucciones con entorno de modulo
-					result = is.(environment.ModuleObject).Instruction.(interfaces.Instruction).Ejecutar(ast, modEnv)
-				}
+		}
+	}
+
+	//agregando las variables al entorno a ejecutar********
+	modEnv = p.CloneVars(env, modEnv)
+
+	//ejecucion mod final
+	for _, is := range tmpMod.Childs.ToArray() { //itera lista de ModuleObject{ visibilidad, tipo, instr }
+		//validando visibilidad
+		if is.(environment.ModuleObject).Visibilidad == environment.PUBLIC {
+			//ejecutando funcion o guardando modulo en entorno
+			if is.(environment.ModuleObject).Tipo == environment.INST {
+				//ejecutar instrucciones con entorno de modulo
+				result = is.(environment.ModuleObject).Instruction.(interfaces.Instruction).Ejecutar(ast, modEnv)
 			}
 		}
 	}
-	fmt.Println("EJECUTAR: ", modEnv.Id)
+
 	//EJECUCION DE EXPRESSION CON ENTORNO NUEVO
 	if strings.Contains(fmt.Sprintf("%T", p.Exp), "instructions") {
 		result = p.Exp.(interfaces.Instruction).Ejecutar(ast, modEnv)
@@ -101,7 +98,6 @@ func (p ModuleAccess) Ejecutar(ast *environment.AST, env interface{}) environmen
 	} else {
 		fmt.Println("error en bloque")
 	}
-
 	return result
 }
 
@@ -120,4 +116,15 @@ func (p ModuleAccess) GetGlobal(env interface{}) environment.Environment {
 		}
 	}
 	return tmpEnvGbl
+}
+
+func (p ModuleAccess) CloneVars(env1, env2 interface{}) environment.Environment {
+	var result environment.Environment
+	//recorriendo mapa del env1
+	for key, element := range env1.(environment.Environment).Tabla {
+		//setenado variable nueva
+		env2.(environment.Environment).SaveVariable(key, element)
+	}
+	result = env2.(environment.Environment)
+	return result
 }

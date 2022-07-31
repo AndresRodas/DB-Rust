@@ -10,18 +10,19 @@ import (
 type Contains struct {
 	Lin       int
 	Col       int
-	Id        string
+	Id        interfaces.Expression
 	Expresion interfaces.Expression
 }
 
-func NewContains(lin int, col int, id string, exp interfaces.Expression) Contains {
+func NewContains(lin int, col int, id, exp interfaces.Expression) Contains {
 	expr := Contains{lin, col, id, exp}
 	return expr
 }
 
 func (p Contains) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 	var result, tmpSymbol, tmpExp environment.Symbol
-	tmpSymbol = env.(environment.Environment).GetVariable(p.Id)
+	//tmpSymbol = env.(environment.Environment).GetVariable(p.Id)
+	tmpSymbol = p.Id.Ejecutar(ast, env)
 	tmpExp = p.Expresion.Ejecutar(ast, env)
 	result = environment.Symbol{Lin: p.Lin, Col: p.Col, Tipo: environment.BOOLEAN, Valor: false, Mutable: true}
 
@@ -37,7 +38,7 @@ func (p Contains) Ejecutar(ast *environment.AST, env interface{}) environment.Sy
 			}
 			return environment.Symbol{Lin: p.Lin, Col: p.Col, Tipo: environment.BOOLEAN, Valor: false, Mutable: true}
 		} else {
-			fmt.Println("Tipo de expression incorrecta")
+			fmt.Println("Tipo de expression incorrecta ", p.Lin, p.Col)
 			return result
 		}
 	} else {

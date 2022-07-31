@@ -26,7 +26,7 @@ func NewEnvironment(ant interface{}, ide string) Environment {
 	}
 }
 
-func (env Environment) SaveVariable(id string, value Symbol, tipo TipoExpresion, mut bool) {
+func (env Environment) SaveVariable(id string, value Symbol) {
 	if variable, ok := env.Tabla[id]; ok {
 		fmt.Println("La variable "+id+" ya existe", variable)
 		return
@@ -47,17 +47,22 @@ func (env Environment) GetVariable(id string) Symbol {
 			tmpEnv = tmpEnv.Anterior.(Environment)
 		}
 	}
-	fmt.Println("La variable no existe")
+	fmt.Println("La variable ", id, " no existe HEREEEE")
 	return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NULL, Valor: 0, Mutable: false}
 }
 
 func (env Environment) SetVariable(id string, value Symbol) Symbol {
+	//value.Id = id
 	var tmpEnv Environment
 	tmpEnv = env
 	for {
 		if variable, ok := tmpEnv.Tabla[id]; ok {
 			if tmpEnv.Tabla[id].Mutable {
 				if tmpEnv.Tabla[id].Tipo == value.Tipo {
+					//fmt.Println("ASIG EN TABLA ", tmpEnv.Tabla[id].TipoArr)
+					//fmt.Println("asig val entra", value.TipoArr)
+					value.TipoArr = tmpEnv.Tabla[id].TipoArr
+					value.ExtraTipo = tmpEnv.Tabla[id].ExtraTipo
 					tmpEnv.Tabla[id] = value
 					return variable
 				} else {
@@ -65,7 +70,7 @@ func (env Environment) SetVariable(id string, value Symbol) Symbol {
 					return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NULL, Valor: 0, Mutable: false}
 				}
 			} else {
-				fmt.Println("La variable no es mutable")
+				fmt.Println("La variable", id, " no es mutable")
 				return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NULL, Valor: 0, Mutable: false}
 			}
 		}
@@ -75,7 +80,7 @@ func (env Environment) SetVariable(id string, value Symbol) Symbol {
 			tmpEnv = tmpEnv.Anterior.(Environment)
 		}
 	}
-	fmt.Println("La variable no existe")
+	fmt.Println("La variable ", id, " no existe")
 	return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NULL, Valor: 0, Mutable: false}
 }
 
@@ -115,7 +120,7 @@ func (env Environment) SetStruct(id *arrayList.List, value Symbol) Symbol {
 		var tmpDic map[string]Symbol
 		tmpDic = make(map[string]Symbol)
 		//asignacion de diccionario
-		tmpDic = env.Tabla
+		tmpDic = tmpEnv.Tabla
 		//recorro la lista de id
 		for _, s := range id.ToArray() { //recorremos lista
 			//validando variable
@@ -143,7 +148,7 @@ func (env Environment) SetStruct(id *arrayList.List, value Symbol) Symbol {
 			tmpEnv = tmpEnv.Anterior.(Environment)
 		}
 	}
-	fmt.Println("La variable no existe")
+	fmt.Println("La variable ", id, "no existe")
 	return Symbol{Lin: 0, Col: 0, Id: "", Tipo: NULL, Valor: 0, Mutable: false}
 }
 
@@ -156,7 +161,6 @@ func (env Environment) SaveFunction(id string, value FunctionSymbol) {
 }
 
 func (env Environment) GetFunction(id string) FunctionSymbol {
-	fmt.Println("EN ENV:", id)
 	var tmpEnv Environment
 	tmpEnv = env
 	for {
@@ -169,8 +173,8 @@ func (env Environment) GetFunction(id string) FunctionSymbol {
 			tmpEnv = tmpEnv.Anterior.(Environment)
 		}
 	}
-	fmt.Println("La funcion no existe")
-	return FunctionSymbol{Ent: nil}
+	fmt.Println("La funcion ", id, " no existe o es una funcion privada..")
+	return FunctionSymbol{TipoRetorno: NULL}
 }
 
 func (env Environment) LoopValidation() bool {

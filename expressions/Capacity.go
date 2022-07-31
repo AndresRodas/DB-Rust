@@ -19,7 +19,6 @@ func NewCapacity(lin int, col int, id string) Capacity {
 func (p Capacity) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 	var tmpSymbol environment.Symbol
 	tmpSymbol = env.(environment.Environment).GetVariable(p.Id)
-
 	//validar que id sea vector
 	if tmpSymbol.Tipo == environment.VECTOR {
 		//retornar tamaño

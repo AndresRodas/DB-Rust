@@ -11,6 +11,11 @@ type Primitive struct {
 	Tipo  environment.TipoExpresion
 }
 
+func NewPrimitive(lin int, col int, valor interface{}, tipo environment.TipoExpresion) Primitive {
+	exp := Primitive{lin, col, valor, tipo}
+	return exp
+}
+
 func (p Primitive) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 
 	return environment.Symbol{
@@ -21,9 +26,4 @@ func (p Primitive) Ejecutar(ast *environment.AST, env interface{}) environment.S
 		Valor:   p.Valor,
 		Mutable: true,
 	}
-}
-
-func NewPrimitive(lin int, col int, valor interface{}, tipo environment.TipoExpresion) Primitive {
-	exp := Primitive{lin, col, valor, tipo}
-	return exp
 }

@@ -23,27 +23,30 @@ func (p Return) Ejecutar(ast *environment.AST, env interface{}) environment.Symb
 	if env.(environment.Environment).FuncValidation() {
 		if p.Expresion == nil { //RETURN SIN VALOR
 			result = environment.Symbol{
-				Lin:     p.Lin,
-				Col:     p.Col,
-				Id:      "RETURN",
-				Tipo:    environment.NULL,
-				Valor:   nil,
-				Mutable: true,
+				Lin:        p.Lin,
+				Col:        p.Col,
+				Id:         "",
+				Tipo:       environment.NULL,
+				Valor:      nil,
+				Mutable:    true,
+				ReturnFlag: true,
 			}
 			return result
 		} else { //RETURN CON VALOR
 			tmpVal := p.Expresion.Ejecutar(ast, env)
 			result = environment.Symbol{
-				Lin:       p.Lin,
-				Col:       p.Col,
-				Id:        "RETURN",
-				Tipo:      tmpVal.Tipo,
-				Valor:     tmpVal.Valor,
-				Mutable:   true,
-				Capacity:  tmpVal.Capacity,
-				TipoArr:   tmpVal.TipoArr,
-				ExtraTipo: tmpVal.ExtraTipo,
+				Lin:        p.Lin,
+				Col:        p.Col,
+				Id:         tmpVal.Id,
+				Tipo:       tmpVal.Tipo,
+				Valor:      tmpVal.Valor,
+				Mutable:    true,
+				Capacity:   tmpVal.Capacity,
+				TipoArr:    tmpVal.TipoArr,
+				ExtraTipo:  tmpVal.ExtraTipo,
+				ReturnFlag: true,
 			}
+			fmt.Println("DESDE RETURN, TIPOARR: ", result.TipoArr)
 		}
 	} else {
 		fmt.Println("Error sentencia return")

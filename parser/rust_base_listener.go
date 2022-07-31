@@ -183,6 +183,12 @@ func (s *BaseRustListener) EnterVectDeclaration(ctx *VectDeclarationContext) {}
 // ExitVectDeclaration is called when production vectDeclaration is exited.
 func (s *BaseRustListener) ExitVectDeclaration(ctx *VectDeclarationContext) {}
 
+// EnterTypeVect is called when production typeVect is entered.
+func (s *BaseRustListener) EnterTypeVect(ctx *TypeVectContext) {}
+
+// ExitTypeVect is called when production typeVect is exited.
+func (s *BaseRustListener) ExitTypeVect(ctx *TypeVectContext) {}
+
 // EnterStructCreation is called when production structCreation is entered.
 func (s *BaseRustListener) EnterStructCreation(ctx *StructCreationContext) {}
 
@@ -200,6 +206,12 @@ func (s *BaseRustListener) EnterAssignment(ctx *AssignmentContext) {}
 
 // ExitAssignment is called when production assignment is exited.
 func (s *BaseRustListener) ExitAssignment(ctx *AssignmentContext) {}
+
+// EnterListArrStr is called when production listArrStr is entered.
+func (s *BaseRustListener) EnterListArrStr(ctx *ListArrStrContext) {}
+
+// ExitListArrStr is called when production listArrStr is exited.
+func (s *BaseRustListener) ExitListArrStr(ctx *ListArrStrContext) {}
 
 // EnterListAccessStruct is called when production listAccessStruct is entered.
 func (s *BaseRustListener) EnterListAccessStruct(ctx *ListAccessStructContext) {}
@@ -243,23 +255,17 @@ func (s *BaseRustListener) EnterListParams(ctx *ListParamsContext) {}
 // ExitListParams is called when production listParams is exited.
 func (s *BaseRustListener) ExitListParams(ctx *ListParamsContext) {}
 
-// EnterListVec is called when production listVec is entered.
-func (s *BaseRustListener) EnterListVec(ctx *ListVecContext) {}
+// EnterCallFunction is called when production callFunction is entered.
+func (s *BaseRustListener) EnterCallFunction(ctx *CallFunctionContext) {}
 
-// ExitListVec is called when production listVec is exited.
-func (s *BaseRustListener) ExitListVec(ctx *ListVecContext) {}
+// ExitCallFunction is called when production callFunction is exited.
+func (s *BaseRustListener) ExitCallFunction(ctx *CallFunctionContext) {}
 
 // EnterExpression is called when production expression is entered.
 func (s *BaseRustListener) EnterExpression(ctx *ExpressionContext) {}
 
 // ExitExpression is called when production expression is exited.
 func (s *BaseRustListener) ExitExpression(ctx *ExpressionContext) {}
-
-// EnterCallFunction is called when production callFunction is entered.
-func (s *BaseRustListener) EnterCallFunction(ctx *CallFunctionContext) {}
-
-// ExitCallFunction is called when production callFunction is exited.
-func (s *BaseRustListener) ExitCallFunction(ctx *CallFunctionContext) {}
 
 // EnterExpr_arit is called when production expr_arit is entered.
 func (s *BaseRustListener) EnterExpr_arit(ctx *Expr_aritContext) {}
@@ -272,12 +278,6 @@ func (s *BaseRustListener) EnterPrimitive(ctx *PrimitiveContext) {}
 
 // ExitPrimitive is called when production primitive is exited.
 func (s *BaseRustListener) ExitPrimitive(ctx *PrimitiveContext) {}
-
-// EnterStringTypes is called when production stringTypes is entered.
-func (s *BaseRustListener) EnterStringTypes(ctx *StringTypesContext) {}
-
-// ExitStringTypes is called when production stringTypes is exited.
-func (s *BaseRustListener) ExitStringTypes(ctx *StringTypesContext) {}
 
 // EnterListArray is called when production listArray is entered.
 func (s *BaseRustListener) EnterListArray(ctx *ListArrayContext) {}
@@ -296,6 +296,12 @@ func (s *BaseRustListener) EnterExpVectors(ctx *ExpVectorsContext) {}
 
 // ExitExpVectors is called when production expVectors is exited.
 func (s *BaseRustListener) ExitExpVectors(ctx *ExpVectorsContext) {}
+
+// EnterListVec is called when production listVec is entered.
+func (s *BaseRustListener) EnterListVec(ctx *ListVecContext) {}
+
+// ExitListVec is called when production listVec is exited.
+func (s *BaseRustListener) ExitListVec(ctx *ListVecContext) {}
 
 // EnterCallModule is called when production callModule is entered.
 func (s *BaseRustListener) EnterCallModule(ctx *CallModuleContext) {}

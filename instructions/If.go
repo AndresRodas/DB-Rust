@@ -23,9 +23,13 @@ func NewIf(lin int, col int, condition interfaces.Expression, bloque *arrayList.
 }
 
 func (p If) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
-
 	var condicion, result environment.Symbol
 	condicion = p.Expresion.Ejecutar(ast, env)
+	//Validando tipo
+	if condicion.Tipo != environment.BOOLEAN {
+		fmt.Println("El tipo de variable es incorrecto para un If")
+		return condicion
+	}
 	if condicion.Valor == true {
 		//EJECUTANDO EL IF
 		var ifEnv environment.Environment
@@ -34,12 +38,28 @@ func (p If) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 			if strings.Contains(fmt.Sprintf("%T", s), "instructions") {
 				result = s.(interfaces.Instruction).Ejecutar(ast, ifEnv)
 				//BREAK, CONTINUE & RETURN
-				if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" {
+				if result.BreakFlag {
+					//result.BreakFlag = false
+					return result
+				} else if result.ContinueFlag {
+					//result.ContinueFlag = false
+					return result
+				} else if result.ReturnFlag {
+					//result.ReturnFlag = false
 					return result
 				}
+
 			} else if strings.Contains(fmt.Sprintf("%T", s), "expressions") {
 				result = s.(interfaces.Expression).Ejecutar(ast, ifEnv)
-				if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" { //BREAK & CONTINUE
+				//BREAK, CONTINUE & RETURN
+				if result.BreakFlag {
+					//result.BreakFlag = false
+					return result
+				} else if result.ContinueFlag {
+					//result.ContinueFlag = false
+					return result
+				} else if result.ReturnFlag {
+					//result.ReturnFlag = false
 					return result
 				}
 			} else {
@@ -58,12 +78,28 @@ func (p If) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 				for _, ns := range s.(If).Bloque.ToArray() {
 					if strings.Contains(fmt.Sprintf("%T", ns), "instructions") {
 						result = ns.(interfaces.Instruction).Ejecutar(ast, elifEnv)
-						if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" { //BREAK & CONTINUE
+						//BREAK, CONTINUE & RETURN
+						if result.BreakFlag {
+							//result.BreakFlag = false
+							return result
+						} else if result.ContinueFlag {
+							//result.ContinueFlag = false
+							return result
+						} else if result.ReturnFlag {
+							//result.ReturnFlag = false
 							return result
 						}
 					} else if strings.Contains(fmt.Sprintf("%T", ns), "expressions") {
 						result = ns.(interfaces.Expression).Ejecutar(ast, elifEnv)
-						if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" { //BREAK & CONTINUE
+						//BREAK, CONTINUE & RETURN
+						if result.BreakFlag {
+							//result.BreakFlag = false
+							return result
+						} else if result.ContinueFlag {
+							//result.ContinueFlag = false
+							return result
+						} else if result.ReturnFlag {
+							//result.ReturnFlag = false
 							return result
 						}
 					} else {
@@ -80,12 +116,28 @@ func (p If) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 			for _, ns := range p.ElseInst.ToArray() {
 				if strings.Contains(fmt.Sprintf("%T", ns), "instructions") {
 					result = ns.(interfaces.Instruction).Ejecutar(ast, elseEnv)
-					if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" { //BREAK & CONTINUE
+					//BREAK, CONTINUE & RETURN
+					if result.BreakFlag {
+						//result.BreakFlag = false
+						return result
+					} else if result.ContinueFlag {
+						//result.ContinueFlag = false
+						return result
+					} else if result.ReturnFlag {
+						//result.ReturnFlag = false
 						return result
 					}
 				} else if strings.Contains(fmt.Sprintf("%T", ns), "expressions") {
 					result = ns.(interfaces.Expression).Ejecutar(ast, elseEnv)
-					if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" { //BREAK & CONTINUE
+					//BREAK, CONTINUE & RETURN
+					if result.BreakFlag {
+						//result.BreakFlag = false
+						return result
+					} else if result.ContinueFlag {
+						//result.ContinueFlag = false
+						return result
+					} else if result.ReturnFlag {
+						//result.ReturnFlag = false
 						return result
 					}
 				} else {
@@ -102,18 +154,35 @@ func (p If) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 		for _, ns := range p.ElseInst.ToArray() {
 			if strings.Contains(fmt.Sprintf("%T", ns), "instructions") {
 				result = ns.(interfaces.Instruction).Ejecutar(ast, elseEnv)
-				if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" { //BREAK & CONTINUE
+				//BREAK, CONTINUE & RETURN
+				if result.BreakFlag {
+					//result.BreakFlag = false
+					return result
+				} else if result.ContinueFlag {
+					//result.ContinueFlag = false
+					return result
+				} else if result.ReturnFlag {
+					//result.ReturnFlag = false
 					return result
 				}
 			} else if strings.Contains(fmt.Sprintf("%T", ns), "expressions") {
 				result = ns.(interfaces.Expression).Ejecutar(ast, elseEnv)
-				if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" { //BREAK & CONTINUE
+				//BREAK, CONTINUE & RETURN
+				if result.BreakFlag {
+					//result.BreakFlag = false
+					return result
+				} else if result.ContinueFlag {
+					//result.ContinueFlag = false
+					return result
+				} else if result.ReturnFlag {
+					//result.ReturnFlag = false
 					return result
 				}
 			} else {
 				fmt.Println("error en bloque")
 			}
 		}
+
 		return result
 	}
 

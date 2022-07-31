@@ -36,37 +36,41 @@ func (p While) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 
 			for _, s := range p.Bloque.ToArray() {
 				if strings.Contains(fmt.Sprintf("%T", s), "instructions") {
-					result = s.(interfaces.Instruction).Ejecutar(ast, whileEnv)
-					if result.Id == "BREAK" { //BREAK
+					result = s.(interfaces.Instruction).Ejecutar(ast, whileEnv) //BREAK, CONTINUE & RETURN
+					if result.BreakFlag {
+						result.BreakFlag = false
 						breakFlag = true
 						if result.Valor != nil {
 							fmt.Println("No se permite retornar valor mediante un Break en un While")
 						}
 						break
-					}
-					if result.Id == "CONTINUE" {
+					} else if result.ContinueFlag {
+						result.ContinueFlag = false
 						break
-					}
-					if result.Id == "RETURN" {
+					} else if result.ReturnFlag {
+						result.ReturnFlag = false
 						return result
 					}
+
 				} else if strings.Contains(fmt.Sprintf("%T", s), "expressions") {
 					result = s.(interfaces.Expression).Ejecutar(ast, whileEnv)
-					if result.Id == "BREAK" { //BREAK
+					if result.BreakFlag {
+						result.BreakFlag = false
 						breakFlag = true
 						if result.Valor != nil {
 							fmt.Println("No se permite retornar valor mediante un Break en un While")
 						}
 						break
-					}
-					if result.Id == "CONTINUE" {
+					} else if result.ContinueFlag {
+						result.ContinueFlag = false
 						break
-					}
-					if result.Id == "RETURN" {
+					} else if result.ReturnFlag {
+						result.ReturnFlag = false
 						return result
 					}
 				} else {
-					fmt.Println("error en bloque")
+					fmt.Println("error en bloque del while")
+					return result
 				}
 			}
 			if breakFlag == true {

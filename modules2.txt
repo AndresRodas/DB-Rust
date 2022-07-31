@@ -1,0 +1,37 @@
+mod Parque {
+    pub mod Lugar{
+        fn distancia() -> f64 {
+            return 6.24;
+        }
+        pub mod LastLevel{
+            pub struct animal{
+                tipo: &str,
+                patas: i64,
+                accion: &str
+            }
+            pub fn fuck() -> &str {
+                return "Funciono perro!";
+            }
+            pub fn test() -> animal {
+                return animal{
+                    tipo: "mamifero",
+                    patas: 4,
+                    accion: "popear"
+                };
+            }
+        }
+    }
+    pub fn direccion() -> String {
+        return "6ta calle".to_string();
+    }
+    pub fn arbol() -> i64 {
+        return 666;
+    }
+}
+fn main() {
+    println!("{}", "It Works!");
+    let var1 = Parque::Lugar::LastLevel::test();
+    println!(var1);
+    println!(Parque::direccion());
+    println!(Parque::Lugar::distancia());
+}

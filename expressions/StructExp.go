@@ -69,6 +69,7 @@ func (p StructExp) Ejecutar(ast *environment.AST, env interface{}) environment.S
 			}
 			//si es valido, guardarlo
 			if p.ListExp.Len() == contDef {
+				//fmt.Println("ASIGNANDO EL EXTRA TIPO: ", p.Id)
 				result = environment.Symbol{Lin: p.Lin, Col: p.Col, Id: p.Id, Tipo: environment.STRUCT, Valor: valor, Mutable: true, ExtraTipo: p.Id}
 			} else {
 				fmt.Println("Faltan parámetros en el struct")
@@ -77,6 +78,5 @@ func (p StructExp) Ejecutar(ast *environment.AST, env interface{}) environment.S
 			fmt.Println("La cantidad de valores en el struct es incorrecta")
 		}
 	}
-
 	return result
 }

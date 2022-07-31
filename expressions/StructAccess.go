@@ -26,11 +26,12 @@ func (p StructAccess) Ejecutar(ast *environment.AST, env interface{}) environmen
 	if tempStruct.Tipo == environment.STRUCT {
 
 		if variable, ok := tempStruct.Valor.(map[string]environment.Symbol)[p.Id]; ok {
+			variable.Mutable = true
 			return variable
 		}
 		fmt.Println("No existe el elemento", p.Id)
 		return result
 	}
-	fmt.Println("No es un struct")
+	fmt.Println("No es un structsss ", p.Lin, p.Col)
 	return result
 }

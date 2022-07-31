@@ -28,7 +28,7 @@ func (p ArrayDeclaration) Ejecutar(ast *environment.AST, env interface{}) enviro
 	//validar array
 	if p.ValidarArray(ast, env, result, p.Tipo) {
 		result.Id = p.Id
-		env.(environment.Environment).SaveVariable(p.Id, result, environment.ARRAY, p.Mutable)
+		env.(environment.Environment).SaveVariable(p.Id, result)
 	} else {
 		fmt.Println("Los tipos no coinciden")
 	}

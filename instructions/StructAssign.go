@@ -20,6 +20,7 @@ func NewStructAssign(lin int, col int, list *arrayList.List, expr interfaces.Exp
 
 func (p StructAssign) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
 	var result environment.Symbol
-	result = env.(environment.Environment).SetStruct(p.ListStruct, p.Exp.Ejecutar(ast, env))
+	exp := p.Exp.Ejecutar(ast, env)
+	result = env.(environment.Environment).SetStruct(p.ListStruct, exp)
 	return result
 }

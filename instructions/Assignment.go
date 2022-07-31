@@ -18,11 +18,9 @@ func NewAssignment(lin int, col int, id string, val interfaces.Expression) Assig
 }
 
 func (p Assignment) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
-
 	var result environment.Symbol
 
 	result = p.Expresion.Ejecutar(ast, env)
-
 	env.(environment.Environment).SetVariable(p.Id, result)
 
 	return result

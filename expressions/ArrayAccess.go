@@ -4,7 +4,6 @@ import (
 	"OLC2/environment"
 	"OLC2/interfaces"
 	"fmt"
-
 	arrayList "github.com/colegno/arraylist"
 )
 
@@ -28,19 +27,27 @@ func (p ArrayAccess) Ejecutar(ast *environment.AST, env interface{}) environment
 	if tempArray.Tipo == environment.ARRAY || tempArray.Tipo == environment.VECTOR {
 		var tempIndex environment.Symbol
 		tempIndex = p.Index.Ejecutar(ast, env) //sym{3}
-
 		var tempValue interface{}
 		tempValue = tempArray.Valor
+		//validando indice
+		if tempIndex.Valor.(int) >= 0 && tempIndex.Valor.(int) <= tempValue.(*arrayList.List).Len() {
+			valret := tempValue.(*arrayList.List).GetValue(tempIndex.Valor.(int)).(environment.Symbol)
+			return valret
+		} else {
+			fmt.Println("Indice fuera de los limites ", p.Lin, p.Col)
+			fmt.Println("indice: ", tempIndex.Valor.(int))
+			fmt.Println("tamaño: ", tempValue.(*arrayList.List).Len())
+		}
 
-		return tempValue.(*arrayList.List).GetValue(tempIndex.Valor.(int)).(environment.Symbol)
+	} else {
+		fmt.Println("No es un arreglo")
 	}
-	fmt.Println("No es un arreglo")
-
 	return environment.Symbol{
-		Lin:   p.Lin,
-		Col:   p.Col,
-		Id:    "",
-		Tipo:  environment.NULL,
-		Valor: "ERROR",
+		Lin:     p.Lin,
+		Col:     p.Col,
+		Id:      "",
+		Tipo:    environment.NULL,
+		Valor:   0,
+		Mutable: true,
 	}
 }

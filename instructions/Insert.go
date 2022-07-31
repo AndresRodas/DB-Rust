@@ -30,21 +30,30 @@ func (p Insert) Ejecutar(ast *environment.AST, env interface{}) environment.Symb
 	//validar que id sea vector
 	if tmpSymbol.Tipo == environment.VECTOR {
 		//validar tipo de expresion
-		if (tmpExp2.Tipo == tmpSymbol.TipoArr || tmpExp2.Id == tmpSymbol.Id) && tmpExp1.Tipo == environment.INTEGER {
+		if ((tmpExp2.Tipo == tmpSymbol.TipoArr) || ((tmpExp2.Id == tmpSymbol.Id) && (tmpSymbol.Id != ""))) && (tmpExp1.Tipo == environment.INTEGER) {
 			//validar indice
-			if tmpExp1.Valor.(int) < tmpSymbol.Valor.(*arrayList.List).Len() && tmpExp1.Valor.(int) >= 0 {
+			if (tmpExp1.Valor.(int) <= tmpSymbol.Valor.(*arrayList.List).Len()) && (tmpExp1.Valor.(int) >= 0) {
 				//recorrer indice
-				for i := 0; i < tmpSymbol.Valor.(*arrayList.List).Len(); i++ {
+				for i := 0; i <= tmpSymbol.Valor.(*arrayList.List).Len(); i++ {
 					//validar mutabilidad
 					if tmpSymbol.Mutable {
 						//asignar
 						if tmpExp1.Valor.(int) == i {
 							//setear capacidad
 							if tmpSymbol.Valor.(*arrayList.List).Len() == tmpSymbol.Capacity {
-								tmpSymbol.Capacity = tmpSymbol.Capacity * 2
+								if tmpSymbol.Capacity == 0 {
+									tmpSymbol.Capacity = tmpSymbol.Capacity + 1
+								} else {
+									tmpSymbol.Capacity = tmpSymbol.Capacity * 2
+								}
 							}
-							tmpArr.Add(tmpExp2)
-							tmpArr.Add(tmpSymbol.Valor.(*arrayList.List).GetValue(i))
+							inStackVal := tmpSymbol.Valor.(*arrayList.List).GetValue(i)
+							if tmpExp2.Valor != nil {
+								tmpArr.Add(tmpExp2)
+							}
+							if inStackVal != nil {
+								tmpArr.Add(inStackVal)
+							}
 						} else {
 							tmpArr.Add(tmpSymbol.Valor.(*arrayList.List).GetValue(i))
 						}

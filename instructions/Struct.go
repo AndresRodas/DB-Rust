@@ -18,7 +18,6 @@ func NewStruct(lin int, col int, id string, list *arrayList.List) Struct {
 }
 
 func (p Struct) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol {
-
 	env.(environment.Environment).SaveStruct(p.Id, p.ListAtr, true)
 	return environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: environment.STRUCT, Valor: p.ListAtr, Mutable: true}
 }

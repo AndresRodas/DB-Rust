@@ -36,18 +36,19 @@ func (p ForIn) Ejecutar(ast *environment.AST, env interface{}) environment.Symbo
 			//agregando variable al entorno
 			//newSym := environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: environment.INTEGER, Valor: s, Mutable: true}
 
-			loopEnv.SaveVariable(p.Id, s.(environment.Symbol), environment.INTEGER, false)
+			loopEnv.SaveVariable(p.Id, s.(environment.Symbol))
 			//recorriendo bloque de instrucciones
 			for _, b := range p.Inst.ToArray() {
 				result = b.(interfaces.Instruction).Ejecutar(ast, loopEnv)
-				if result.Id == "BREAK" {
+				if result.BreakFlag {
 					breakFlag = true
 					break
 				}
-				if result.Id == "CONTINUE" {
+				if result.ContinueFlag {
 					break
 				}
-				if result.Id == "RETURN" {
+				if result.ReturnFlag {
+					result.ReturnFlag = false
 					return result
 				}
 			}

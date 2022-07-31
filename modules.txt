@@ -1,0 +1,69 @@
+mod tienda { //Base de datos
+    pub mod ventas { //Tabla ventas
+        pub struct Venta {
+            total: i64,
+            cliente: String
+        }
+        // Definición del método de creación de la tabla
+        pub fn crear_tabla(_tabla: &mut Vec<Venta>, tamanio: i64) -> Vec<Venta> {
+            _tabla = Vec::with_capacity(tamanio);
+            println!("La tabla ventas ha sido creada");
+            return _tabla;
+        }
+        pub fn insertar_tabla(_tabla: &mut Vec<Venta>, total: i64, cliente:String) -> Vec<Venta> {
+            if _tabla.len() < _tabla.capacity() {
+                //Insertar un valor nuevo
+                let valor: Venta = Venta {
+                    total: total,
+                    cliente: cliente.to_string()
+                };
+                _tabla.push(valor);
+                println!("Valor nuevo agregado a tabla ventas");
+            }
+            else {
+                println!("La tabla ha llegado a su maxima capacidad");
+            }
+            return _tabla;
+        }
+        // Definición de la obtención de un dato según su índice
+        pub fn select_venta_por_id(_tabla: &mut Vec<Venta>, id: i64) -> Venta {
+            let value: Venta = Venta {
+                total: _tabla[id].total,
+                cliente: _tabla[id].cliente
+            };
+            return value;
+        }
+    }
+}
+
+fn main() {
+    let mut _vector: Vec<Venta> = Vec::new();
+    //Iniciar la tabla
+    _vector = tienda::ventas::crear_tabla(_vector,10);
+    //Insertar valor
+    _vector = tienda::ventas::insertar_tabla(_vector,15,"Hector".to_string());
+    //Obtener un valor
+    let getValue: tienda::ventas::Venta = tienda::ventas::select_venta_por_id(_vector,0);
+    println!("total: {} cliente: {}", getValue.total, getValue.cliente);
+}
+
+fn main () {
+    let mut arr3: [i64; 6] = [90, 3, 40, 10, 8, 5];
+  println!("inicio {:?}", arr3);
+    ordInsercion(&mut arr3);
+    println!("final {:?}", arr3);
+}
+/* algoritmo insercion */
+fn ordInsercion(arr: &mut [i64]) {
+  arr[1] = 1;
+  println!("insercion {:?}", arr);
+  test(&mut arr);
+   //println!("{:?}", arr);
+}
+
+fn test(ar: &mut [i64]) {
+  for val in 0..4{
+  	ar[val] = 6;
+  }
+  println!("test {:?}", ar);
+}

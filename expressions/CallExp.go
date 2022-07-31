@@ -6,6 +6,7 @@ import (
 	"OLC2/interfaces"
 	"fmt"
 	arrayList "github.com/colegno/arraylist"
+	"reflect"
 	"strings"
 )
 
@@ -33,36 +34,83 @@ func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Sym
 	//definiendo nuevo entorno de funcion
 	var funcEnv environment.Environment
 
-	//creando entorno          //llamar funcion obtenerbglobal
-	funcEnv = environment.NewEnvironment(p.GetGlobal(env), p.Id+"(FUNCTION)")
+	//creando entorno
+	if strings.Contains(env.(environment.Environment).Id, "MODULO") {
+		//si es modulo se usa el anterior como anterior
+		funcEnv = environment.NewEnvironment(env.(environment.Environment), p.Id+"(FUNCTION)")
+	} else {
+		//si no es modulo se usa el global como anterior
+		funcEnv = environment.NewEnvironment(p.GetGlobal(env), p.Id+"(FUNCTION)")
+	}
 
-	//validar tamaños de parametros
-	if funcSym.ListDec.Len() == p.Params.Len() { // PARAMS: ByRef{ expression, bool(mut) }
-		//recorrer las listas						ListDec: ParamsDeclaration { id, tipo, extratipo } funcSym
-		for i := 0; i < p.Params.Len(); i++ {
-			//valores a utilizar
-			idNewVar := funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).Id     //guardando id
-			typeNewVar := funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).Tipo //guardando tipo
-			extraType := funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).ExtraTipo
-			symNewVar := p.Params.GetValue(i).(environment.ByReference).Exp.(interfaces.Expression).Ejecutar(ast, env) //guardando simbolo
-			//Comparar los tipos de los parametros
-			if typeNewVar == symNewVar.Tipo || extraType == symNewVar.Id {
-				//setear muteabilidad y paso por referencia
-				if p.Params.GetValue(i).(environment.ByReference).Ref && (typeNewVar == environment.ARRAY) || (typeNewVar == environment.VECTOR) {
-					listIdRef.Add(symNewVar.Id)
-					listIdNew.Add(idNewVar)
+	//si la funcion existe..
+	if funcSym.TipoRetorno != environment.NULL {
+		//validar tamaños de parametros
+		//fmt.Println("LOS TAMAÑOS DEBEN SER IGUALES... GUARDADA: ", funcSym.ListDec.Len(), ", ENTRA: ", p.Params.Len())
+		//fmt.Println(funcSym.Id, funcSym.ListDec.ToArray())
+		if funcSym.ListDec.Len() == p.Params.Len() { // PARAMS: ByRef{ expression, bool(mut) }  "entrante"
+			//recorrer las listas						ListDec: ParamsDeclaration { id, tipo, extratipo, Vectipo } funcSym "guardada"
+			for i := 0; i < p.Params.Len(); i++ {
+				//valores a utilizar
+				idNewVar := funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).Id                                //guardando id func guardada
+				typeNewVar := funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).Tipo                            //guardando tipo func guardada
+				extraType := funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).ExtraTipo                        //extra tipo func guardada
+				vecTipo := funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).Vectipo                            //guardando tipo de vector
+				symNewVar := p.Params.GetValue(i).(environment.ByReference).Exp.(interfaces.Expression).Ejecutar(ast, env) //guardando simbolo que viene
+
+				//valor por referencia
+				var idnewer string
+				if reflect.TypeOf(p.Params.GetValue(i).(environment.ByReference).Exp) == reflect.TypeOf(CallVar{}) {
+					identificador := p.Params.GetValue(i).(environment.ByReference).Exp.(CallVar)
+					idnewer = identificador.Id
 				}
-				symNewVar.Mutable = true
-				//guardar simbolo en entorno de funcSym
-				symNewVar.ExtraTipo = funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).ExtraTipo
-				funcEnv.SaveVariable(idNewVar, symNewVar, typeNewVar, true)
-			} else {
-				fmt.Println("Los parametros son incorrectos")
-				return result
+				//Comparar los tipos de los parametros
+				if typeNewVar == environment.VECTOR {
+					//es un vector con tipo adentro
+					//fmt.Println("tipo func alma: ", vecTipo)
+					//fmt.Println("tipo func exp: ", symNewVar.TipoArr)
+					if vecTipo == symNewVar.TipoArr {
+						//setear muteabilidad y paso por referencia
+						if p.Params.GetValue(i).(environment.ByReference).Ref {
+							listIdRef.Add(idnewer)
+							listIdNew.Add(idNewVar)
+						}
+						symNewVar.Mutable = true
+						//guardar simbolo en entorno de funcSym
+						symNewVar.ExtraTipo = funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).ExtraTipo
+						//symNewVar.Id = idNewVar
+						funcEnv.SaveVariable(idNewVar, symNewVar)
+					} else {
+						fmt.Println("Los parametros son incorrectos nooooo ", p.Lin, p.Col)
+						return result
+					}
+
+				} else if typeNewVar == symNewVar.Tipo || (extraType == symNewVar.Id && extraType != "") { //se cambio id por exratipo
+					fmt.Println("saved type: ", typeNewVar)
+					fmt.Println("new type: ", symNewVar.Tipo)
+					fmt.Println("extra saved type: ", extraType)
+					fmt.Println("new extra type: ", symNewVar.Id)
+					//setear muteabilidad y paso por referencia
+					if p.Params.GetValue(i).(environment.ByReference).Ref && (typeNewVar == environment.ARRAY) || (typeNewVar == environment.VECTOR) || (typeNewVar == environment.STRUCT) {
+						listIdRef.Add(idnewer)
+						listIdNew.Add(idNewVar)
+					}
+					symNewVar.Mutable = true
+					//guardar simbolo en entorno de funcSym
+					symNewVar.ExtraTipo = funcSym.ListDec.GetValue(i).(instructions.ParamsDeclaration).ExtraTipo
+					//symNewVar.Id = idNewVar
+					fmt.Println("GUARDANDO EL SIMBOLO: ", idNewVar)
+					funcEnv.SaveVariable(idNewVar, symNewVar)
+				} else {
+					fmt.Println("Los parametros son incorrectos", p.Lin, p.Col)
+					return result
+				}
 			}
+		} else {
+			fmt.Println("La cantidad de parametros no es la correcta, Lin: ", p.Lin, ", Col: ", p.Col)
+			return result
 		}
 	} else {
-		fmt.Println("La cantidad de parametros no es la correcta")
 		return result
 	}
 
@@ -71,32 +119,42 @@ func (p CallExp) Ejecutar(ast *environment.AST, env interface{}) environment.Sym
 		if strings.Contains(fmt.Sprintf("%T", s), "instructions") {
 			result = s.(interfaces.Instruction).Ejecutar(ast, funcEnv)
 			p.SaveVarsReference(listIdRef, listIdNew, env.(environment.Environment), funcEnv)
-			if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" { //BREAK, CONTINUE & RETURN
-				//comprobacion de tipo de retorno
-				if result.Id == "RETURN" {
-					if funcSym.TipoRetorno == result.Tipo || funcSym.IdTipo == result.ExtraTipo {
-						return result
-					} else {
-						fmt.Println("El tipo del valor a retornar es incorrecto")
-						return environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: environment.NULL}
-					}
-				}
+			//BREAK, CONTINUE & RETURN
+			if result.BreakFlag {
+				result.BreakFlag = false
 				return result
+			} else if result.ContinueFlag {
+				result.ContinueFlag = false
+				return result
+			} else if result.ReturnFlag {
+				result.ReturnFlag = false
+
+				if funcSym.TipoRetorno == result.Tipo || funcSym.IdTipo == result.ExtraTipo {
+					return result
+				} else {
+					fmt.Println("El tipo del valor a retornar es incorrecto")
+					return environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: environment.NULL}
+				}
 			}
+
 		} else if strings.Contains(fmt.Sprintf("%T", s), "expressions") {
 			result = s.(interfaces.Expression).Ejecutar(ast, funcEnv)
 			p.SaveVarsReference(listIdRef, listIdNew, env.(environment.Environment), funcEnv)
-			if result.Id == "BREAK" || result.Id == "CONTINUE" || result.Id == "RETURN" { //BREAK, CONTINUE & RETURN
-				//comprobacion de tipo de retorno
-				if result.Id == "RETURN" {
-					if funcSym.TipoRetorno == result.Tipo || funcSym.IdTipo == result.ExtraTipo {
-						return result
-					} else {
-						fmt.Println("El tipo del valor a retornar es incorrecto")
-						return environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: environment.NULL}
-					}
-				}
+			//BREAK, CONTINUE & RETURN
+			if result.BreakFlag {
+				result.BreakFlag = false
 				return result
+			} else if result.ContinueFlag {
+				result.ContinueFlag = false
+				return result
+			} else if result.ReturnFlag {
+				result.ReturnFlag = false
+				if funcSym.TipoRetorno == result.Tipo || funcSym.IdTipo == result.ExtraTipo {
+					return result
+				} else {
+					fmt.Println("El tipo del valor a retornar es incorrecto")
+					return environment.Symbol{Lin: p.Lin, Col: p.Col, Id: "", Tipo: environment.NULL}
+				}
 			}
 		} else {
 			fmt.Println("error en bloque")

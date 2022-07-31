@@ -28,9 +28,11 @@ func (p Declaration) Ejecutar(ast *environment.AST, env interface{}) environment
 	result.Mutable = p.Mutable
 
 	if result.Tipo == p.Tipo {
-		env.(environment.Environment).SaveVariable(p.Id, result, p.Tipo, p.Mutable)
+		env.(environment.Environment).SaveVariable(p.Id, result)
+		//agregando simbolo
+		//ast.AddSymbol(p.Id, "Variable", string(result.Tipo), env.(environment.Environment).Id, p.Lin, p.Col)
 	} else if p.Tipo == environment.WILDCARD { //aqui no se define tipo
-		env.(environment.Environment).SaveVariable(p.Id, result, result.Tipo, p.Mutable)
+		env.(environment.Environment).SaveVariable(p.Id, result)
 	} else {
 		fmt.Println("Los tipos no coinciden")
 	}

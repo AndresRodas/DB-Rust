@@ -26,12 +26,16 @@ func (p Push) Ejecutar(ast *environment.AST, env interface{}) environment.Symbol
 	//validar que id sea vector
 	if tmpSymbol.Tipo == environment.VECTOR {
 		//validar tipo de expresion
-		if tmpExp.Tipo == tmpSymbol.TipoArr || tmpSymbol.Id == tmpExp.Id {
+		if (tmpExp.Tipo == tmpSymbol.TipoArr) || ((tmpSymbol.Id == tmpExp.Id) && (tmpSymbol.Id != "")) {
 			//push valor
 			if tmpSymbol.Mutable {
 				//setear capacidad
 				if tmpSymbol.Valor.(*arrayList.List).Len() == tmpSymbol.Capacity {
-					tmpSymbol.Capacity = tmpSymbol.Capacity * 2
+					if tmpSymbol.Capacity == 0 {
+						tmpSymbol.Capacity = tmpSymbol.Capacity + 1
+					} else {
+						tmpSymbol.Capacity = tmpSymbol.Capacity * 2
+					}
 				}
 				tmpSymbol.Valor.(*arrayList.List).Add(tmpExp)
 			} else {
